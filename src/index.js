@@ -1,3 +1,3 @@
-import MyPlugin from 'src/models/MyPlugin';
+import DockerComposatorPlugin from 'src/models/DockerComposatorPlugin';
 
-export default MyPlugin;
+export default DockerComposatorPlugin;

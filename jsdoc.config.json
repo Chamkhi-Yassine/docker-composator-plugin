@@ -17,14 +17,14 @@
     "monospaceLinks": false,
     "search": true,
     "better-docs": {
-      "name": "my-plugin",
+      "name": "docker-composator-plugin",
       "css": "style.css",
       "trackingCode": "tracking-code-which-will-go-to-the-HEAD",
       "hideGenerator": false,
       "navLinks": [
         {
           "label": "Github",
-          "href": "https://github.com/ditrit/my-plugin#README.md"
+          "href": "https://github.com/Chamkhi-Yassine/docker-composator-plugin#README.md"
         }
       ]
     }

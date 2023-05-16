@@ -3,7 +3,7 @@ import { DefaultParser } from 'leto-modelizer-plugin-core';
 /**
  * Template of plugin parser.
  */
-class MyPluginParser extends DefaultParser {
+class DockerComposatorPluginParser extends DefaultParser {
   isParsable(fileInformation) {
     /*
      * Implement this to indicate which fileInformation your provider can manage.
@@ -29,4 +29,4 @@ class MyPluginParser extends DefaultParser {
   }
 }
 
-export default MyPluginParser;
+export default DockerComposatorPluginParser;

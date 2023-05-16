@@ -1,7 +1,7 @@
 {
-  "name": "leto-modelizer-plugin-template",
-  "version": "0.1.0",
-  "description": "Template for plugin creation",
+  "name": "docker-composator-plugin",
+  "version": "0.0.1",
+  "description": "Plugin for creating docker compose files",
   "main": "dist/my-plugin.js",
   "exports": "./dist/my-plugin.js",
   "scripts": {
@@ -16,18 +16,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ditrit/leto-modelizer-plugin-template.git"
+    "url": "git+https://github.com/Chamkhi-Yassine/docker-composator-plugin.git"
   },
   "keywords": [
     "Leto-modelizer",
-    "plugin-template"
+    "docker-compose",
+    "docker-composator-plugin"
   ],
-  "author": "Vincent Moittie <moittie.vincent@gmail.com>",
+  "author": "Yassine Chamkhi <yassine.chamkhi@nearteam.fr>",
   "license": "Mozilla Public License 2.0",
   "bugs": {
-    "url": "https://github.com/ditrit/leto-modelizer-plugin-template/issues"
+    "url": "https://github.com/Chamkhi-Yassine/docker-composator-plugin/issues"
   },
-  "homepage": "https://github.com/ditrit/leto-modelizer-plugin-template#readme",
+  "homepage": "https://github.com/Chamkhi-Yassine/docker-composator-plugin#readme",
   "dependencies": {
     "leto-modelizer-plugin-core": "github:ditrit/leto-modelizer-plugin-core#0.11.0"
   },

@@ -8,7 +8,7 @@ import { DefaultMetadata } from 'leto-modelizer-plugin-core';
  *
  * Feel free to manage your metadata as you wish.
  */
-class MyPluginMetadata extends DefaultMetadata {
+class DockerComposatorPluginMetadata extends DefaultMetadata {
   validate() {
     return super.validate();
   }
@@ -29,4 +29,4 @@ class MyPluginMetadata extends DefaultMetadata {
   }
 }
 
-export default MyPluginMetadata;
+export default DockerComposatorPluginMetadata;
