@@ -51,19 +51,8 @@
             "type": "Array",
             "attributes": [
               {
-                "name": null,
-                "type": "Object",
-                "attributes": [
-                  {
-                    "name": "name",
-                    "type": "String",
-                    "required": true
-                  },
-                  {
-                    "name": "value",
-                    "type": "String"
-                  }
-                ]
+                "name": null,              
+                "type": "String"
               }
             ]
           },

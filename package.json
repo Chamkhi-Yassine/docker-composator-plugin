@@ -12,7 +12,8 @@
     "lint:report": "eslint --ext .js src -f json-relative > eslint.json",
     "prepare:docs": "sed -i 's#taffydb#@jsdoc/salty#g' node_modules/better-docs/publish.js",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "generate:parser": "node scripts/generate_parser.js"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,9 @@
   },
   "homepage": "https://github.com/Chamkhi-Yassine/docker-composator-plugin#readme",
   "dependencies": {
-    "leto-modelizer-plugin-core": "github:ditrit/leto-modelizer-plugin-core#0.11.0"
+    "js-yaml": "^4.1.0",
+    "leto-modelizer-plugin-core": "github:ditrit/leto-modelizer-plugin-core#0.11.0",
+    "lidy-js": "github:ditrit/lidy-js.git#main"
   },
   "devDependencies": {
     "@babel/core": "^7.18.9",
