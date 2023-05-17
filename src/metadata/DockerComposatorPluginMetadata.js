@@ -54,7 +54,7 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
     const subAttributes = attribute.attributes || [];
     const attributeDef = new ComponentAttributeDefinition({
       ...attribute,
-      displayName: attribute.displayName || this.formatDisplayName(attribute.name),
+      displayName: attribute.displayName, //|| this.formatDisplayName(attribute.name),
       definedAttributes: subAttributes.map(this.getAttributeDefinition, this),
     });
     attributeDef.expanded = attribute.expanded || false;

@@ -2,6 +2,7 @@
     {
         "type": "Docker-Compose",
         "model": "DefaultContainer",
+        "displayName": "Docker Compose",
         "icon": "resources/compose",
         "description": "Contains the specifications for deploying a set of services",
         "url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
@@ -22,6 +23,7 @@
         "type": "Service",
         "model": "DefaultContainer",
         "icon": "resources/service",
+        "displayName": "Service",
         "parentTypes": ["Docker-Compose"],
         "isContainer": false,
         "attributes": [
