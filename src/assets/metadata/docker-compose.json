@@ -8,9 +8,7 @@
         "url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
         "isContainer": true,
         "childrenTypes": [
-          "Service",
-          "Volume",
-          "Network"
+          "Service"
         ],
         "attributes": [
             {
