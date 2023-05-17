@@ -1,0 +1,82 @@
+[
+    {
+        "type": "Docker-Compose",
+        "model": "DefaultContainer",
+        "icon": "resources/compose",
+        "description": "Contains the specifications for deploying a set of services",
+        "url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+        "isContainer": true,
+        "childrenTypes": [
+          "Service",
+          "Volume",
+          "Network"
+        ],
+        "attributes": [
+            {
+                "name": "version",
+                "type": "String"
+            }
+        ]
+    },
+    {
+        "type": "Service",
+        "model": "DefaultContainer",
+        "icon": "resources/service",
+        "parentTypes": ["Docker-Compose"],
+        "isContainer": false,
+        "attributes": [
+          {
+            "name": "parentCompose",
+            "type": "Reference",
+            "containerRef": "Docker-Compose"
+          },
+          {
+            "name": "image",
+            "type": "String"
+          },
+          {
+            "name": "stdin_open",
+            "type": "Boolean"
+          },
+          {
+            "name": "tty",
+            "type": "Boolean"
+          },
+          {
+            "name": "ports",
+            "type": "Array"
+          },
+          {
+            "name": "environment",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,
+                "type": "Object",
+                "attributes": [
+                  {
+                    "name": "name",
+                    "type": "String",
+                    "required": true
+                  },
+                  {
+                    "name": "value",
+                    "type": "String"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ports",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,
+                "type": "String"
+              }
+            ]
+        }
+        ]
+    }
+]

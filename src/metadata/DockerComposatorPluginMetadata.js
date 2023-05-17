@@ -1,5 +1,5 @@
-import { DefaultMetadata } from 'leto-modelizer-plugin-core';
-
+import { DefaultMetadata, ComponentDefinition } from 'leto-modelizer-plugin-core';
+import metadata from '../assets/metadata'
 /*
  * Metadata is used to generate definition of Component and ComponentAttribute.
  *
@@ -9,24 +9,59 @@ import { DefaultMetadata } from 'leto-modelizer-plugin-core';
  * Feel free to manage your metadata as you wish.
  */
 class DockerComposatorPluginMetadata extends DefaultMetadata {
+  /**
+   * Validate the provided metadata with a schemas.
+   *
+   * @returns {boolean} True if metadata is valid.
+   */
   validate() {
-    return super.validate();
+    return true;
   }
 
   parse() {
-    /*
-     * Implement this to provide all the definitions describing the components.
-     *
-     * ComponentDefinition is used to generate the instantiable component list.
-     *
-     * And the componentAttributeDefinition is used to generate the form to update a component.
-     *
-     * Both of them can be also used to check components in parser and generate errors.
-     */
-    this.pluginData.definitions = {
-      components: [],
-    };
+    const componentDefs = metadata.jsonComponents.map(
+        (component) => this.getComponentDefinition(component)
+      );
+
+    this.setChildrenTypes(componentDefs);
+    this.pluginData.definitions.components = componentDefs;
   }
+
+  /**
+   * Convert a JSON component definition object to a KubernetesComponentDefinition.
+   *
+   * @param {string} apiVersion - Kubernetes API version of the component definition.
+   * @param {object} component - JSON component definition object to parse.
+   * @returns {KubernetesComponentDefinition} Parsed component definition.
+   */
+  getComponentDefinition(component) {
+    const attributes = component.attributes || [];
+    let definedAttributes = attributes.map(this.getAttributeDefinition, this);
+
+    return new ComponentDefinition({
+      ...component,
+      definedAttributes
+    });
+  }
+
+  /**
+   * Convert a JSON attribute object to a ComponentAttributeDefinition.
+   *
+   * @param {object} attribute - JSON attribute definition object to parse.
+   * @returns {ComponentAttributeDefinition} Parsed attribute definition.
+   */
+  getAttributeDefinition(attribute) {
+    const subAttributes = attribute.attributes || [];
+    const attributeDef = new ComponentAttributeDefinition({
+      ...attribute,
+      displayName: attribute.displayName || this.formatDisplayName(attribute.name),
+      definedAttributes: subAttributes.map(this.getAttributeDefinition, this),
+    });
+    attributeDef.expanded = attribute.expanded || false;
+    return attributeDef;
+  }
+
+  
 }
 
 export default DockerComposatorPluginMetadata;
