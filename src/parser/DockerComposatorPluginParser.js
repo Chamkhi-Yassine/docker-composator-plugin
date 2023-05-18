@@ -1,5 +1,5 @@
 import { DefaultParser } from 'leto-modelizer-plugin-core';
-import {DockerComposatorPluginListener} from 'DockerComposatorPluginListener.js'
+import DockerComposatorPluginListener from './DockerComposatorPluginListener'
 /**
  * Template of plugin parser.
  */

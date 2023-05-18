@@ -1,3 +1,3 @@
-import DockerComposatorPlugin from 'src/models/DockerComposatorPlugin';
+import DockerComposatorPlugin from './models/DockerComposatorPlugin';
 
 export default DockerComposatorPlugin;

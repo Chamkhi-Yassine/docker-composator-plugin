@@ -2,23 +2,26 @@ import {
   DefaultPlugin,
   DefaultData,
 } from 'leto-modelizer-plugin-core';
-import DockerComposatorPluginDrawer from 'src/draw/DockerComposatorPluginDrawer';
-import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
-import DockerComposatorPluginParser from 'src/parser/DockerComposatorPluginParser';
-import DockerComposatorPluginRenderer from 'src/render/DockerComposatorPluginRenderer';
-import { name, version } from 'package.json';
+import DockerComposatorPluginDrawer from '../draw/DockerComposatorPluginDrawer';
+import DockerComposatorPluginMetadata from '../metadata/DockerComposatorPluginMetadata';
+import DockerComposatorPluginParser from '../parser/DockerComposatorPluginParser';
+import DockerComposatorPluginRenderer from '../render/DockerComposatorPluginRenderer';
+import packageInfo from '../../package.json';
 
 /**
  * Template of plugin model.
  */
+
+const PACKAGE_NAME = packageInfo.name
+const PACKAGE_VERSION = packageInfo.version
 class DockerComposatorPlugin extends DefaultPlugin {
   /**
    * Default constructor.
    */
   constructor() {
     const pluginData = new DefaultData({
-      name,
-      version,
+      PACKAGE_NAME,
+      PACKAGE_VERSION,
     });
 
     super({
