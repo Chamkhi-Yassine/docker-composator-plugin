@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import {
   DefaultPlugin,
   DefaultData,
@@ -12,17 +13,18 @@ import packageInfo from '../../package.json';
  * Template of plugin model.
  */
 
-const PACKAGE_NAME = packageInfo.name
-const PACKAGE_VERSION = packageInfo.version
 class DockerComposatorPlugin extends DefaultPlugin {
   /**
    * Default constructor.
    */
-  constructor() {
+
+  constructor(props = {
+    event: null,
+  }) {
     const pluginData = new DefaultData({
-      PACKAGE_NAME,
-      PACKAGE_VERSION,
-    });
+      name: packageInfo.name,
+      version: packageInfo.version,
+    }, props.event);
 
     super({
       pluginData,
@@ -31,6 +33,10 @@ class DockerComposatorPlugin extends DefaultPlugin {
       pluginParser: new DockerComposatorPluginParser(pluginData),
       pluginRenderer: new DockerComposatorPluginRenderer(pluginData),
     });
+  }
+
+  getMeta() {
+    return this.pluginData.definition.components;
   }
 }
 

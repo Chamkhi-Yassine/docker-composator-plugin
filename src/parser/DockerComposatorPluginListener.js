@@ -10,7 +10,7 @@ class DockerComposatorPluginListener {
    * @param {FileInformation} fileInformation - File information.
    * @param {ComponentDefinition[]} [definitions=[]] - All component definitions.
    */
-constructor(fileInformation, definitions = []) {
+  constructor(fileInformation, definitions = []) {
     /**
      * File information.
      *
@@ -33,16 +33,14 @@ constructor(fileInformation, definitions = []) {
     this.childComponentsByType = {};
   }
 
-
-   /**
+  /**
    * Function called when attribute `root` is parsed.
    * Create a component from the parsed root element.
    *
    * @param {MapNode} rootNode - The Lidy `root` node.
    */
-   exit_root(rootNode) {
+  exit_root(rootNode) {
     const type = rootNode.value.type.value;
-
 
     const rootComponent = this.createComponentFromTree(rootNode, type);
     rootComponent.path = this.fileInformation.path;
@@ -51,15 +49,13 @@ constructor(fileInformation, definitions = []) {
     });
   }
 
-
   createComponentFromTree(node, type) {
-    const definition = this.definitions.find((definition) =>
-        definition.type === type
-    );
+    const definition = this.definitions.find((def) => def.type === type);
+
     const id = node.value.metadata?.value.name?.value || node.value.name?.value
       || this.pluginData.generateComponentId(definition);
 
-    delete node.value.metadata?.value.name; // we don't want to create an attribute for the name, because the component already has a name
+    delete node.value.metadata?.value.name;
     delete node.value.name; // TODO: improve this
 
     const component = new Component({
@@ -71,20 +67,19 @@ constructor(fileInformation, definitions = []) {
     return component;
   }
 
-
   createAttributesFromTreeNode(parentNode, parentDefinition) {
-    return Object.keys(parentNode.value).map(childKey => {
+    return Object.keys(parentNode.value).map((childKey) => {
       const childNode = parentNode.value[childKey];
       const definition = parentDefinition?.definedAttributes.find(
-        ({ name }) => name === (parentNode.type !== 'list' ? childKey: null)
+        ({ name }) => name === (parentNode.type !== 'list' ? childKey : null),
       ); // note: elements inside a list don't have a name, because it has to match the definition
       const attribute = new ComponentAttribute({
         name: childKey,
         type: this.lidyToLetoType(childNode.type),
         definition,
-        value: (childNode.type === 'map' || childNode.type === 'list') ?
-          this.createAttributesFromTreeNode(childNode, definition) :
-          childNode.value,
+        value: (childNode.type === 'map' || childNode.type === 'list')
+          ? this.createAttributesFromTreeNode(childNode, definition)
+          : childNode.value,
       });
       return attribute;
     });
@@ -113,8 +108,6 @@ constructor(fileInformation, definitions = []) {
         return null; // TODO: throw error
     }
   }
-
 }
-
 
 export default DockerComposatorPluginListener;

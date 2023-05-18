@@ -1,11 +1,13 @@
+/* eslint-disable no-restricted-imports */
 import { DefaultParser } from 'leto-modelizer-plugin-core';
-import DockerComposatorPluginListener from './DockerComposatorPluginListener'
+import { parse as lidyParse } from '../lidy/dcompose';
+import DockerComposatorPluginListener from './DockerComposatorPluginListener';
 /**
  * Template of plugin parser.
  */
 class DockerComposatorPluginParser extends DefaultParser {
   isParsable(fileInformation) {
-    /* 
+    /*
      * Implement this to indicate which fileInformation your provider can manage.
      *
      * You just have to return a Boolean to say if your parser can manage the file or not.
@@ -55,7 +57,10 @@ class DockerComposatorPluginParser extends DefaultParser {
           },
         });
 
-        const listener = new DockerComposatorPluginListener(input, this.pluginData.definitions.components);
+        const listener = new DockerComposatorPluginListener(
+          input,
+          this.pluginData.definitions.components,
+        );
 
         const errors = [];
         const warnings = [];
@@ -68,11 +73,11 @@ class DockerComposatorPluginParser extends DefaultParser {
           listener,
           path: input.path,
           prog: {
-            errors: errors,
-            warnings: warnings,
-            imports: imports,
-            alreadyImported: alreadyImported,
-            root: root,
+            errors,
+            warnings,
+            imports,
+            alreadyImported,
+            root,
           },
         });
 

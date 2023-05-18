@@ -1,5 +1,6 @@
-import { DefaultMetadata, ComponentDefinition } from 'leto-modelizer-plugin-core';
-import metadata from '../assets/metadata'
+/* eslint-disable no-restricted-imports */
+import { DefaultMetadata, ComponentDefinition, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
+import metadata from '../assets/metadata';
 /*
  * Metadata is used to generate definition of Component and ComponentAttribute.
  *
@@ -20,8 +21,8 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
 
   parse() {
     const componentDefs = metadata.jsonComponents.map(
-        (component) => this.getComponentDefinition(component)
-      );
+      (component) => this.getComponentDefinition(component),
+    );
 
     this.setChildrenTypes(componentDefs);
     this.pluginData.definitions.components = componentDefs;
@@ -32,15 +33,15 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
    *
    * @param {string} apiVersion - Kubernetes API version of the component definition.
    * @param {object} component - JSON component definition object to parse.
-   * @returns {KubernetesComponentDefinition} Parsed component definition.
+   * @returns {ComponentDefinition} Parsed component definition.
    */
   getComponentDefinition(component) {
     const attributes = component.attributes || [];
-    let definedAttributes = attributes.map(this.getAttributeDefinition, this);
+    const definedAttributes = attributes.map(this.getAttributeDefinition, this);
 
     return new ComponentDefinition({
       ...component,
-      definedAttributes
+      definedAttributes,
     });
   }
 
@@ -54,14 +55,12 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
     const subAttributes = attribute.attributes || [];
     const attributeDef = new ComponentAttributeDefinition({
       ...attribute,
-      displayName: attribute.displayName, //|| this.formatDisplayName(attribute.name),
+      displayName: attribute.displayName, // || this.formatDisplayName(attribute.name),
       definedAttributes: subAttributes.map(this.getAttributeDefinition, this),
     });
     attributeDef.expanded = attribute.expanded || false;
     return attributeDef;
   }
-
-  
 }
 
 export default DockerComposatorPluginMetadata;
