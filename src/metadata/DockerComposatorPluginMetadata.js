@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import { DefaultMetadata, ComponentDefinition, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
-import metadata from '../assets/metadata';
+import jsonComponents from '../assets/metadata';
 /*
  * Metadata is used to generate definition of Component and ComponentAttribute.
  *
@@ -20,11 +20,11 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
   }
 
   parse() {
-    const componentDefs = metadata.jsonComponents.map(
+    const componentDefs = jsonComponents.flatMap(
       (component) => this.getComponentDefinition(component),
     );
 
-    this.setChildrenTypes(componentDefs);
+    // this.setChildrenTypes(componentDefs);
     this.pluginData.definitions.components = componentDefs;
   }
 
@@ -38,11 +38,11 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
   getComponentDefinition(component) {
     const attributes = component.attributes || [];
     const definedAttributes = attributes.map(this.getAttributeDefinition, this);
-
-    return new ComponentDefinition({
+    const comp = new ComponentDefinition({
       ...component,
       definedAttributes,
     });
+    return comp;
   }
 
   /**
