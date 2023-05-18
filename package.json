@@ -2,8 +2,8 @@
   "name": "docker-composator-plugin",
   "version": "0.0.1",
   "description": "Plugin for creating docker compose files",
-  "main": "dist/my-plugin.js",
-  "exports": "./dist/my-plugin.js",
+  "main": "dist/docker-composator-plugin.js",
+  "exports": "./dist/docker-composator-plugin.js",
   "scripts": {
     "build": "webpack",
     "build:docs": "jsdoc --readme README.md --package package.json -r ./src/ -c jsdoc.config.json -d docs",
