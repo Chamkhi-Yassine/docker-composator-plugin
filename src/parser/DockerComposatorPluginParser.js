@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable no-restricted-imports */
 import { DefaultParser } from 'leto-modelizer-plugin-core';
 import { parse as lidyParse } from '../lidy/dcompose';
@@ -14,7 +15,6 @@ class DockerComposatorPluginParser extends DefaultParser {
      *
      * By default, this function return false only on null/undefined fileInformation.
      */
-    console.log('P testing file parsable');
     return /\.ya?ml$/.test(fileInformation.path);
   }
 
@@ -31,10 +31,8 @@ class DockerComposatorPluginParser extends DefaultParser {
     inputs
       .filter(({ content, path }) => {
         if (content && content.trim() !== '') {
-          console.log('P content is not empty');
           return true;
         }
-        console.log('P content is empty');
         this.pluginData.emitEvent({
           parent: parentEventId,
           type: 'Parser',
@@ -59,31 +57,28 @@ class DockerComposatorPluginParser extends DefaultParser {
             global: false,
           },
         });
-
         const listener = new DockerComposatorPluginListener(
           input,
           this.pluginData.definitions.components,
         );
-
         const errors = [];
         const warnings = [];
         const imports = [];
         const alreadyImported = [];
         const root = [];
-        console.log('PARSING: ', input.content);
+
         lidyParse({
           src_data: input.content,
           listener,
           path: input.path,
           prog: {
-            errors,
-            warnings,
-            imports,
-            alreadyImported,
-            root,
+            errors: errors,
+            warnings: warnings,
+            imports: imports,
+            alreadyImported: alreadyImported,
+            root: root,
           },
         });
-
         console.log(errors);
         console.log(warnings);
         console.log(imports);
@@ -93,8 +88,6 @@ class DockerComposatorPluginParser extends DefaultParser {
         this.pluginData.components.push(...listener.components);
         this.pluginData.emitEvent({ id, status: 'success' });
       });
-
-    console.log('P', this.pluginData.components);
   }
 }
 

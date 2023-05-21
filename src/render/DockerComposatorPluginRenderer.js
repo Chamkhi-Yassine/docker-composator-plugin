@@ -8,7 +8,6 @@ import yaml from 'js-yaml';
  */
 class DockerComposatorPluginRenderer extends DefaultRender {
   renderFiles(parentEventId = null) {
-    console.log('R', this.pluginData.components);
     return this.pluginData.components.filter(
       (component) => !component.getContainerId(),
     )
@@ -44,11 +43,9 @@ class DockerComposatorPluginRenderer extends DefaultRender {
 
   formatAttributes(attributes, component) {
     return attributes.reduce((acc, attribute) => {
-      // console.log('Formatting attribute: ', attribute.name, attribute.type, attribute.value);
       if (attribute.type === 'Object') {
         acc[attribute.name] = this.formatAttributes(attribute.value, component);
       } else if (attribute.type === 'Array') {
-        // console.log('R array attribute: ', attribute);
         // acc[attribute.name] = Object.values(this.formatAttributes(attribute.value, component));
         acc[attribute.name] = Array.from(attribute.value);
       } else if (attribute.definition?.type === 'Reference') {
@@ -74,11 +71,8 @@ class DockerComposatorPluginRenderer extends DefaultRender {
   }
 
   insertChildComponentsAttributes(formatted, component) {
-    // console.log('inserting child component attributes');
-
     const childComponents = this.pluginData.getChildren(component.id);
     if (!childComponents.length) {
-      // console.log('there are no children', component.name);
       return;
     }
 

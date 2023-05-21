@@ -1,5 +1,4 @@
 import { Component, ComponentAttribute } from 'leto-modelizer-plugin-core';
-
 /**
  * Lidy listener for Docker Compsoe files.
  */
@@ -40,8 +39,10 @@ class DockerComposatorPluginListener {
    * @param {MapNode} rootNode - The Lidy `root` node.
    */
   exit_root(rootNode) {
-    const type = rootNode.value.type.value;
-    console.log('parsing successful');
+    let type = '';
+    if (rootNode.value.version) {
+      type = 'Docker-Compose';
+    }
     const rootComponent = this.createComponentFromTree(rootNode, type);
     rootComponent.path = this.fileInformation.path;
     rootComponent.definition.childrenTypes.forEach((childType) => {
@@ -51,10 +52,9 @@ class DockerComposatorPluginListener {
 
   createComponentFromTree(node, type) {
     const definition = this.definitions.find((def) => def.type === type);
-
-    const id = node.value.metadata?.value.name?.value || node.value.name?.value
-      || this.pluginData.generateComponentId(definition);
-
+    // const id = node.value.metadata?.value.name?.value || node.value.name?.value
+    // || this.pluginData.generateComponentId(definition);
+    const id = this.fileInformation.path.split('/').pop().split('.')[0];
     delete node.value.metadata?.value.name;
     delete node.value.name; // TODO: improve this
 

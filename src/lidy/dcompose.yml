@@ -1,6 +1,9 @@
 main: root
 
-root: docker-compose
+root: 
+  _oneOf:
+    - docker-compose
+    - service
 
 
 docker-compose:
@@ -8,16 +11,14 @@ docker-compose:
     version: string
     services:
       _mapOf:
-        id: service
-
-id: string
+        string: service
 
 service:
   _map:
     image: string
   _mapFacultative:
-    stdin_open: bool
-    tty: bool
+    stdin_open: boolean
+    tty: boolean
     environment:
       _listOf: string
     ports:
