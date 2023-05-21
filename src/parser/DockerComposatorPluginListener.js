@@ -41,7 +41,7 @@ class DockerComposatorPluginListener {
    */
   exit_root(rootNode) {
     const type = rootNode.value.type.value;
-
+    console.log('parsing successful');
     const rootComponent = this.createComponentFromTree(rootNode, type);
     rootComponent.path = this.fileInformation.path;
     rootComponent.definition.childrenTypes.forEach((childType) => {

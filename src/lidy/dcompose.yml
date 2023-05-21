@@ -3,13 +3,14 @@ main: root
 root: docker-compose
 
 
-########## COMMON STRUCTS (to reuse in SPECS) ##################################
-docker-compose: 
+docker-compose:
   _map:
     version: string
     services:
       _mapOf:
-        any: service
+        id: service
+
+id: string
 
 service:
   _map:

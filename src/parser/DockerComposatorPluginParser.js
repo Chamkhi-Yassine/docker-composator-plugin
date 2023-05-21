@@ -14,6 +14,7 @@ class DockerComposatorPluginParser extends DefaultParser {
      *
      * By default, this function return false only on null/undefined fileInformation.
      */
+    console.log('P testing file parsable');
     return /\.ya?ml$/.test(fileInformation.path);
   }
 
@@ -30,8 +31,10 @@ class DockerComposatorPluginParser extends DefaultParser {
     inputs
       .filter(({ content, path }) => {
         if (content && content.trim() !== '') {
+          console.log('P content is not empty');
           return true;
         }
+        console.log('P content is empty');
         this.pluginData.emitEvent({
           parent: parentEventId,
           type: 'Parser',
@@ -67,7 +70,7 @@ class DockerComposatorPluginParser extends DefaultParser {
         const imports = [];
         const alreadyImported = [];
         const root = [];
-
+        console.log('PARSING: ', input.content);
         lidyParse({
           src_data: input.content,
           listener,

@@ -3,10 +3,11 @@
         "type": "Docker-Compose",
         "model": "DefaultContainer",
         "displayName": "Docker Compose",
-        "icon": "resources/compose",
+        "icon": "compose",
         "description": "Contains the specifications for deploying a set of services",
         "url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
         "isContainer": true,
+        "expanded": true,
         "childrenTypes": [
           "Service"
         ],
@@ -20,7 +21,7 @@
     {
         "type": "Service",
         "model": "DefaultContainer",
-        "icon": "resources/service",
+        "icon": "service",
         "displayName": "Service",
         "parentTypes": ["Docker-Compose"],
         "isContainer": false,
@@ -41,10 +42,6 @@
           {
             "name": "tty",
             "type": "Boolean"
-          },
-          {
-            "name": "ports",
-            "type": "Array"
           },
           {
             "name": "environment",
