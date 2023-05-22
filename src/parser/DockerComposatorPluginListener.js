@@ -40,7 +40,7 @@ class DockerComposatorPluginListener {
    */
   exit_root(rootNode) {
     let type = '';
-    console.log('ROOT NODE VALUE: ', rootNode.value);
+    // console.log('ROOT NODE VALUE: ', rootNode.value);
     if (rootNode.value.version) {
       type = 'Docker-Compose';
       const rootComponent = this.createComponentFromTree(rootNode, type);
@@ -55,9 +55,10 @@ class DockerComposatorPluginListener {
 
   exit_service(serviceNode) {
     const type = 'Service';
-    if (this.components.find((component) => component.value === serviceNode.value)) {
-      return;
-    }
+    console.log('EXITING SERVICE NODE: ', serviceNode);
+    // if (this.components.find((component) => component.value === serviceNode.value)) {
+    //   return;
+    // }
     const serviceComponent = this.createComponentFromTree(serviceNode, type);
     serviceComponent.path = this.fileInformation.path;
     if (!this.childComponentsByType[type]) {
@@ -66,6 +67,11 @@ class DockerComposatorPluginListener {
     this.childComponentsByType[type].push(serviceComponent);
   }
 
+  // enter_service(serviceNode) {
+  //   // serviceNode.value.id = 'service17';
+  //   console.log('Entered service');
+  // }
+
   createComponentFromTree(node, type) {
     const definition = this.definitions.find((def) => def.type === type);
     // const id = node.value.metadata?.value.name?.value || node.value.name?.value
@@ -73,9 +79,21 @@ class DockerComposatorPluginListener {
     let id = 'unnamed_component';
     if (type === 'Docker-Compose') {
       id = this.fileInformation.path?.split('/').pop().split('.')[0];
+      console.log(id);
     }
     if (type === 'Service') {
-      id = node.value.image.value;
+      const newNode = JSON.parse(JSON.stringify(node));
+      console.log('setting id');
+      try {
+        id = Object.keys(newNode.ctx.src.services).find((key) => {
+          const newNodeKeyValue = JSON.stringify(newNode.ctx.src.services[key]);
+          const newNodeCurrent = JSON.stringify(newNode.current);
+          return newNodeKeyValue === newNodeCurrent;
+        });
+      } catch {
+        id = this.fileInformation.path?.split('/').pop().split('.')[0];
+      }
+      console.log(id);
     }
     delete node.value.metadata?.value.name;
     delete node.value.name; // TODO: improve this
@@ -92,8 +110,6 @@ class DockerComposatorPluginListener {
   createAttributesFromTreeNode(parentNode, parentDefinition) {
     return Object.keys(parentNode.value).map((childKey) => {
       const childNode = parentNode.value[childKey];
-      console.log('PARENT NODE: ', parentNode);
-      console.log('CHILD NODE: ', childNode);
       const definition = parentDefinition?.definedAttributes.find(
         ({ name }) => name === (parentNode.type !== 'list' ? childKey : null),
       ); // note: elements inside a list don't have a name, because it has to match the definition
@@ -118,7 +134,6 @@ class DockerComposatorPluginListener {
 
   setParentComponent(parentComponent, childComponents) {
     childComponents?.forEach((childComponent) => {
-      console.log('Setting child');
       childComponent.setReferenceAttribute(parentComponent);
     });
   }

@@ -24,14 +24,14 @@ class DockerComposatorPluginRenderer extends DefaultRender {
         });
         const file = new FileInput({
           path: component.path,
-          content: yaml.dump(this.formaComponent(component)),
+          content: yaml.dump(this.formatComponent(component)),
         });
         this.pluginData.emitEvent({ id, status: 'success' });
         return file;
       });
   }
 
-  formaComponent(component) {
+  formatComponent(component) {
     const formatted = this.formatAttributes(component.attributes, component);
     // formatted = this.insertComponentName(formatted, component);
 
@@ -78,7 +78,7 @@ class DockerComposatorPluginRenderer extends DefaultRender {
 
     childComponents.forEach((childComponent) => {
       formatted.services ||= {};
-      formatted.services[childComponent.id] = this.formaComponent(childComponent);
+      formatted.services[childComponent.id] = this.formatComponent(childComponent);
     });
   }
 }
