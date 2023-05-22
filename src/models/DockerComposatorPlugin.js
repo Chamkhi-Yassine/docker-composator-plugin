@@ -34,10 +34,6 @@ class DockerComposatorPlugin extends DefaultPlugin {
       pluginRenderer: new DockerComposatorPluginRenderer(pluginData),
     });
   }
-
-  getMeta() {
-    return this.pluginData.definition.components;
-  }
 }
 
 export default DockerComposatorPlugin;

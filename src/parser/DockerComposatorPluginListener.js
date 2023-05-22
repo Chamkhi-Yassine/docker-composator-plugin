@@ -40,21 +40,43 @@ class DockerComposatorPluginListener {
    */
   exit_root(rootNode) {
     let type = '';
+    console.log('ROOT NODE VALUE: ', rootNode.value);
     if (rootNode.value.version) {
       type = 'Docker-Compose';
+      const rootComponent = this.createComponentFromTree(rootNode, type);
+      rootComponent.path = this.fileInformation.path;
+      rootComponent.definition.childrenTypes.forEach((childType) => {
+        this.setParentComponent(rootComponent, this.childComponentsByType[childType].filter(
+          (component) => component.path === rootComponent.path,
+        ));
+      });
     }
-    const rootComponent = this.createComponentFromTree(rootNode, type);
-    rootComponent.path = this.fileInformation.path;
-    rootComponent.definition.childrenTypes.forEach((childType) => {
-      this.setParentComponent(rootComponent, this.childComponentsByType[childType]);
-    });
+  }
+
+  exit_service(serviceNode) {
+    const type = 'Service';
+    if (this.components.find((component) => component.value === serviceNode.value)) {
+      return;
+    }
+    const serviceComponent = this.createComponentFromTree(serviceNode, type);
+    serviceComponent.path = this.fileInformation.path;
+    if (!this.childComponentsByType[type]) {
+      this.childComponentsByType[type] = [];
+    }
+    this.childComponentsByType[type].push(serviceComponent);
   }
 
   createComponentFromTree(node, type) {
     const definition = this.definitions.find((def) => def.type === type);
     // const id = node.value.metadata?.value.name?.value || node.value.name?.value
     // || this.pluginData.generateComponentId(definition);
-    const id = this.fileInformation.path.split('/').pop().split('.')[0];
+    let id = 'unnamed_component';
+    if (type === 'Docker-Compose') {
+      id = this.fileInformation.path?.split('/').pop().split('.')[0];
+    }
+    if (type === 'Service') {
+      id = node.value.image.value;
+    }
     delete node.value.metadata?.value.name;
     delete node.value.name; // TODO: improve this
 
@@ -70,16 +92,25 @@ class DockerComposatorPluginListener {
   createAttributesFromTreeNode(parentNode, parentDefinition) {
     return Object.keys(parentNode.value).map((childKey) => {
       const childNode = parentNode.value[childKey];
+      console.log('PARENT NODE: ', parentNode);
+      console.log('CHILD NODE: ', childNode);
       const definition = parentDefinition?.definedAttributes.find(
         ({ name }) => name === (parentNode.type !== 'list' ? childKey : null),
       ); // note: elements inside a list don't have a name, because it has to match the definition
+
+      let attributeValue = {};
+      if (childNode.type === 'map' || childNode.type === 'list') {
+        attributeValue = this.createAttributesFromTreeNode(childNode, definition);
+      } else if (childNode.type === 'string' && (!childKey || /[0-9]+/i.test(childKey))) {
+        return childNode.value;
+      } else {
+        attributeValue = childNode.value;
+      }
       const attribute = new ComponentAttribute({
         name: childKey,
         type: this.lidyToLetoType(childNode.type),
         definition,
-        value: (childNode.type === 'map' || childNode.type === 'list')
-          ? this.createAttributesFromTreeNode(childNode, definition)
-          : childNode.value,
+        value: attributeValue,
       });
       return attribute;
     });
@@ -87,6 +118,7 @@ class DockerComposatorPluginListener {
 
   setParentComponent(parentComponent, childComponents) {
     childComponents?.forEach((childComponent) => {
+      console.log('Setting child');
       childComponent.setReferenceAttribute(parentComponent);
     });
   }
