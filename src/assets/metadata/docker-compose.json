@@ -4,10 +4,7 @@
         "model": "DefaultContainer",
         "displayName": "Docker Compose",
         "icon": "compose",
-        "description": "Contains the specifications for deploying a set of services",
-        "url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
         "isContainer": true,
-        "expanded": true,
         "childrenTypes": [
           "Service"
         ],
@@ -64,5 +61,5 @@
             ]
         }
         ]
-    }
+    } 
 ]
