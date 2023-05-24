@@ -17,8 +17,16 @@ service:
   _map:
     image: string
   _mapFacultative:
+    build:
+      _mapFacultative:
+        context: string
+        dockerfile: string
+    depends_on:
+      _listOf: string
     stdin_open: boolean
     tty: boolean
+    privileged: boolean
+    command: string
     environment:
       _listOf: string
     ports:

@@ -30,15 +30,23 @@
           },
           {
             "name": "image",
-            "type": "String"
+            "type": "String",
+            "required": true
           },
           {
-            "name": "stdin_open",
-            "type": "Boolean"
-          },
-          {
-            "name": "tty",
-            "type": "Boolean"
+            "name": "build",
+            "type": "Object",
+            "expanded": true,
+            "attributes": [
+              {
+                "name": "context",              
+                "type": "String"
+              },
+              {
+                "name": "dockerfile",              
+                "type": "String"
+              }
+            ]
           },
           {
             "name": "environment",
@@ -59,7 +67,28 @@
                 "type": "String"
               }
             ]
-        }
+          },
+          {
+            "name": "depends_on",
+            "type": "Link",
+            "linkRef": "Service"
+          },
+          {
+            "name": "command",
+            "type": "String"
+          },
+          {
+            "name": "stdin_open",
+            "type": "Boolean"
+          },
+          {
+            "name": "privileged",
+            "type": "Boolean"
+          },
+          {
+            "name": "tty",
+            "type": "Boolean"
+          }
         ]
     } 
 ]

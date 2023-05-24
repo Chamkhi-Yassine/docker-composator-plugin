@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  database:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=admin
+  veterinary-config-server:
+    image: veterinary-config-server:0.1
+    build:
+      context: .
+      dockerfile: config-server.Dockerfile
+  veterinary-ms-dev-environment:
+    depends_on:
+      - database
+      - veterinary-config-server
+    image: veterinary-ms-dev-env:0.1
+    build:
+      context: .
+      dockerfile: my-veterinary-ms.Dockerfile
+    ports:
+      - '8092:8092'
+      - '35729:35729'
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://database:5432/veterinary_db
+      - CONFIG_SERVER_HOST=veterinary-config-server
+      - SPRING_CLOUD_CONFIG_URI=http://veterinary-config-server:2001

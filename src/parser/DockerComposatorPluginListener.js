@@ -83,7 +83,6 @@ class DockerComposatorPluginListener {
     delete node.value.metadata?.value.name;
     delete node.value.name; // TODO: improve this
 
-
     const component = new Component({
       id,
       definition,

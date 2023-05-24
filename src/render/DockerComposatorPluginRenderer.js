@@ -34,7 +34,6 @@ class DockerComposatorPluginRenderer extends DefaultRender {
   formatComponent(component) {
     const formatted = this.formatAttributes(component.attributes, component);
     // formatted = this.insertComponentName(formatted, component);
-
     this.insertChildComponentsAttributes(formatted, component);
     // this.insertDefaultValues(formatted, component);
 
