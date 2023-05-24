@@ -45,8 +45,23 @@
               {
                 "name": "dockerfile",              
                 "type": "String"
+              },
+              {
+                "name": "args",
+                "type": "Array",
+                "attributes":[
+                  {
+                    "name": null,
+                    "type": "String"
+                  }
+                ]
               }
             ]
+          },
+          {
+            "name": "depends_on",
+            "type": "Link",
+            "linkRef": "Service"
           },
           {
             "name": "environment",
@@ -69,9 +84,27 @@
             ]
           },
           {
-            "name": "depends_on",
-            "type": "Link",
-            "linkRef": "Service"
+            "name": "healthcheck",
+            "type": "Object",
+            "expanded": true,
+            "attributes": [
+              {
+                "name": "test",
+                "type": "String"
+              },
+              {
+                "name": "interval",
+                "type": "String"
+              },
+              {
+                "name": "timeout",
+                "type": "String"
+              },
+              {
+                "name": "retries",
+                "type": "Number"
+              }
+            ]
           },
           {
             "name": "command",

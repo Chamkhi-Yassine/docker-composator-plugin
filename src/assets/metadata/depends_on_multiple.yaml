@@ -1,0 +1,20 @@
+{
+            "name": "depends_on",
+            "oneOf": [
+              {
+                "type": "Array",
+                "attributes": [
+                  {
+                    "name": null,
+                    "type": "Link",
+                    "linkRef": "Service",
+                    "condition": "String"
+                  }
+                ]
+              },
+              {
+                "type": "Link",
+                "linkRef": "Service"
+              }
+            ]
+          },

@@ -21,8 +21,21 @@ service:
       _mapFacultative:
         context: string
         dockerfile: string
+        args:
+          _listOf: string
     depends_on:
       _listOf: string
+      # _oneOf:
+      #   - _listOf: string
+      #   - _map:
+      #       any:
+      #         condition: string
+    healthcheck:
+      _map: 
+        test: string
+        interval: string
+        timeout: string
+        retries: int
     stdin_open: boolean
     tty: boolean
     privileged: boolean
