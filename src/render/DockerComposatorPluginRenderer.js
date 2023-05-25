@@ -49,6 +49,8 @@ class DockerComposatorPluginRenderer extends DefaultRender {
         acc[attribute.name] = Array.from(attribute.value);
       } else if (attribute.definition?.type === 'Reference') {
         // Drop attribute in rendered file
+      } else if (attribute.definition?.type === 'DependsOnLink') {
+        acc[attribute.name] = this.formatAttributes(attribute.value, component);
       } else {
         acc[attribute.name] = attribute.value;
       }

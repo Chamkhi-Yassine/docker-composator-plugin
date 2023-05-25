@@ -59,6 +59,17 @@
             ]
           },
           {
+            "name": "depends_on_enhanced",
+            "type": "DependsOnLink",
+                  "linkRef": "Service",
+                  "attributes":[
+                    {
+                      "name": "condition",
+                      "type": "String"
+                    }
+                  ]
+          },
+          {
             "name": "depends_on",
             "type": "Link",
             "linkRef": "Service"

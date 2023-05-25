@@ -19,7 +19,8 @@ services:
 
   veterinary-ms:
     depends_on:
-      - veterinary-config-server
+      veterinary-config-server:
+        condition: service_healthy
     image: veterinary-ms:0.2
     build:  
       context: ./Backend/veterinary-ms

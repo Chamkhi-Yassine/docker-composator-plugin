@@ -1,20 +1,22 @@
 {
-            "name": "depends_on",
-            "oneOf": [
-              {
-                "type": "Array",
-                "attributes": [
-                  {
-                    "name": null,
-                    "type": "Link",
-                    "linkRef": "Service",
-                    "condition": "String"
-                  }
-                ]
-              },
-              {
-                "type": "Link",
-                "linkRef": "Service"
-              }
-            ]
-          },
+  "name": "depends_on",
+  "type" : "object",
+  "oneOf" : [
+    {
+      "type" : "Link",
+      "linkRef": "Service"
+    }, 
+    {
+      "type" : "Array",
+      "attributes": [
+        {
+          "name": null,
+          "type": "Link",
+          "linkRef": "Service",
+          "condition": "String"
+        }
+      ]
+      },
+      "additionalProperties":false
+    ]
+}
