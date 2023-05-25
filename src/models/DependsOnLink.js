@@ -1,29 +1,26 @@
-import { FileInformation } from 'leto-modelizer-plugin-core';
+import { ComponentLink } from 'leto-modelizer-plugin-core';
 
 /**
  * Class that links Components together.
  * @augments {FileInformation}
  */
-class DependsOnLink extends FileInformation {
+class DependsOnLink extends ComponentLink {
 /**
  * Default constructor.
  * @param {object} [props={}] - Object that contains all properties to set.
- * @param {DependsOnLinkDefinition} [props.definition] - The definition of the link.
- * @param {ComponentAttribute[]} [props.attributes=[]] - Attributes of Component.
+ * @param {string} [props.source] - Id of component can be the source in a link.
+ * @param {string} [props.target] - Id of component can be the target of the link.
+ * @param {ComponentLinkDefinition} [props.definition] - The definition of the link.
+ * @param {ComponentAttribute[]} [props.attributes=[]] - Attributes of DependsOnLink.
  */
   constructor(props = {
+    attributes: [],
     source: null,
     target: null,
     definition: null,
-    attributes: [],
   }) {
-    super();
-    const {
-      source,
-      target,
-      definition,
-      attributes,
-    } = props;
+    const { attributes, ...rest } = props;
+    super(rest);
 
     /**
      * Use for drawer to get the type of object.
@@ -31,21 +28,6 @@ class DependsOnLink extends FileInformation {
      * @private
      */
     this.__class = 'DependsOnLink';
-    /**
-     * Where the link is created.
-     * @type {object}
-     */
-    this.source = source || null;
-    /**
-     * Target of the link.
-     * @type {object}
-     */
-    this.target = target || null;
-    /**
-     * The definition of the link.
-     * @type {DependsOnLinkDefinition}
-     */
-    this.definition = definition || null;
     /**
      * Attributes of Component.
      * @type {ComponentAttribute[]}

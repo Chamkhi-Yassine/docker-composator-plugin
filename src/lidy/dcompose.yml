@@ -24,12 +24,7 @@ service:
         args:
           _listOf: string
     depends_on:
-      _oneOf:
-        - _listOf: string
-        - _map:
-            string:
-              _map:
-                condition: string
+      _listOf: string
     # networks:
     #   _listOf: string
     healthcheck:
