@@ -4,6 +4,8 @@ root:
   _oneOf:
     - docker-compose
     - service
+    - volume
+    - network
 
 
 docker-compose:
@@ -12,6 +14,12 @@ docker-compose:
     services:
       _mapOf:
         string: service
+    volumes:
+      _mapOf:
+        string: volume
+    networks:
+      _mapOf:
+        string: network
 
 service:
   _map:
@@ -31,6 +39,39 @@ service:
       _listOf: string
     ports:
       _listOf: string
+
+
+volume:
+  _map:
+    driver: string
+  _mapFacultative:
+    driver_opts:
+      _listOf: string
+    labels:
+      _listOf: string
+    external: boolean
+
+
+network:
+  _map:
+    driver: string
+  _mapFacultative:
+    driver_opts:
+      _listOf: string
+    enable_ipv6: boolean
+    ipam:
+      _map:
+      driver: string
+      _mapFacultative:
+        subnet: string
+        ip_range: string
+        gateway: string
+        aux_adresses:
+          _listOf: string
+    options: string
+
+
+
 
 
 

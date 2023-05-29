@@ -6,12 +6,15 @@
         "icon": "compose",
         "isContainer": true,
         "childrenTypes": [
-          "Service"
+          "Service",
+          "Volume",
+          "Network"
         ],
         "attributes": [
             {
                 "name": "version",
-                "type": "String"
+                "type": "String",
+                "required": true
             }
         ]
     },
@@ -90,5 +93,152 @@
             "type": "Boolean"
           }
         ]
-    } 
+    } ,
+    {
+      "type": "Volume",
+      "model": "DefaultContainer",
+      "icon": "volume",
+      "displayName": "Volume",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+          {
+            "name": "parentCompose",
+            "type": "Reference",
+            "containerRef": "Docker-Compose"
+          },
+          {
+            "name": "driver",              
+            "type": "String",
+            "required": true
+          },
+          {
+            "name": "driver_opts",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "labels",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "external",
+            "type": "Boolean"
+          }
+      ]
+    },
+    {
+      "type": "Network",
+      "model": "DefaultContainer",
+      "icon": "network",
+      "displayName": "Network",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+          {
+            "name": "parentCompose",
+            "type": "Reference",
+            "containerRef": "Docker-Compose"
+            
+          },
+          {
+            "name": "driver",              
+            "type": "String",
+            "required": true
+          },
+          {
+            "name": "driver_opts",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "enable_ipv6",
+            "type": "Boolean"
+          },
+          {
+            "name": "ipam",
+            "type": "Object",
+            "expanded": true,
+            "attributes": [
+              {
+                "name": "driver",              
+                "type": "String"
+              },
+              {
+                "name": "config",              
+                "type": "Object",
+                "attributes": [
+                  {
+                    "name": "subnet",              
+                    "type": "String"
+                  },
+                  {
+                    "name": "ip_range",              
+                    "type": "String"
+                  },
+                  {
+                    "name": "gateway",              
+                    "type": "Array"
+                  },
+                  {
+                    "name": "aux_adresses",              
+                    "type": "Array",
+                    "attributes":[
+                      {
+                        "name": "host",
+                        "type": "String"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                 "name": "options",
+                 "type":"Array",
+                 "attributes":[
+                  {
+                    "name": null,              
+                    "type": "String"
+                  }
+                 ] 
+              }
+            ]
+          },
+          
+          {
+            "name": "labels",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "external",
+            "type": "Boolean"
+          }
+
+
+        
+        ]
+    }
+
 ]
