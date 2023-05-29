@@ -63,7 +63,6 @@ class DockerComposatorPluginParser extends DefaultParser {
           this.pluginData.definitions.components
         );
         
-        console.log('Starting Lidy parsing...');
         lidyParse({
           src_data: input.content,
           listener,
@@ -78,8 +77,6 @@ class DockerComposatorPluginParser extends DefaultParser {
         });
        
 
-        console.log('Parsed components:', listener.components);
-        console.log('Lidy parsing completed.');
 
         this.pluginData.components.push(...listener.components);
         this.pluginData.emitEvent({ id, status: 'success' });

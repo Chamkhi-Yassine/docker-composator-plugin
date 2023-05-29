@@ -76,7 +76,6 @@ class DockerComposatorPluginRenderer extends DefaultRender {
     }
     
     childComponents.forEach((childComponent) => {
-      console.log('insertChildComponent', childComponent);
       switch (childComponent.definition.type) {
         case "Service":
             formatted.services ||= {};

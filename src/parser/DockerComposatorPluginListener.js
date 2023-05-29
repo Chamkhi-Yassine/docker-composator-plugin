@@ -44,14 +44,16 @@ class DockerComposatorPluginListener {
    * @param {MapNode} rootNode - The Lidy `root` node.
    */
   exit_root(rootNode) {
-    console.log('listener', rootNode)
     let type = '';
-    console.log(rootNode);
     if (rootNode.value.version) {
       type = 'Docker-Compose';
       const rootComponent = this.createComponentFromTree(rootNode, type);
       rootComponent.path = this.fileInformation.path;
       rootComponent.definition.childrenTypes.forEach((childType) => {
+    
+        if (!this.childComponentsByType[childType]) {
+          this.childComponentsByType[childType] = [];
+        }
         this.setParentComponent(rootComponent, this.childComponentsByType[childType].filter(
           (component) => component.path === rootComponent.path,
         ));
@@ -73,7 +75,6 @@ class DockerComposatorPluginListener {
   }
 
   exit_volume(volumeNode) {
-    console.log('Exit Volume');
     const type = 'Volume';
     if(volumeNode){
       const volumeComponent = this.createComponentFromTree(volumeNode, type);
@@ -110,7 +111,6 @@ class DockerComposatorPluginListener {
       const nodeObject = JSON.parse(JSON.stringify(node));
       try {
         id = Object.keys(nodeObject.ctx.src.services).find((key) => JSON.stringify(nodeObject.ctx.src.services[key]) === JSON.stringify(nodeObject.current));
-        console.log("service",id);
       } catch {
         id = this.fileInformation.path?.split('/').pop().split('.')[0];
       }
@@ -119,38 +119,31 @@ class DockerComposatorPluginListener {
       const nodeObject = JSON.parse(JSON.stringify(node));
       try {
         id = Object.keys(nodeObject.ctx.src.volumes).find((key) => JSON.stringify(nodeObject.ctx.src.volumes[key]) === JSON.stringify(nodeObject.current));
-        console.log("volume",id);
       } catch {
         id = this.fileInformation.path?.split('/').pop().split('.')[0];
-        console.log("volume",id);
       }
     }
     if (type === 'Network') {
       const nodeObject = JSON.parse(JSON.stringify(node));
       try {
         id = Object.keys(nodeObject.ctx.src.networks).find((key) => JSON.stringify(nodeObject.ctx.src.networks[key]) === JSON.stringify(nodeObject.current));
-        console.log("network",id);
       } catch {
         id = this.fileInformation.path?.split('/').pop().split('.')[0];
-        console.log("network",id);
       }
     }
-    console.log('creat comp from tree',node)
     delete node?.value?.metadata?.value.name;
     delete node?.value?.name; // TODO: improve this
-    console.log('create component');
     const component = new Component({
       id,
       definition,
       attributes: this.createAttributesFromTreeNode(node, definition),
     });
-
+    
     this.components.push(component);
     return component;
   }
 
   createAttributesFromTreeNode(parentNode, parentDefinition) {
-    console.log('create attributes from', parentNode, parentDefinition);
     return Object.keys(parentNode.value).map((childKey) => {
       const childNode = parentNode.value[childKey];
       const definition = parentDefinition?.definedAttributes.find(

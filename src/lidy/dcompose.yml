@@ -11,6 +11,7 @@ root:
 docker-compose:
   _map:
     version: string
+  _mapFacultative:
     services:
       _mapOf:
         string: service
