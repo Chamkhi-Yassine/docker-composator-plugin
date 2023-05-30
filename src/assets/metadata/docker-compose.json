@@ -17,7 +17,7 @@
     },
     {
         "type": "Service",
-        "model": "DefaultContainer",
+        "model": "DefaultModel",
         "icon": "service",
         "displayName": "Service",
         "parentTypes": ["Docker-Compose"],

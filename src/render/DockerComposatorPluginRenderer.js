@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   DefaultRender,
   FileInput,
@@ -47,7 +48,8 @@ class DockerComposatorPluginRenderer extends DefaultRender {
         // acc[attribute.name] = Object.values(this.formatAttributes(attribute.value, component));
 
         if (attribute.name === 'depends_on') {
-          acc[attribute.name] = Object.values(this.formatAttributes(attribute.value, component));
+          // acc[attribute.name] = Object.values(this.formatAttributes(attribute.value, component));
+          acc[attribute.name] = this.formatDependsOnAttributes(attribute);
         } else {
           acc[attribute.name] = Array.from(attribute.value);
         }
@@ -58,6 +60,15 @@ class DockerComposatorPluginRenderer extends DefaultRender {
       }
       return acc;
     }, {});
+  }
+
+  formatDependsOnAttributes(attribute) {
+    const subAttributes = {};
+    attribute.value.forEach((childObject) => {
+      subAttributes[childObject.value[0].value] = {};
+      subAttributes[childObject.value[0].value][childObject.value[1].name] = childObject.value[1].value;
+    });
+    return subAttributes;
   }
 
   insertComponentName(formatted, component) {
