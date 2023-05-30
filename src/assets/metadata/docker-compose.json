@@ -20,7 +20,7 @@
     },
     {
         "type": "Service",
-        "model": "DefaultContainer",
+        "model": "DefaultModel",
         "icon": "service",
         "displayName": "Service",
         "parentTypes": ["Docker-Compose"],
@@ -108,7 +108,7 @@
     } ,
     {
       "type": "Volume",
-      "model": "DefaultContainer",
+      "model": "DefaultModel",
       "icon": "volume",
       "displayName": "Volume",
       "parentTypes": ["Docker-Compose"],
@@ -120,7 +120,7 @@
             "containerRef": "Docker-Compose"
           },
           {
-            "name": "driver_vol",              
+            "name": "driver",              
             "type": "String",
             "required": true
           },
@@ -152,7 +152,7 @@
     },
     {
       "type": "Network",
-      "model": "DefaultContainer",
+      "model": "DefaultModel",
       "icon": "network",
       "displayName": "Network",
       "parentTypes": ["Docker-Compose"],
@@ -165,7 +165,7 @@
             
           },
           {
-            "name": "driver_net",              
+            "name": "driver",              
             "type": "String",
             "required": true
           },
