@@ -20,7 +20,6 @@ class DockerComposatorPluginParser extends DefaultParser {
 
   /**
    * Convert the content of files into Components.
-   *
    * @param {FileInput[]} [inputs=[]] - Data you want to parse.
    * @param {string} [parentEventId=null] - Parent event id.
    */

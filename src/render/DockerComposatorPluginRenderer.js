@@ -8,13 +8,10 @@ import yaml from 'js-yaml';
  */
 class DockerComposatorPluginRenderer extends DefaultRender {
   renderFiles(parentEventId = null) {
-    console.log('R', this.pluginData.components);
     return this.pluginData.components.filter(
       (component) => !component.getContainerId(),
     )
       .map((component) => {
-        console.log('R', component);
-
         const id = this.pluginData.emitEvent({
           parent: parentEventId,
           type: 'Render',
@@ -29,21 +26,16 @@ class DockerComposatorPluginRenderer extends DefaultRender {
           path: component.path,
           content: yaml.dump(this.formatComponent(component)),
         });
-        console.log('R', file);
-
         this.pluginData.emitEvent({ id, status: 'success' });
         return file;
       });
   }
 
   formatComponent(component) {
-    console.log('R', component);
     const formatted = this.formatAttributes(component.attributes, component);
-    console.log('R', formatted);
     // formatted = this.insertComponentName(formatted, component);
     this.insertChildComponentsAttributes(formatted, component);
     // this.insertDefaultValues(formatted, component);
-    console.log('R', formatted);
     return formatted;
   }
 
@@ -69,7 +61,6 @@ class DockerComposatorPluginRenderer extends DefaultRender {
   }
 
   insertComponentName(formatted, component) {
-    console.log('inserting name', formatted);
     formatted = this.insertFront(formatted, 'name', component.id);
     return formatted;
   }
@@ -84,7 +75,6 @@ class DockerComposatorPluginRenderer extends DefaultRender {
 
   insertChildComponentsAttributes(formatted, component) {
     const childComponents = this.pluginData.getChildren(component.id);
-    console.log('R', childComponents);
     if (!childComponents.length) {
       return;
     }

@@ -10,10 +10,8 @@ import Component from './DockerComposatorPluginComponent';
 class DockerComposatorData extends DefaultData {
   /**
    * Create new component.
-   *
    * @param {ComponentDefinition} definition - Component definition.
    * @param {string} [folder=''] - Folder path.
-   * @param {string} [fileName] - File name.
    * @returns {string} Component id.
    */
   addComponent(definition, folder = '') {
@@ -37,10 +35,10 @@ class DockerComposatorData extends DefaultData {
       );
       if (dependsOnAttribute) {
         dependsOnAttribute.value.forEach((item) => {
-          console.log(this.definitions.links);
           const definition = this.definitions.links.find(
             ({ attributeRef }) => attributeRef === 'service',
           );
+
           links.push(new ComponentLink({
             definition,
             source: component.id,
