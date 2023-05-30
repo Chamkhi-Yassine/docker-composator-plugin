@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  Service_1:
+    image: front
+    depends_on:
+      Service_2:
+        condition: service_healthy
+      Service_3:
+        condition: service_started
+    volumes:
+      - lcoal-vol
+  Service_2:
+    image: backend
+    depends_on:
+      Service_3:
+        condition: service_something_else
+    networks:
+      - WAN1
+  Service_3:
+    image: bch
+    networks:
+      - WAN1
+      - PAN
+volumes:
+  lcoal-vol:
+    driver: qkjsd
+    external: true
+networks:
+  WAN1:
+    driver: kqjsd

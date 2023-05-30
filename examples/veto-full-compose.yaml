@@ -1,43 +1,50 @@
 version: '3.9'
-
 services:
-
   database:
     image: postgres
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=admin
-
-
   veterinary-config-server:
     image: veterinary-config-server:0.2
-    build: 
+    build:
       context: ./Backend/config-server
       dockerfile: ./Backend/config-server/Dockerfile
-
-
+    networks:
+      - LAN1
   veterinary-ms:
-    depends_on_enhanced:
+    image: veterinary-ms:0.2
+    build:
+      context: ./Backend/veterinary-ms
+    depends_on:
       veterinary-config-server:
         condition: service_healthy
-    image: veterinary-ms:0.2
-    build:  
-      context: ./Backend/veterinary-ms
+      database:
+        condition: service_healthy
     environment:
       - DATASOURCE_URL=jdbc:postgresql://database:5432/veterinary_db
       - CONFIG_SERVER_HOST=veterinary-config-server
       - SPRING_CLOUD_CONFIG_URI=http://veterinary-config-server:2001
-
-
+    networks:
+      - LAN1
+      - WAN1
+    stdin_open: true
+    privileged: true
+    tty: true
   veterinary-frontend:
-    depends_on:
-      - veterinary-ms
     image: my-veterinary-ui:0.1
-    build: 
+    build:
       context: ./Frontend
+    depends_on:
+      veterinary-ms:
+        condition: service_started
     ports:
-      - 9090:9090       
+      - '9090:9090'
+    networks:
+      - PAN
     stdin_open: true
     tty: true
-  
+networks:
+  LAN1:
+    driver: wdffd

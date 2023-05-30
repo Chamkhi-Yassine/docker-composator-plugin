@@ -83,4 +83,5 @@ network:
         gateway: string
         aux_adresses:
           _listOf: string
-    options: string
+    options: 
+      _listOf: string
