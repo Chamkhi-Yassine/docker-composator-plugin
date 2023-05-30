@@ -108,7 +108,7 @@
             "containerRef": "Docker-Compose"
           },
           {
-            "name": "driver",              
+            "name": "driver_vol",              
             "type": "String",
             "required": true
           },
@@ -153,7 +153,7 @@
             
           },
           {
-            "name": "driver",              
+            "name": "driver_net",              
             "type": "String",
             "required": true
           },

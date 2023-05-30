@@ -86,8 +86,8 @@ class DockerComposatorPluginRenderer extends DefaultRender {
             formatted.volumes[childComponent.id] = this.formatComponent(childComponent);
           break;
         case "Network":
-            formatted.volumes ||= {};
-            formatted.volumes[childComponent.id] = this.formatComponent(childComponent);
+            formatted.networks ||= {};
+            formatted.networks[childComponent.id] = this.formatComponent(childComponent);
           break;
         default:
           break;

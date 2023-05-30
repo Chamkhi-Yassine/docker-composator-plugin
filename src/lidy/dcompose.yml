@@ -44,7 +44,7 @@ service:
 
 volume:
   _map:
-    driver: string
+    driver_vol: string
   _mapFacultative:
     driver_opts:
       _listOf: string
@@ -55,7 +55,7 @@ volume:
 
 network:
   _map:
-    driver: string
+    driver_net: string
   _mapFacultative:
     driver_opts:
       _listOf: string
