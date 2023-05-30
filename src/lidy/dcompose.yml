@@ -24,11 +24,12 @@ service:
         args:
           _listOf: string
     depends_on:
-      _listOf: string
-    # networks:
-    #   _listOf: string
+      _mapOf:
+        string:
+          _mapFacultative:
+            condition: string
     healthcheck:
-      _map: 
+      _mapFacultative:
         test: string
         interval: string
         timeout: string
@@ -42,7 +43,7 @@ service:
     ports:
       _listOf: string
 
-
+  
 
 
 

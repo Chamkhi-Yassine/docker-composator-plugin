@@ -7,23 +7,41 @@ import {
 } from 'leto-modelizer-plugin-core';
 import DependsOnLink from './DependsOnLink';
 import DependsOnLinkDefinition from './DependsOnLinkDefinition';
+import Component from './DockerComposatorPluginComponent';
 
 class DockerComposatorData extends DefaultData {
+  /**
+   * Create new component.
+   *
+   * @param {ComponentDefinition} definition - Component definition.
+   * @param {string} [folder=''] - Folder path.
+   * @param {string} [fileName] - File name.
+   * @returns {string} Component id.
+   */
+  addComponent(definition, folder = '') {
+    const id = this.generateComponentId(definition);
+    const component = new Component({
+      id,
+      definition,
+      path: `${folder}${id}.yaml`,
+    });
+    this.components.push(component);
+
+    return id;
+  }
+
   getLinks() {
     const links = [];
-
     this.definitions.links.forEach((definition) => {
       const components = this.getComponentsByType(definition.sourceRef);
-
       components.forEach((component) => {
         const attribute = component.getAttributeByName(definition.attributeRef);
-
         if (!attribute) {
           return;
         }
-
         attribute.value.forEach((value) => {
           if (definition instanceof ComponentLinkDefinition) {
+            // definition.attributeRef = value;
             links.push(new ComponentLink({
               definition,
               source: component.id,
@@ -39,6 +57,7 @@ class DockerComposatorData extends DefaultData {
         });
       });
     });
+
     return links.concat(this.getWorkflowLinks());
   }
 
@@ -75,7 +94,7 @@ class DockerComposatorData extends DefaultData {
         });
 
         this.definitions.links.push(linkDefinition);
-      } else if (attributeDefinition.type === 'Object') {
+      } else if (attributeDefinition.type === 'Object' || attributeDefinition.type === 'Array') {
         this.__setLinkDefinitions(type, attributeDefinition.definedAttributes);
       }
     });

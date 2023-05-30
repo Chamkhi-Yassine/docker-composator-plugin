@@ -18,7 +18,7 @@ services:
 
 
   veterinary-ms:
-    depends_on:
+    depends_on_enhanced:
       veterinary-config-server:
         condition: service_healthy
     image: veterinary-ms:0.2

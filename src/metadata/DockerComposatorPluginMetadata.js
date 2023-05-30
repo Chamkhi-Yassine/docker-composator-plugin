@@ -12,7 +12,6 @@ import jsonComponents from '../assets/metadata';
 class DockerComposatorPluginMetadata extends DefaultMetadata {
   /**
    * Validate the provided metadata with a schemas.
-   *
    * @returns {boolean} True if metadata is valid.
    */
   validate() {
@@ -30,8 +29,6 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
 
   /**
    * Convert a JSON component definition object to a KubernetesComponentDefinition.
-   *
-   * @param {string} apiVersion - Kubernetes API version of the component definition.
    * @param {object} component - JSON component definition object to parse.
    * @returns {ComponentDefinition} Parsed component definition.
    */
@@ -47,7 +44,6 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
 
   /**
    * Convert a JSON attribute object to a ComponentAttributeDefinition.
-   *
    * @param {object} attribute - JSON attribute definition object to parse.
    * @returns {ComponentAttributeDefinition} Parsed attribute definition.
    */

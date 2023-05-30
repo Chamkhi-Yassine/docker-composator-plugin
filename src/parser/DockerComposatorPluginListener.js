@@ -1,25 +1,25 @@
+/* eslint-disable no-restricted-imports */
 /* eslint-disable max-len */
-import { Component, ComponentAttribute } from 'leto-modelizer-plugin-core';
+import { ComponentAttribute, ComponentAttributeDefinition, ComponentLinkDefinition } from 'leto-modelizer-plugin-core';
+import Component from '../models/DockerComposatorPluginComponent';
+
 /**
- * Lidy listener for Docker Compsoe files.
+ * Lidy listener for Docker Compose files.
  */
 class DockerComposatorPluginListener {
-/**
+  /**
    * Default constructor.
-   *
    * @param {FileInformation} fileInformation - File information.
    * @param {ComponentDefinition[]} [definitions=[]] - All component definitions.
    */
   constructor(fileInformation, definitions = []) {
     /**
      * File information.
-     *
      * @type {FileInformation}
      */
     this.fileInformation = fileInformation;
     /**
      * Array of component definitions.
-     *
      * @type {ComponentDefinition[]}
      */
     this.definitions = definitions;
@@ -27,6 +27,10 @@ class DockerComposatorPluginListener {
      * Parsed components.
      */
     this.components = [];
+    /**
+     * Parsed Link Definitions.
+     */
+    this.linkDefinitions = [];
     /**
      * Parsed subcomponent.
      */
@@ -36,7 +40,6 @@ class DockerComposatorPluginListener {
   /**
    * Function called when attribute `root` is parsed.
    * Create a component from the parsed root element.
-   *
    * @param {MapNode} rootNode - The Lidy `root` node.
    */
   exit_root(rootNode) {
@@ -100,13 +103,17 @@ class DockerComposatorPluginListener {
       ); // note: elements inside a list don't have a name, because it has to match the definition
 
       let attributeValue = {};
-      if (childNode.type === 'map' || childNode.type === 'list') {
+      if (childKey === 'depends_on') {
+        return this.createDependsOnAttribute(childNode, childKey, definition);
+      }
+      if ((childNode.type === 'map' || childNode.type === 'list')) {
         attributeValue = this.createAttributesFromTreeNode(childNode, definition);
       } else if (childNode.type === 'string' && (!childKey || /[0-9]+/i.test(childKey))) {
         return childNode.value;
       } else {
         attributeValue = childNode.value;
       }
+
       const attribute = new ComponentAttribute({
         name: childKey,
         type: this.lidyToLetoType(childNode.type),
@@ -121,6 +128,60 @@ class DockerComposatorPluginListener {
     childComponents?.forEach((childComponent) => {
       childComponent.setReferenceAttribute(parentComponent);
     });
+  }
+
+  createDependsOnAttribute(childNode, childKey, definition) {
+    const dependsOnValue = [];
+
+    childNode.childs.forEach((child, i = 0) => {
+      // definition.definedAttributes.push(definition.definedAttributes[0]);
+
+      const linkDefinition = definition.definedAttributes[0].definedAttributes.find(
+        ({ name }) => name === 'service',
+      );
+      const newLinkName = `service${i}`;
+      const newLinkAttribute = new ComponentAttributeDefinition({
+        ...linkDefinition,
+        name: newLinkName,
+      });
+      const newLinkDefinition = new ComponentLinkDefinition({
+        type: newLinkAttribute.linkType,
+        attributeRef: newLinkAttribute.name,
+        sourceRef: 'Service',
+        targetRef: newLinkAttribute.linkRef,
+        color: newLinkAttribute.linkColor,
+        width: newLinkAttribute.linkWidth,
+        dashStyle: newLinkAttribute.linkDashStyle,
+      });
+      this.linkDefinitions.push(newLinkDefinition);
+
+      dependsOnValue.push(new ComponentAttribute({
+        name: null,
+        type: 'Object',
+        value: [
+          new ComponentAttribute({
+            name: newLinkName,
+            type: 'Array',
+            definition: newLinkAttribute,
+            value: [child.key.value],
+          }),
+          new ComponentAttribute({
+            name: 'condition',
+            type: 'String',
+            value: child.value.condition.value,
+          }),
+        ],
+      }));
+      i += 1;
+    });
+
+    const dependsOnComp = new ComponentAttribute({
+      name: childKey,
+      type: 'Array',
+      definition,
+      value: dependsOnValue,
+    });
+    return dependsOnComp;
   }
 
   lidyToLetoType(lidyType) {
