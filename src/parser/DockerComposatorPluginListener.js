@@ -132,6 +132,8 @@ class DockerComposatorPluginListener {
 
   createDependsOnAttribute(id, childNode, childKey, definition) {
     const dependsOnValue = [];
+    // For each child object of the depends_on array, create its attributes.
+    // Each child has two attributes: service and condition.
     childNode.childs.forEach((child, i = 0) => {
       const linkDefinition = definition.definedAttributes[0].definedAttributes.find(
         ({ type }) => type === 'Link',
@@ -142,17 +144,6 @@ class DockerComposatorPluginListener {
         ...linkDefinition,
         name: newLinkName,
       });
-
-      // const newLinkDefinition = new ComponentLinkDefinition({
-      //   type: newLinkAttribute.linkType,
-      //   attributeRef: newLinkAttribute.name,
-      //   sourceRef: 'Service',
-      //   targetRef: newLinkAttribute.linkRef,
-      //   color: newLinkAttribute.linkColor,
-      //   width: newLinkAttribute.linkWidth,
-      //   dashStyle: newLinkAttribute.linkDashStyle,
-      // });
-      // this.linkDefinitions.push(newLinkDefinition);
 
       dependsOnValue.push(new ComponentAttribute({
         name: null,
@@ -171,16 +162,16 @@ class DockerComposatorPluginListener {
           }),
         ],
       }));
+      // Increment depends_on service link name for the current component
       i += 1;
     });
-
-    const dependsOnComp = new ComponentAttribute({
+    // Return the final depends_on component with all its children properly set
+    return new ComponentAttribute({
       name: childKey,
       type: 'Array',
       definition,
       value: dependsOnValue,
     });
-    return dependsOnComp;
   }
 
   lidyToLetoType(lidyType) {
