@@ -85,7 +85,6 @@ class DockerComposatorPluginParser extends DefaultParser {
         console.log(alreadyImported);
         console.log(root);
 
-        this.pluginData.definitions.links.push(...listener.linkDefinitions);
         this.pluginData.components.push(...listener.components);
         this.pluginData.emitEvent({ id, status: 'success' });
       });

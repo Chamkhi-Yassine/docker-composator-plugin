@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable max-len */
-import { ComponentAttribute, ComponentAttributeDefinition, ComponentLinkDefinition } from 'leto-modelizer-plugin-core';
+import { ComponentAttribute, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
 import Component from '../models/DockerComposatorPluginComponent';
 
 /**
@@ -89,13 +89,13 @@ class DockerComposatorPluginListener {
     const component = new Component({
       id,
       definition,
-      attributes: this.createAttributesFromTreeNode(node, definition),
+      attributes: this.createAttributesFromTreeNode(id, node, definition),
     });
     this.components.push(component);
     return component;
   }
 
-  createAttributesFromTreeNode(parentNode, parentDefinition) {
+  createAttributesFromTreeNode(id, parentNode, parentDefinition) {
     return Object.keys(parentNode.value).map((childKey) => {
       const childNode = parentNode.value[childKey];
       const definition = parentDefinition?.definedAttributes.find(
@@ -104,10 +104,10 @@ class DockerComposatorPluginListener {
 
       let attributeValue = {};
       if (childKey === 'depends_on') {
-        return this.createDependsOnAttribute(childNode, childKey, definition);
+        return this.createDependsOnAttribute(id, childNode, childKey, definition);
       }
       if ((childNode.type === 'map' || childNode.type === 'list')) {
-        attributeValue = this.createAttributesFromTreeNode(childNode, definition);
+        attributeValue = this.createAttributesFromTreeNode(id, childNode, definition);
       } else if (childNode.type === 'string' && (!childKey || /[0-9]+/i.test(childKey))) {
         return childNode.value;
       } else {
@@ -130,30 +130,29 @@ class DockerComposatorPluginListener {
     });
   }
 
-  createDependsOnAttribute(childNode, childKey, definition) {
+  createDependsOnAttribute(id, childNode, childKey, definition) {
     const dependsOnValue = [];
-
     childNode.childs.forEach((child, i = 0) => {
-      // definition.definedAttributes.push(definition.definedAttributes[0]);
-
       const linkDefinition = definition.definedAttributes[0].definedAttributes.find(
-        ({ name }) => name === 'service',
+        ({ type }) => type === 'Link',
       );
-      const newLinkName = `service${i}`;
-      const newLinkAttribute = new ComponentAttributeDefinition({
+
+      const newLinkName = `service_${id}_${i}`;
+      const newLinkAttributeDefinition = new ComponentAttributeDefinition({
         ...linkDefinition,
         name: newLinkName,
       });
-      const newLinkDefinition = new ComponentLinkDefinition({
-        type: newLinkAttribute.linkType,
-        attributeRef: newLinkAttribute.name,
-        sourceRef: 'Service',
-        targetRef: newLinkAttribute.linkRef,
-        color: newLinkAttribute.linkColor,
-        width: newLinkAttribute.linkWidth,
-        dashStyle: newLinkAttribute.linkDashStyle,
-      });
-      this.linkDefinitions.push(newLinkDefinition);
+
+      // const newLinkDefinition = new ComponentLinkDefinition({
+      //   type: newLinkAttribute.linkType,
+      //   attributeRef: newLinkAttribute.name,
+      //   sourceRef: 'Service',
+      //   targetRef: newLinkAttribute.linkRef,
+      //   color: newLinkAttribute.linkColor,
+      //   width: newLinkAttribute.linkWidth,
+      //   dashStyle: newLinkAttribute.linkDashStyle,
+      // });
+      // this.linkDefinitions.push(newLinkDefinition);
 
       dependsOnValue.push(new ComponentAttribute({
         name: null,
@@ -162,7 +161,7 @@ class DockerComposatorPluginListener {
           new ComponentAttribute({
             name: newLinkName,
             type: 'Array',
-            definition: newLinkAttribute,
+            definition: newLinkAttributeDefinition,
             value: [child.key.value],
           }),
           new ComponentAttribute({
