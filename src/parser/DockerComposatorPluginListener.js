@@ -18,21 +18,20 @@ class DockerComposatorPluginListener {
      * @type {FileInformation}
      */
     this.fileInformation = fileInformation;
+
     /**
      * Array of component definitions.
      * @type {ComponentDefinition[]}
      */
     this.definitions = definitions;
+
     /**
      * Parsed components.
      */
     this.components = [];
+
     /**
-     * Parsed Link Definitions.
-     */
-    this.linkDefinitions = [];
-    /**
-     * Parsed subcomponent.
+     * Parsed subcomponents.
      */
     this.childComponentsByType = {};
   }
@@ -49,6 +48,9 @@ class DockerComposatorPluginListener {
       const rootComponent = this.createComponentFromTree(rootNode, type);
       rootComponent.path = this.fileInformation.path;
       rootComponent.definition.childrenTypes.forEach((childType) => {
+        if (!this.childComponentsByType[childType]) {
+          this.childComponentsByType[childType] = [];
+        }
         this.setParentComponent(rootComponent, this.childComponentsByType[childType].filter(
           (component) => component.path === rootComponent.path,
         ));
@@ -58,22 +60,48 @@ class DockerComposatorPluginListener {
 
   exit_service(serviceNode) {
     const type = 'Service';
-    const serviceComponent = this.createComponentFromTree(serviceNode, type);
-    serviceComponent.path = this.fileInformation.path;
-    if (!this.childComponentsByType[type]) {
-      this.childComponentsByType[type] = [];
+    if (serviceNode) {
+      const serviceComponent = this.createComponentFromTree(serviceNode, type);
+      serviceComponent.path = this.fileInformation.path;
+      if (!this.childComponentsByType[type]) {
+        this.childComponentsByType[type] = [];
+      }
+      this.childComponentsByType[type].push(serviceComponent);
     }
-    this.childComponentsByType[type].push(serviceComponent);
+  }
+
+  exit_volume(volumeNode) {
+    const type = 'Volume';
+    if (volumeNode) {
+      const volumeComponent = this.createComponentFromTree(volumeNode, type);
+      volumeComponent.path = this.fileInformation.path;
+      if (!this.childComponentsByType[type]) {
+        this.childComponentsByType[type] = [];
+      }
+      this.childComponentsByType[type].push(volumeComponent);
+    }
+  }
+
+  exit_network(networkNode) {
+    const type = 'Network';
+    if (networkNode) {
+      const networkComponent = this.createComponentFromTree(networkNode, type);
+      networkComponent.path = this.fileInformation.path;
+      if (!this.childComponentsByType[type]) {
+        this.childComponentsByType[type] = [];
+      }
+      this.childComponentsByType[type].push(networkComponent);
+    }
   }
 
   createComponentFromTree(node, type) {
     const definition = this.definitions.find((def) => def.type === type);
-    // const id = node.value.metadata?.value.name?.value || node.value.name?.value
-    // || this.pluginData.generateComponentId(definition);
     let id = 'unnamed_component';
     if (type === 'Docker-Compose') {
       id = this.fileInformation.path?.split('/').pop().split('.')[0];
       delete node.value.services;
+      delete node.value.volumes;
+      delete node.value.networks;
     }
     if (type === 'Service') {
       const nodeObject = JSON.parse(JSON.stringify(node));
@@ -83,14 +111,30 @@ class DockerComposatorPluginListener {
         id = this.fileInformation.path?.split('/').pop().split('.')[0];
       }
     }
-    delete node.value.metadata?.value.name;
-    delete node.value.name; // TODO: improve this
-
+    if (type === 'Volume') {
+      const nodeObject = JSON.parse(JSON.stringify(node));
+      try {
+        id = Object.keys(nodeObject.ctx.src.volumes).find((key) => JSON.stringify(nodeObject.ctx.src.volumes[key]) === JSON.stringify(nodeObject.current));
+      } catch {
+        id = this.fileInformation.path?.split('/').pop().split('.')[0];
+      }
+    }
+    if (type === 'Network') {
+      const nodeObject = JSON.parse(JSON.stringify(node));
+      try {
+        id = Object.keys(nodeObject.ctx.src.networks).find((key) => JSON.stringify(nodeObject.ctx.src.networks[key]) === JSON.stringify(nodeObject.current));
+      } catch {
+        id = this.fileInformation.path?.split('/').pop().split('.')[0];
+      }
+    }
+    delete node?.value?.metadata?.value.name;
+    delete node?.value?.name; // TODO: improve this
     const component = new Component({
       id,
       definition,
       attributes: this.createAttributesFromTreeNode(id, node, definition),
     });
+
     this.components.push(component);
     return component;
   }
@@ -100,7 +144,7 @@ class DockerComposatorPluginListener {
       const childNode = parentNode.value[childKey];
       const definition = parentDefinition?.definedAttributes.find(
         ({ name }) => name === (parentNode.type !== 'list' ? childKey : null),
-      ); // note: elements inside a list don't have a name, because it has to match the definition
+      );
 
       let attributeValue = {};
       if (childKey === 'depends_on') {
@@ -120,6 +164,7 @@ class DockerComposatorPluginListener {
         definition,
         value: attributeValue,
       });
+
       return attribute;
     });
   }

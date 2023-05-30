@@ -91,8 +91,22 @@ class DockerComposatorPluginRenderer extends DefaultRender {
     }
 
     childComponents.forEach((childComponent) => {
-      formatted.services ||= {};
-      formatted.services[childComponent.id] = this.formatComponent(childComponent);
+      switch (childComponent.definition.type) {
+        case 'Service':
+          formatted.services ||= {};
+          formatted.services[childComponent.id] = this.formatComponent(childComponent);
+          break;
+        case 'Volume':
+          formatted.volumes ||= {};
+          formatted.volumes[childComponent.id] = this.formatComponent(childComponent);
+          break;
+        case 'Network':
+          formatted.networks ||= {};
+          formatted.networks[childComponent.id] = this.formatComponent(childComponent);
+          break;
+        default:
+          break;
+      }
     });
   }
 }
