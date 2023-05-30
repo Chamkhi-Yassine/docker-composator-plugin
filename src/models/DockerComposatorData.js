@@ -5,8 +5,6 @@ import {
   ComponentLink,
   ComponentLinkDefinition,
 } from 'leto-modelizer-plugin-core';
-import DependsOnLink from './DependsOnLink';
-import DependsOnLinkDefinition from './DependsOnLinkDefinition';
 import Component from './DockerComposatorPluginComponent';
 
 class DockerComposatorData extends DefaultData {
@@ -39,16 +37,10 @@ class DockerComposatorData extends DefaultData {
       );
       if (dependsOnAttribute) {
         dependsOnAttribute.value.forEach((item) => {
+          console.log(this.definitions.links);
           const definition = this.definitions.links.find(
             ({ attributeRef }) => attributeRef === 'service',
           );
-          const newLinkDefinition = new ComponentLinkDefinition({
-            ...definition,
-          });
-          newLinkDefinition.attributeRef = item.value.find(
-            ({ name }) => name.startsWith('service'),
-          ).name;
-
           links.push(new ComponentLink({
             definition,
             source: component.id,
@@ -68,20 +60,12 @@ class DockerComposatorData extends DefaultData {
           return;
         }
         attribute.value.forEach((value) => {
-          if (definition instanceof ComponentLinkDefinition) {
-            // definition.attributeRef = value;
-            links.push(new ComponentLink({
-              definition,
-              source: component.id,
-              target: value,
-            }));
-          } else if (definition instanceof DependsOnLinkDefinition) {
-            links.push(new DependsOnLink({
-              definition,
-              source: component.id,
-              target: value,
-            }));
-          }
+          // definition.attributeRef = value;
+          links.push(new ComponentLink({
+            definition,
+            source: component.id,
+            target: value,
+          }));
         });
       });
     });
@@ -100,19 +84,6 @@ class DockerComposatorData extends DefaultData {
         const linkDefinition = new ComponentLinkDefinition({
           type: attributeDefinition.linkType,
           attributeRef: attributeDefinition.name,
-          sourceRef: type,
-          targetRef: attributeDefinition.linkRef,
-          color: attributeDefinition.linkColor,
-          width: attributeDefinition.linkWidth,
-          dashStyle: attributeDefinition.linkDashStyle,
-        });
-
-        this.definitions.links.push(linkDefinition);
-      } else if (attributeDefinition.type === 'DependsOnLink') {
-        const linkDefinition = new DependsOnLinkDefinition({
-          type: attributeDefinition.linkType,
-          attributeRef: attributeDefinition.name,
-          definedAttributes: attributeDefinition.definedAttributes,
           sourceRef: type,
           targetRef: attributeDefinition.linkRef,
           color: attributeDefinition.linkColor,
