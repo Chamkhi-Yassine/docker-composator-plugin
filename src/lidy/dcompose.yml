@@ -32,6 +32,10 @@ service:
         dockerfile: string
     depends_on:
       _listOf: string
+    networks:
+      _listOf: string
+    volumes:
+      _listOf: string
     stdin_open: boolean
     tty: boolean
     privileged: boolean

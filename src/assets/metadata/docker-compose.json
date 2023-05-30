@@ -77,6 +77,18 @@
             "linkRef": "Service"
           },
           {
+            "name": "networks",
+            "type": "Link",
+            "linkRef": "Network",
+            "linkColor": "purple"
+          },
+          {
+            "name": "volumes",
+            "type": "Link",
+            "linkRef": "Volume",
+            "linkColor": "green"
+          },
+          {
             "name": "command",
             "type": "String"
           },
