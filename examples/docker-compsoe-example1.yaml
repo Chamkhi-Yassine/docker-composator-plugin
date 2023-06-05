@@ -1,23 +1,23 @@
 version: '3.9'
 services:
-  Service_1:
-    image: front
+  microservice_1:
+    image: ms1
     depends_on:
-      Service_2:
+      microservice_2:
         condition: service_healthy
-      Service_3:
+      microservice_3:
         condition: service_started
     volumes:
       - lcoal-vol
-  Service_2:
-    image: backend
+  microservice_2:
+    image: ms2
     depends_on:
-      Service_3:
-        condition: service_something_else
+      microservice_3:
+        condition: service_completed_successfully
     networks:
       - WAN1
-  Service_3:
-    image: bch
+  microservice_3:
+    image: ms3
     networks:
       - WAN1
       - PAN
