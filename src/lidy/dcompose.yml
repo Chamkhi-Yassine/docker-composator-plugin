@@ -6,6 +6,8 @@ root:
     - service
     - volume
     - network
+    - config
+    - secret
 
 
 docker-compose:
@@ -21,6 +23,12 @@ docker-compose:
     networks:
       _mapOf:
         string: network
+    configs:
+      _mapOf:
+        string: config
+    secrets:
+      _mapOf:
+        string: secret
 
 service:
   _map:
@@ -46,6 +54,10 @@ service:
     networks:
       _listOf: string
     volumes:
+      _listOf: string
+    configs:
+      _listOf: string
+    secrets:
       _listOf: string
     stdin_open: boolean
     tty: boolean
@@ -85,3 +97,18 @@ network:
           _listOf: string
     options: 
       _listOf: string
+
+config:
+  _map:
+    file: string
+  _mapFacultative:
+    name: string
+    external: boolean
+
+secret:
+  _map:
+    file: string
+  _mapFacultative:
+    name: string
+    environment: string
+    external: boolean
