@@ -1,10 +1,11 @@
 /* eslint-disable no-restricted-imports */
-// import fs from 'fs';
-import { FileInformation } from 'leto-modelizer-plugin-core';
+import fs from 'fs';
+import { FileInformation, FileInput } from 'leto-modelizer-plugin-core';
 import DockerComposatorPluginParser from '../../../src/parser/DockerComposatorPluginParser';
-// import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorPluginMetadata from '../../../src/metadata/DockerComposatorPluginMetadata';
 
-// import DockerComposatorData from 'src/models/DockerComposatorData';
+import DockerComposatorData from '../../../src/models/DockerComposatorData';
+import mockData from '../../resources/veto-full-compose';
 
 describe('Test DockerComposatorPluginParser', () => {
   describe('Test functions', () => {
@@ -45,29 +46,28 @@ describe('Test DockerComposatorPluginParser', () => {
       });
     });
 
-    // describe('Test function: parse', () => {
-    // // it('Should set empty components on no input files', () => {
-    // //   const pluginData = new DefaultData();
-    // //   const parser = new DockerComposatorPluginParser(pluginData);
-    // //   parser.parse();
-    // //
-    // //   expect(pluginData.components).not.toBeNull();
-    // //   expect(pluginData.components.length).toEqual(0);
-    // // });
-
-    //   it('Parse simple.yml should set valid component', () => {
-    //     const pluginData = new DockerComposatorData();
-    //     const metadata = new DockerComposatorPluginMetadata(pluginData);
-    //     metadata.parse();
-    //     const parser = new DockerComposatorPluginParser(pluginData);
-    //     const file = new FileInput({
-    //       path: './deployment.yml',
-    //       content: fs.readFileSync('tests/resources/yml/deployment.yml', 'utf8'),
-    //     });
-    //     parser.parse([file]);
-
-    //     expect(pluginData.components).toEqual([deploymentComponent]);
-    //   });
+    describe('Test function: parse', () => {
+    // it('Should set empty components on no input files', () => {
+    //   const pluginData = new DefaultData();
+    //   const parser = new DockerComposatorPluginParser(pluginData);
+    //   parser.parse();
+    //
+    //   expect(pluginData.components).not.toBeNull();
+    //   expect(pluginData.components.length).toEqual(0);
     // });
+
+      it('Parse simple.yml should set valid component', () => {
+        const pluginData = new DockerComposatorData();
+        const metadata = new DockerComposatorPluginMetadata(pluginData);
+        metadata.parse();
+        const parser = new DockerComposatorPluginParser(pluginData);
+        const file = new FileInput({
+          path: './veto-full-compose.yaml',
+          content: fs.readFileSync('tests/resources/veto-full-compose.yaml', 'utf8'),
+        });
+        parser.parse([file]);
+        expect(pluginData.components).toEqual(mockData.components);
+      });
+    });
   });
 });

@@ -1,0 +1,5 @@
+version: '3.9'
+services:
+  veterinary-ms:
+    image: veterinary-ms:0.2
+    tty: true
