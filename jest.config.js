@@ -1,5 +1,3 @@
-const esModules = ['quasar', 'quasar/lang', 'lodash-es'].join('|');
-
 module.exports = {
   globals: {
     __DEV__: true,
@@ -21,6 +19,8 @@ module.exports = {
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/$1',
     '^src/(.*)$': '<rootDir>/src/$1',
+    '^tests/(.*)$': '<rootDir>/tests/$1',
+    'package.json': '<rootDir>package.json',
   },
   moduleDirectories: [
     'node_modules',
@@ -28,12 +28,6 @@ module.exports = {
   transform: {
     '^.+\\.js?$': 'babel-jest',
   },
-  testResultsProcessor: 'jest-sonar-reporter',
-  collectCoverage: true,
-  coverageDirectory: './reports',
-  collectCoverageFrom: [
-    '<rootDir>/src/**/*.js',
-  ],
   // Needed in JS codebases too because of feature flags
   coveragePathIgnorePatterns: ['/node_modules/', '.d.ts$'],
   coverageThreshold: {
@@ -44,6 +38,10 @@ module.exports = {
       //  statements: 50
     },
   },
-  coverageReporters: ['lcov', 'cobertura', 'text-summary'],
-  transformIgnorePatterns: [`node_modules/(?!(${esModules}))`],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!lidy-js)'],
+  testResultsProcessor: 'jest-sonar-reporter',
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.js'],
+  coverageReporters: ['lcov', 'cobertura', 'text-summary', 'text'],
+  coverageDirectory: './reports',
 };
