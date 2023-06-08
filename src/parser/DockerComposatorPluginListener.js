@@ -94,6 +94,30 @@ class DockerComposatorPluginListener {
     }
   }
 
+  exit_config(configNode) {
+    const type = 'Config';
+    if (configNode) {
+      const configComponent = this.createComponentFromTree(configNode, type);
+      configComponent.path = this.fileInformation.path;
+      if (!this.childComponentsByType[type]) {
+        this.childComponentsByType[type] = [];
+      }
+      this.childComponentsByType[type].push(configComponent);
+    }
+  }
+
+  exit_secret(secretNode) {
+    const type = 'Secret';
+    if (secretNode) {
+      const secretComponent = this.createComponentFromTree(secretNode, type);
+      secretComponent.path = this.fileInformation.path;
+      if (!this.childComponentsByType[type]) {
+        this.childComponentsByType[type] = [];
+      }
+      this.childComponentsByType[type].push(secretComponent);
+    }
+  }
+
   createComponentFromTree(node, type) {
     const definition = this.definitions.find((def) => def.type === type);
     let id = 'unnamed_component';
@@ -123,6 +147,22 @@ class DockerComposatorPluginListener {
       const nodeObject = JSON.parse(JSON.stringify(node));
       try {
         id = Object.keys(nodeObject.ctx.src.networks).find((key) => JSON.stringify(nodeObject.ctx.src.networks[key]) === JSON.stringify(nodeObject.current));
+      } catch {
+        id = this.fileInformation.path?.split('/').pop().split('.')[0];
+      }
+    }
+    if (type === 'Config') {
+      const nodeObject = JSON.parse(JSON.stringify(node));
+      try {
+        id = Object.keys(nodeObject.ctx.src.configs).find((key) => JSON.stringify(nodeObject.ctx.src.configs[key]) === JSON.stringify(nodeObject.current));
+      } catch {
+        id = this.fileInformation.path?.split('/').pop().split('.')[0];
+      }
+    }
+    if (type === 'Secret') {
+      const nodeObject = JSON.parse(JSON.stringify(node));
+      try {
+        id = Object.keys(nodeObject.ctx.src.secrets).find((key) => JSON.stringify(nodeObject.ctx.src.secrets[key]) === JSON.stringify(nodeObject.current));
       } catch {
         id = this.fileInformation.path?.split('/').pop().split('.')[0];
       }

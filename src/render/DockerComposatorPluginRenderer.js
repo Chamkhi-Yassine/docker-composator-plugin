@@ -104,6 +104,14 @@ class DockerComposatorPluginRenderer extends DefaultRender {
           formatted.networks ||= {};
           formatted.networks[childComponent.id] = this.formatComponent(childComponent);
           break;
+        case 'Config':
+            formatted.configs ||= {};
+            formatted.configs[childComponent.id] = this.formatComponent(childComponent);
+            break;
+        case 'Secret':
+            formatted.secrets ||= {};
+            formatted.secrets[childComponent.id] = this.formatComponent(childComponent);
+              break;
         default:
           break;
       }

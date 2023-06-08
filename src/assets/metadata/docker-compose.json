@@ -8,7 +8,9 @@
         "childrenTypes": [
           "Service",
           "Volume",
-          "Network"
+          "Network",
+          "Config",
+          "Secret"
         ],
         "attributes": [
             {
@@ -29,6 +31,7 @@
           {
             "name": "parentCompose",
             "type": "Reference",
+            "required":true,
             "containerRef": "Docker-Compose"
           },
           {
@@ -139,6 +142,18 @@
             "linkColor": "green"
           },
           {
+            "name": "configs",
+            "type": "Link",
+            "linkRef": "Config",
+            "linkColor": "blue"
+          },
+          {
+            "name": "secrets",
+            "type": "Link",
+            "linkRef": "Secret",
+            "linkColor": "pink"
+          },
+          {
             "name": "command",
             "type": "String"
           },
@@ -167,6 +182,7 @@
           {
             "name": "parentCompose",
             "type": "Reference",
+            "required":true,
             "containerRef": "Docker-Compose"
           },
           {
@@ -211,6 +227,7 @@
           {
             "name": "parentCompose",
             "type": "Reference",
+            "required":true,
             "containerRef": "Docker-Compose"
             
           },
@@ -301,6 +318,72 @@
 
         
         ]
+    },
+
+    {
+      "type": "Config",
+      "model": "DefaultModel",
+      "icon": "config",
+      "displayName": "Config",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+        {
+            "name": "parentCompose",
+            "type": "Reference",
+            "required":true,
+            "containerRef": "Docker-Compose"
+            
+        },
+        {
+            "name": "file",              
+            "type": "String",
+            "required":true
+        },
+        {
+            "name": "name",              
+            "type": "String"
+        },
+        {
+            "name": "external",
+            "type": "Boolean"
+        }
+      ]
+    },
+
+    {
+      "type": "Secret",
+      "model": "DefaultModel",
+      "icon": "secret",
+      "displayName": "Secret",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+        {
+            "name": "parentCompose",
+            "type": "Reference",
+            "required":true,
+            "containerRef": "Docker-Compose"
+            
+        },
+        {
+            "name": "file",              
+            "type": "String",
+            "required":true
+        },
+        {
+            "name": "name",              
+            "type": "String"
+        },
+        {
+          "name": "environment",              
+          "type": "String"
+      },
+        {
+            "name": "external",
+            "type": "Boolean"
+        }
+      ]
     }
 
 ]
