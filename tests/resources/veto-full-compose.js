@@ -13,7 +13,6 @@ const dockerComposeDef = pluginData.definitions.components
 const serviceDef = pluginData.definitions.components
   .find(({ type }) => type === 'Service');
 
-console.log(serviceDef.definedAttributes);
 
 const dockerCompose = new DockerComposatorPluginComponent({
   id: 'veto-full-compose',
