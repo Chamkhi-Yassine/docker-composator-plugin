@@ -6,6 +6,7 @@ import DockerComposatorPluginMetadata from '../../../src/metadata/DockerComposat
 
 import DockerComposatorData from '../../../src/models/DockerComposatorData';
 import mockData from '../../resources/veto-full-compose';
+import emptyComposeMockData from '../../resources/empty-compose';
 
 describe('Test DockerComposatorPluginParser', () => {
   describe('Test functions', () => {
@@ -80,6 +81,21 @@ describe('Test DockerComposatorPluginParser', () => {
         });
         parser.parse([file]);
         expect(pluginData.components).toEqual(mockData.components);
+      });
+
+      it('Should set empty children on file containing only docker-compose element', () => {
+        const pluginData = new DockerComposatorData();
+        const metadata = new DockerComposatorPluginMetadata(pluginData);
+        metadata.parse();
+
+        const parser = new DockerComposatorPluginParser(pluginData);
+
+        const file = new FileInput({
+          path: './empty-compose.yaml',
+          content: fs.readFileSync('tests/resources/empty-compose.yaml', 'utf8'),
+        });
+        parser.parse([file]);
+        expect(pluginData.components).toEqual(emptyComposeMockData.components);
       });
     });
   });

@@ -29,7 +29,8 @@
           {
             "name": "parentCompose",
             "type": "Reference",
-            "containerRef": "Docker-Compose"
+            "containerRef": "Docker-Compose",
+            "required": true
           },
           {
             "name": "image",
@@ -167,7 +168,8 @@
           {
             "name": "parentCompose",
             "type": "Reference",
-            "containerRef": "Docker-Compose"
+            "containerRef": "Docker-Compose",
+            "required": true
           },
           {
             "name": "driver",              
@@ -211,8 +213,8 @@
           {
             "name": "parentCompose",
             "type": "Reference",
-            "containerRef": "Docker-Compose"
-            
+            "containerRef": "Docker-Compose",
+            "required": true
           },
           {
             "name": "driver",              
