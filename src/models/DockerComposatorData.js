@@ -94,10 +94,6 @@ class DockerComposatorData extends DefaultData {
       }
     });
   }
-
-  emitEvent(log) {
-    this.eventLogs.push(log);
-  }
 }
 
 export default DockerComposatorData;

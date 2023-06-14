@@ -126,46 +126,28 @@ class DockerComposatorPluginListener {
       delete node.value.services;
       delete node.value.volumes;
       delete node.value.networks;
+      delete node.value.secrets;
+      delete node.value.configs;
     }
     if (type === 'Service') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      try {
-        id = Object.keys(nodeObject.ctx.src.services).find((key) => JSON.stringify(nodeObject.ctx.src.services[key]) === JSON.stringify(nodeObject.current));
-      } catch {
-        id = this.fileInformation.path?.split('/').pop().split('.')[0];
-      }
+      id = Object.keys(nodeObject.ctx.src.services).find((key) => JSON.stringify(nodeObject.ctx.src.services[key]) === JSON.stringify(nodeObject.current));
     }
     if (type === 'Volume') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      try {
-        id = Object.keys(nodeObject.ctx.src.volumes).find((key) => JSON.stringify(nodeObject.ctx.src.volumes[key]) === JSON.stringify(nodeObject.current));
-      } catch {
-        id = this.fileInformation.path?.split('/').pop().split('.')[0];
-      }
+      id = Object.keys(nodeObject.ctx.src.volumes).find((key) => JSON.stringify(nodeObject.ctx.src.volumes[key]) === JSON.stringify(nodeObject.current));
     }
     if (type === 'Network') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      try {
-        id = Object.keys(nodeObject.ctx.src.networks).find((key) => JSON.stringify(nodeObject.ctx.src.networks[key]) === JSON.stringify(nodeObject.current));
-      } catch {
-        id = this.fileInformation.path?.split('/').pop().split('.')[0];
-      }
+      id = Object.keys(nodeObject.ctx.src.networks).find((key) => JSON.stringify(nodeObject.ctx.src.networks[key]) === JSON.stringify(nodeObject.current));
     }
     if (type === 'Config') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      try {
-        id = Object.keys(nodeObject.ctx.src.configs).find((key) => JSON.stringify(nodeObject.ctx.src.configs[key]) === JSON.stringify(nodeObject.current));
-      } catch {
-        id = this.fileInformation.path?.split('/').pop().split('.')[0];
-      }
+      id = Object.keys(nodeObject.ctx.src.configs).find((key) => JSON.stringify(nodeObject.ctx.src.configs[key]) === JSON.stringify(nodeObject.current));
     }
     if (type === 'Secret') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      try {
-        id = Object.keys(nodeObject.ctx.src.secrets).find((key) => JSON.stringify(nodeObject.ctx.src.secrets[key]) === JSON.stringify(nodeObject.current));
-      } catch {
-        id = this.fileInformation.path?.split('/').pop().split('.')[0];
-      }
+      id = Object.keys(nodeObject.ctx.src.secrets).find((key) => JSON.stringify(nodeObject.ctx.src.secrets[key]) === JSON.stringify(nodeObject.current));
     }
     delete node?.value?.metadata?.value.name;
     delete node?.value?.name; // TODO: improve this
@@ -273,7 +255,7 @@ class DockerComposatorPluginListener {
       case 'list':
         return 'Array';
       default:
-        return null; // TODO: throw error
+        return null;
     }
   }
 }

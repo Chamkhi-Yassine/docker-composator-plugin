@@ -31,8 +31,8 @@
           {
             "name": "parentCompose",
             "type": "Reference",
-            "required":true,
-            "containerRef": "Docker-Compose"
+            "containerRef": "Docker-Compose",
+            "required": true
           },
           {
             "name": "image",
@@ -182,8 +182,8 @@
           {
             "name": "parentCompose",
             "type": "Reference",
-            "required":true,
-            "containerRef": "Docker-Compose"
+            "containerRef": "Docker-Compose",
+            "required": true
           },
           {
             "name": "driver",              
@@ -227,9 +227,8 @@
           {
             "name": "parentCompose",
             "type": "Reference",
-            "required":true,
-            "containerRef": "Docker-Compose"
-            
+            "containerRef": "Docker-Compose",
+            "required": true
           },
           {
             "name": "driver",              
@@ -314,9 +313,6 @@
             "name": "external",
             "type": "Boolean"
           }
-
-
-        
         ]
     },
 
