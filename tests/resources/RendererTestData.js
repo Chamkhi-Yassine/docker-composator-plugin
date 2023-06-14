@@ -91,6 +91,29 @@ service.attributes.push(new ComponentAttribute({
   value: 'veto-full-compose',
 }));
 
+service.attributes.push(new ComponentAttribute({
+  name: 'healthcheck',
+  type: 'Object',
+  definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck'),
+  value: [
+    new ComponentAttribute({
+      name: 'test',
+      type: 'string',
+      definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck').definedAttributes.find(
+        ({ name }) => name === 'test'),
+      value: 'test-exemple',
+    }),
+    new ComponentAttribute({
+      name: 'retries',
+      type: 'Number',
+      definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck').definedAttributes.find(
+        ({ name }) => name === 'retries'),
+      value: 3,
+    }),
+  ],
+}));
+
+
 const service2 = new DockerComposatorPluginComponent({
   id: 'front',
   path: './veto-full-compose.yaml',

@@ -1,5 +1,5 @@
 import DockerComposatorPluginRenderer from '../../../src/render/DockerComposatorPluginRenderer';
-import pluginData from '../../resources/testData';
+import pluginData from '../../resources/RendererTestData';
 
 describe('DockerComposatorPluginRenderer', () => {
   let renderer;
@@ -39,16 +39,16 @@ describe('DockerComposatorPluginRenderer', () => {
 
     const formattedComponent = renderer.formatComponent(component);
 
+
     // Add assertions to validate the formatted Service component
     // Example assertions:
-    expect(formattedComponent).toBeDefined();
     expect(formattedComponent).toBeDefined();
     expect(formattedComponent.image).toEqual('postgres');
     expect(formattedComponent.environment).toEqual(['POSTGRES_USER=admin', 'POSTGRES_PASSWORD=${DATABASE_PASSWORD}']);
     expect(formattedComponent.ports).toEqual(['5432:5432']);
     expect(formattedComponent.networks).toEqual(['backend']);
     expect(formattedComponent.volumes).toEqual(['data']);
-    
+    expect(formattedComponent.healthcheck).toEqual( {"retries": 3, "test": "test-exemple"});
 
     // Add more assertions as needed
   });
@@ -139,6 +139,24 @@ describe('DockerComposatorPluginRenderer', () => {
     expect(formattedComponent.secrets).toBeUndefined();
   
   });
+
+
+  it('should insert the component name into the formatted object', () => {
+    const renderer = new DockerComposatorPluginRenderer();
+    const formatted = { ...pluginData.components[0] }; // Assuming the first component is 'veto-full-compose'
+
+    const component = pluginData.components.find((comp) => comp.id === 'veto-full-compose');
+
+    const expected = {
+      ...formatted,
+      name: component.id,
+    };
+
+    const result = renderer.insertComponentName(formatted, component);
+    expect(result).toEqual(expected);
+  });
+  
+  
   
 
 

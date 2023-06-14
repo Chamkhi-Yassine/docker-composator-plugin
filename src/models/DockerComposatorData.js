@@ -58,7 +58,6 @@ class DockerComposatorData extends DefaultData {
           return;
         }
         attribute.value.forEach((value) => {
-          // definition.attributeRef = value;
           links.push(new ComponentLink({
             definition,
             source: component.id,
