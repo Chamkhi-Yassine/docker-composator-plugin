@@ -1,0 +1,385 @@
+[
+    {
+        "type": "Docker-Compose",
+        "model": "DefaultContainer",
+        "displayName": "Docker Compose",
+        "icon": "compose",
+        "isContainer": true,
+        "childrenTypes": [
+          "Service",
+          "Volume",
+          "Network",
+          "Config",
+          "Secret"
+        ],
+        "attributes": [
+            {
+                "name": "version",
+                "type": "String",
+                "required": true
+            }
+        ]
+    },
+    {
+        "type": "Service",
+        "model": "DefaultModel",
+        "icon": "service",
+        "displayName": "Service",
+        "parentTypes": ["Docker-Compose"],
+        "isContainer": false,
+        "attributes": [
+          {
+            "name": "parentCompose",
+            "type": "Reference",
+            "containerRef": "Docker-Compose",
+            "required": true
+          },
+          {
+            "name": "image",
+            "type": "String",
+            "required": true
+          },
+          {
+            "name": "build",
+            "type": "Object",
+            "expanded": true,
+            "attributes": [
+              {
+                "name": "context",              
+                "type": "String"
+              },
+              {
+                "name": "dockerfile",              
+                "type": "String"
+              },
+              {
+                "name": "args",
+                "type": "Array",
+                "attributes":[
+                  {
+                    "name": null,
+                    "type": "String"
+                  }
+                ]
+              }
+            ]
+          },        
+          {
+            "name": "depends_on",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,
+                "type": "Object",
+                "attributes": [
+                  {
+                    "name": "service",
+                    "type": "Link",
+                    "linkRef": "Service",
+                    "linkColor": "red"
+                  },
+                  {
+                    "name": "condition",
+                    "type": "String"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "environment",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "ports",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "healthcheck",
+            "type": "Object",
+            "expanded": true,
+            "attributes": [
+              {
+                "name": "test",
+                "type": "String"
+              },
+              {
+                "name": "interval",
+                "type": "String"
+              },
+              {
+                "name": "timeout",
+                "type": "String"
+              },
+              {
+                "name": "retries",
+                "type": "Number"
+              }
+            ]
+          },
+          {
+            "name": "networks",
+            "type": "Link",
+            "linkRef": "Network",
+            "linkColor": "purple"
+          },
+          {
+            "name": "volumes",
+            "type": "Link",
+            "linkRef": "Volume",
+            "linkColor": "green"
+          },
+          {
+            "name": "configs",
+            "type": "Link",
+            "linkRef": "Config",
+            "linkColor": "blue"
+          },
+          {
+            "name": "secrets",
+            "type": "Link",
+            "linkRef": "Secret",
+            "linkColor": "pink"
+          },
+          {
+            "name": "command",
+            "type": "String"
+          },
+          {
+            "name": "stdin_open",
+            "type": "Boolean"
+          },
+          {
+            "name": "privileged",
+            "type": "Boolean"
+          },
+          {
+            "name": "tty",
+            "type": "Boolean"
+          }
+        ]
+    } ,
+    {
+      "type": "Volume",
+      "model": "DefaultModel",
+      "icon": "volume",
+      "displayName": "Volume",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+          {
+            "name": "parentCompose",
+            "type": "Reference",
+            "containerRef": "Docker-Compose",
+            "required": true
+          },
+          {
+            "name": "driver",              
+            "type": "String",
+            "required": true
+          },
+          {
+            "name": "driver_opts",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "labels",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "external",
+            "type": "Boolean"
+          }
+      ]
+    },
+    {
+      "type": "Network",
+      "model": "DefaultModel",
+      "icon": "network",
+      "displayName": "Network",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+          {
+            "name": "parentCompose",
+            "type": "Reference",
+            "containerRef": "Docker-Compose",
+            "required": true
+          },
+          {
+            "name": "driver",              
+            "type": "String",
+            "required": true
+          },
+          {
+            "name": "driver_opts",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "enable_ipv6",
+            "type": "Boolean"
+          },
+          {
+            "name": "ipam",
+            "type": "Object",
+            "expanded": true,
+            "attributes": [
+              {
+                "name": "driver",              
+                "type": "String"
+              },
+              {
+                "name": "config",              
+                "type": "Object",
+                "attributes": [
+                  {
+                    "name": "subnet",              
+                    "type": "String"
+                  },
+                  {
+                    "name": "ip_range",              
+                    "type": "String"
+                  },
+                  {
+                    "name": "gateway",              
+                    "type": "Array"
+                  },
+                  {
+                    "name": "aux_adresses",              
+                    "type": "Array",
+                    "attributes":[
+                      {
+                        "name": "host",
+                        "type": "String"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                 "name": "options",
+                 "type":"Array",
+                 "attributes":[
+                  {
+                    "name": null,              
+                    "type": "String"
+                  }
+                 ] 
+              }
+            ]
+          },
+          
+          {
+            "name": "labels",
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,              
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "name": "external",
+            "type": "Boolean"
+          }
+        ]
+    },
+
+    {
+      "type": "Config",
+      "model": "DefaultModel",
+      "icon": "config",
+      "displayName": "Config",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+        {
+            "name": "parentCompose",
+            "type": "Reference",
+            "required":true,
+            "containerRef": "Docker-Compose"
+            
+        },
+        {
+            "name": "file",              
+            "type": "String",
+            "required":true
+        },
+        {
+            "name": "name",              
+            "type": "String"
+        },
+        {
+            "name": "external",
+            "type": "Boolean"
+        }
+      ]
+    },
+
+    {
+      "type": "Secret",
+      "model": "DefaultModel",
+      "icon": "secret",
+      "displayName": "Secret",
+      "parentTypes": ["Docker-Compose"],
+      "isContainer":false,
+      "attributes":[
+        {
+            "name": "parentCompose",
+            "type": "Reference",
+            "required":true,
+            "containerRef": "Docker-Compose"
+            
+        },
+        {
+            "name": "file",              
+            "type": "String",
+            "required":true
+        },
+        {
+            "name": "name",              
+            "type": "String"
+        },
+        {
+          "name": "environment",              
+          "type": "String"
+      },
+        {
+            "name": "external",
+            "type": "Boolean"
+        }
+      ]
+    }
+
+]

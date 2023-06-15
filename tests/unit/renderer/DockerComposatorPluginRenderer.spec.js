@@ -1,5 +1,5 @@
 import DockerComposatorPluginRenderer from '../../../src/render/DockerComposatorPluginRenderer';
-import pluginData from '../../resources/RendererTestData';
+import pluginData from '../../resources/renderer/RendererTestData';
 
 describe('DockerComposatorPluginRenderer', () => {
   let renderer;
