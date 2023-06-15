@@ -1,21 +1,12 @@
-/* eslint-disable object-shorthand */
-/* eslint-disable no-restricted-imports */
 import { DefaultParser } from 'leto-modelizer-plugin-core';
-import { parse as lidyParse } from '../lidy/dcompose';
-import DockerComposatorPluginListener from './DockerComposatorPluginListener';
+import { parse as lidyParse } from 'src/lidy/dcompose';
+import DockerComposatorPluginListener from 'src/parser/DockerComposatorPluginListener';
 
 /**
  * Template of plugin parser.
  */
 class DockerComposatorPluginParser extends DefaultParser {
   isParsable(fileInformation) {
-    /*
-     * Implement this to indicate which fileInformation your provider can manage.
-     *
-     * You just have to return a Boolean to say if your parser can manage the file or not.
-     *
-     * By default, this function return false only on null/undefined fileInformation.
-     */
     return /\.ya?ml$/.test(fileInformation.path);
   }
 

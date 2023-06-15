@@ -1,12 +1,11 @@
-/* eslint-disable no-restricted-imports */
 import fs from 'fs';
 import { FileInformation, FileInput } from 'leto-modelizer-plugin-core';
-import DockerComposatorPluginParser from '../../../src/parser/DockerComposatorPluginParser';
-import DockerComposatorPluginMetadata from '../../../src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorPluginParser from 'src/parser/DockerComposatorPluginParser';
+import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
 
-import DockerComposatorData from '../../../src/models/DockerComposatorData';
-import mockData from '../../resources/veto-full-compose';
-import emptyComposeMockData from '../../resources/empty-compose';
+import DockerComposatorData from 'src/models/DockerComposatorData';
+import mockData from 'tests/resources/veto-full-compose';
+import emptyComposeMockData from 'tests/resources/empty-compose';
 
 describe('Test DockerComposatorPluginParser', () => {
   describe('Test functions', () => {

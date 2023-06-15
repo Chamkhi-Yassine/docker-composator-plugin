@@ -2,7 +2,7 @@ import { Component } from 'leto-modelizer-plugin-core';
 
 class DockerComposatorPluginComponent extends Component {
   __getAttributeByName(attributes, name) {
-    for (let index = 0; index < attributes.length; index += 1) { // NOSONAR
+    for (let index = 0; index < attributes.length; index += 1) {
       if (attributes[index].name === name) {
         return attributes[index];
       }

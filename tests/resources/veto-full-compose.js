@@ -1,8 +1,7 @@
-/* eslint-disable no-restricted-imports */
 import { ComponentAttribute, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
-import DockerComposatorData from '../../src/models/DockerComposatorData';
-import DockerComposatorPluginComponent from '../../src/models/DockerComposatorPluginComponent';
-import DockerComposatorPluginMetadata from '../../src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorData from 'src/models/DockerComposatorData';
+import DockerComposatorPluginComponent from 'src/models/DockerComposatorPluginComponent';
+import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
 
 const pluginData = new DockerComposatorData();
 const metadata = new DockerComposatorPluginMetadata(pluginData);

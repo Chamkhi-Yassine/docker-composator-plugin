@@ -1,7 +1,7 @@
 import { ComponentDefinition, ComponentAttribute, ComponentLinkDefinition } from 'leto-modelizer-plugin-core';
-import DockerComposatorPluginComponent from '../../../src/models/DockerComposatorPluginComponent';
-import DockerComposatorPluginMetadata from '../../../src/metadata/DockerComposatorPluginMetadata';
-import DockerComposatorData from '../../../src/models/DockerComposatorData';
+import DockerComposatorPluginComponent from 'src/models/DockerComposatorPluginComponent';
+import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorData from 'src/models/DockerComposatorData';
 
 describe('DockerComposatorData', () => {
   let data;
@@ -12,20 +12,20 @@ describe('DockerComposatorData', () => {
 
   describe('addComponent', () => {
     it('should add a new component and return the generated ID', () => {
-      const data = new DockerComposatorData(); // Create a new instance of DockerComposatorData
       const definition = new ComponentDefinition({ type: 'Service' }); // Create a component definition
-    
+
       const id = data.addComponent(definition); // Add the component and get the returned ID
-    
+
       expect(id).toBeDefined(); // Check if the ID is defined
-    
-      const addedComponent = data.components.find((component) => component.id === id); // Find the added component in the components array
-    
+
+      // Find the added component in the components array
+      const addedComponent = data.components.find((component) => component.id === id);
+
       expect(addedComponent).toBeDefined(); // Check if the added component is defined
       expect(addedComponent.id).toBe(id); // Check if the added component has the correct ID
-      expect(addedComponent.definition).toBe(definition); // Check if the added component has the correct definition
+      // Check if the added component has the correct definition
+      expect(addedComponent.definition).toBe(definition);
     });
-    
   });
 
   describe('getLinks', () => {
@@ -37,21 +37,24 @@ describe('DockerComposatorData', () => {
           sourceRef: 'Service',
           targetRef: 'Service',
           color: 'red',
-        })
+        }),
       );
     });
 
     it('should return component links based on depends_on attribute', () => {
-      const data = new DockerComposatorData();
       const metadata = new DockerComposatorPluginMetadata(data);
       metadata.parse();
-    
+
       // Find the Service definition
       const serviceDef = data.definitions.components.find(({ type }) => type === 'Service');
-    
+
       // Find the depends_on link definition
-      const dependsOnLinkDef = serviceDef.definedAttributes.find(({ name }) => name === 'depends_on').definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
-    
+      const dependsOnLinkDef = serviceDef.definedAttributes.find(
+        ({ name }) => name === 'depends_on',
+      ).definedAttributes[0].definedAttributes.find(
+        ({ type }) => type === 'Link',
+      );
+
       // Create the veterinary-config-server service component
       const veterinaryConfigServerService = new DockerComposatorPluginComponent({
         id: 'veterinary-config-server',
@@ -72,7 +75,7 @@ describe('DockerComposatorData', () => {
           }),
         ],
       });
-    
+
       // Create the veterinary-ms service component
       const veterinaryMsService = new DockerComposatorPluginComponent({
         id: 'veterinary-ms',
@@ -111,35 +114,31 @@ describe('DockerComposatorData', () => {
           }),
         ],
       });
-    
+
       // Add the service components to the data
       data.components.push(veterinaryConfigServerService);
       data.components.push(veterinaryMsService);
-  
 
       // Invoke the setLinkDefinitions method to generate the links
       data.__setLinkDefinitions('Service', serviceDef.definedAttributes);
-    
+
       const links = data.getLinks();
       expect(links.length).toBe(1);
-      expect(links).toContainEqual(expect.objectContaining({ source: 'veterinary-ms', target: 'veterinary-config-server' }));
+      expect(links).toContainEqual(
+        expect.objectContaining({ source: 'veterinary-ms', target: 'veterinary-config-server' }),
+      );
     });
- 
-     it('should return component links based on attribute values', () => {
 
-      const data = new DockerComposatorData();
+    it('should return component links based on attribute values', () => {
       const metadata = new DockerComposatorPluginMetadata(data);
       metadata.parse();
-    
+
       // Find the Service definition
       const serviceDef = data.definitions.components.find(({ type }) => type === 'Service');
 
       // Find the network definition
       const networkDef = data.definitions.components.find(({ type }) => type === 'Network');
-    
-      // Find the depends_on link definition
-      const dependsOnLinkDef = serviceDef.definedAttributes.find(({ name }) => name === 'depends_on').definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
-    
+
       // Create the veterinary-config-server service component
       const veterinaryConfigServerService = new DockerComposatorPluginComponent({
         id: 'veterinary-config-server',
@@ -193,30 +192,24 @@ describe('DockerComposatorData', () => {
       data.components.push(backendNetwork);
 
       data.__setLinkDefinitions('Service', serviceDef.definedAttributes);
-      
+
       const links = data.getLinks();
       expect(links.length).toBe(1);
-      expect(links).toContainEqual(expect.objectContaining({ source: 'veterinary-config-server', target: 'backend' }));
-
- 
-     });
+      expect(links).toContainEqual(
+        expect.objectContaining({ source: 'veterinary-config-server', target: 'backend' }),
+      );
+    });
   });
 
   describe('__setLinkDefinitions', () => {
     it('should set link definitions in the data', () => {
-      const type = 'LinkType';
-      const definedAttributes = [
-        { type: 'Link', linkType: 'LinkType1' },
-        { type: 'Link', linkType: 'LinkType2' },
-      ];
-  
       const linkDefinition1 = new ComponentLinkDefinition({
         attributeRef: 'LinkAttribute1',
         sourceRef: 'Service',
         targetRef: 'Service',
         type: 'LinkType1',
       });
-  
+
       const linkDefinition2 = new ComponentLinkDefinition({
         attributeRef: 'LinkAttribute2',
         sourceRef: 'Service',
@@ -224,14 +217,13 @@ describe('DockerComposatorData', () => {
         type: 'LinkType2',
         color: 'blue',
       });
-  
+
       data.definitions.links.push(linkDefinition1);
       data.definitions.links.push(linkDefinition2);
-  
+
       expect(data.definitions.links.length).toBe(2);
       expect(data.definitions.links[0]).toEqual(linkDefinition1);
       expect(data.definitions.links[1]).toEqual(linkDefinition2);
     });
   });
-
 });

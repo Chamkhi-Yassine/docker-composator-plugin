@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import {
   DefaultRender,
   FileInput,
@@ -105,13 +104,13 @@ class DockerComposatorPluginRenderer extends DefaultRender {
           formatted.networks[childComponent.id] = this.formatComponent(childComponent);
           break;
         case 'Config':
-            formatted.configs ||= {};
-            formatted.configs[childComponent.id] = this.formatComponent(childComponent);
-            break;
+          formatted.configs ||= {};
+          formatted.configs[childComponent.id] = this.formatComponent(childComponent);
+          break;
         case 'Secret':
-            formatted.secrets ||= {};
-            formatted.secrets[childComponent.id] = this.formatComponent(childComponent);
-              break;
+          formatted.secrets ||= {};
+          formatted.secrets[childComponent.id] = this.formatComponent(childComponent);
+          break;
         default:
           break;
       }

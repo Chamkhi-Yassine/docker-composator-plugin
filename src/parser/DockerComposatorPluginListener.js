@@ -1,7 +1,5 @@
-/* eslint-disable no-restricted-imports */
-/* eslint-disable max-len */
 import { ComponentAttribute, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
-import Component from '../models/DockerComposatorPluginComponent';
+import Component from 'src/models/DockerComposatorPluginComponent';
 
 /**
  * Lidy listener for Docker Compose files.
@@ -131,26 +129,46 @@ class DockerComposatorPluginListener {
     }
     if (type === 'Service') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.services).find((key) => JSON.stringify(nodeObject.ctx.src.services[key]) === JSON.stringify(nodeObject.current));
+      id = Object.keys(nodeObject.ctx.src.services).find(
+        (key) => JSON.stringify(
+          nodeObject.ctx.src.services[key],
+        ) === JSON.stringify(nodeObject.current),
+      );
     }
     if (type === 'Volume') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.volumes).find((key) => JSON.stringify(nodeObject.ctx.src.volumes[key]) === JSON.stringify(nodeObject.current));
+      id = Object.keys(nodeObject.ctx.src.volumes).find(
+        (key) => JSON.stringify(
+          nodeObject.ctx.src.volumes[key],
+        ) === JSON.stringify(nodeObject.current),
+      );
     }
     if (type === 'Network') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.networks).find((key) => JSON.stringify(nodeObject.ctx.src.networks[key]) === JSON.stringify(nodeObject.current));
+      id = Object.keys(nodeObject.ctx.src.networks).find(
+        (key) => JSON.stringify(
+          nodeObject.ctx.src.networks[key],
+        ) === JSON.stringify(nodeObject.current),
+      );
     }
     if (type === 'Config') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.configs).find((key) => JSON.stringify(nodeObject.ctx.src.configs[key]) === JSON.stringify(nodeObject.current));
+      id = Object.keys(nodeObject.ctx.src.configs).find(
+        (key) => JSON.stringify(
+          nodeObject.ctx.src.configs[key],
+        ) === JSON.stringify(nodeObject.current),
+      );
     }
     if (type === 'Secret') {
       const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.secrets).find((key) => JSON.stringify(nodeObject.ctx.src.secrets[key]) === JSON.stringify(nodeObject.current));
+      id = Object.keys(nodeObject.ctx.src.secrets).find(
+        (key) => JSON.stringify(
+          nodeObject.ctx.src.secrets[key],
+        ) === JSON.stringify(nodeObject.current),
+      );
     }
     delete node?.value?.metadata?.value.name;
-    delete node?.value?.name; // TODO: improve this
+    delete node?.value?.name;
     const component = new Component({
       id,
       definition,

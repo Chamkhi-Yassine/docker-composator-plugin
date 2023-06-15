@@ -1,5 +1,3 @@
-/* eslint-disable no-useless-constructor */
-/* eslint-disable max-len */
 import { DefaultDrawer } from 'leto-modelizer-plugin-core';
 
 class DockerComposatorPluginDrawer extends DefaultDrawer {

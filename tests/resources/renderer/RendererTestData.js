@@ -1,8 +1,7 @@
-/* eslint-disable no-restricted-imports */
 import { ComponentAttribute } from 'leto-modelizer-plugin-core';
-import DockerComposatorData from '../../../src/models/DockerComposatorData';
-import DockerComposatorPluginComponent from '../../../src/models/DockerComposatorPluginComponent';
-import DockerComposatorPluginMetadata from '../../../src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorData from 'src/models/DockerComposatorData';
+import DockerComposatorPluginComponent from 'src/models/DockerComposatorPluginComponent';
+import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
 
 const pluginData = new DockerComposatorData();
 const metadata = new DockerComposatorPluginMetadata(pluginData);
@@ -20,7 +19,6 @@ const configDef = pluginData.definitions.components
   .find(({ type }) => type === 'Config');
 const secretDef = pluginData.definitions.components
   .find(({ type }) => type === 'Secret');
-
 
 const dockerCompose = new DockerComposatorPluginComponent({
   id: 'veto-full-compose',
@@ -56,7 +54,7 @@ service.attributes.push(new ComponentAttribute({
   type: 'Array',
   definition: serviceDef.definedAttributes
     .find(({ name }) => name === 'environment'),
-  value: ['POSTGRES_USER=admin','POSTGRES_PASSWORD=${DATABASE_PASSWORD}'],
+  value: ['POSTGRES_USER=admin', 'POSTGRES_PASSWORD=pg-pwd'],
 }));
 
 service.attributes.push(new ComponentAttribute({
@@ -99,20 +97,25 @@ service.attributes.push(new ComponentAttribute({
     new ComponentAttribute({
       name: 'test',
       type: 'string',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck').definedAttributes.find(
-        ({ name }) => name === 'test'),
+      definition: serviceDef.definedAttributes.find(
+        ({ name }) => name === 'healthcheck',
+      ).definedAttributes.find(
+        ({ name }) => name === 'test',
+      ),
       value: 'test-exemple',
     }),
     new ComponentAttribute({
       name: 'retries',
       type: 'Number',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck').definedAttributes.find(
-        ({ name }) => name === 'retries'),
+      definition: serviceDef.definedAttributes.find(
+        ({ name }) => name === 'healthcheck',
+      ).definedAttributes.find(
+        ({ name }) => name === 'retries',
+      ),
       value: 3,
     }),
   ],
 }));
-
 
 const service2 = new DockerComposatorPluginComponent({
   id: 'front',
@@ -140,8 +143,11 @@ service2.attributes.push(new ComponentAttribute({
       new ComponentAttribute({
         name: 'service_id_0',
         type: 'Array',
-        definition: serviceDef.definedAttributes.find(({ name }) => name === 'depends_on').definedAttributes[0].definedAttributes.find(
-          ({ type }) => type === 'Link'),
+        definition: serviceDef.definedAttributes.find(
+          ({ name }) => name === 'depends_on',
+        ).definedAttributes[0].definedAttributes.find(
+          ({ type }) => type === 'Link',
+        ),
         value: ['database'],
       }),
       new ComponentAttribute({

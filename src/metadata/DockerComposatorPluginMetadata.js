@@ -1,18 +1,19 @@
-/* eslint-disable no-restricted-imports */
 import Ajv from 'ajv';
-import { DefaultMetadata, ComponentDefinition, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
-import jsonComponents from '../assets/metadata';
-import Schema from './ValidationSchema';
+import {
+  DefaultMetadata,
+  ComponentDefinition,
+  ComponentAttributeDefinition,
+} from 'leto-modelizer-plugin-core';
+import jsonComponents from 'src/assets/metadata';
+import Schema from 'src/metadata/ValidationSchema';
 /*
  * Metadata is used to generate definition of Component and ComponentAttribute.
  *
- * In our plugin managing Terraform, we use [Ajv](https://ajv.js.org/) to validate metadata.
- * And we provide a `metadata.json` to define all metadata.
+ * In our plugin managing Docker Composator, we use [Ajv](https://ajv.js.org/) to validate metadata.
+ * And we provide a `assets/metadata/docker-compose.json` to define all metadata.
  *
- * Feel free to manage your metadata as you wish.
  */
 class DockerComposatorPluginMetadata extends DefaultMetadata {
-
   constructor(pluginData) {
     super(pluginData);
     this.ajv = new Ajv();
@@ -20,6 +21,7 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
     this.jsonComponents = jsonComponents;
     this.validate = this.validate.bind(this);
   }
+
   /**
    * Validate the provided metadata with a schema.
    * @returns {boolean} True if metadata is valid.
@@ -27,7 +29,6 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
   validate() {
     const errors = [];
     const validate = this.ajv.compile(this.schema);
-    console.log(validate);
     if (!validate(this.jsonComponents)) {
       errors.push({
         ...this.jsonComponents,
@@ -35,33 +36,18 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
       });
     }
 
-    // this.jsonComponents.forEach((component) => {
-    //   const validate = this.ajv.compile(this.schema);
-    //   console.log(validate);
-    //   if (!validate(component)) {
-    //     errors.push({
-    //       component,
-    //       errors: validate.errors,
-    //     });
-    //   }
-    // });
-
     if (errors.length > 0) {
-      console.log(errors[0].errors);
-      //throw new Error('Metadata is not valid', { cause: errors });
+      // throw new Error('Metadata are not valid', { cause: errors });
       return false;
     }
 
     return true;
   }
 
-
   parse() {
     const componentDefs = jsonComponents.flatMap(
       (component) => this.getComponentDefinition(component),
     );
-
-    // this.setChildrenTypes(componentDefs);
     this.pluginData.definitions.components = componentDefs;
   }
 

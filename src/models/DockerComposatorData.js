@@ -1,11 +1,9 @@
-/* eslint-disable max-len */
-/* eslint-disable no-restricted-imports */
 import {
   DefaultData,
   ComponentLink,
   ComponentLinkDefinition,
 } from 'leto-modelizer-plugin-core';
-import Component from './DockerComposatorPluginComponent';
+import Component from 'src/models/DockerComposatorPluginComponent';
 
 class DockerComposatorData extends DefaultData {
   /**

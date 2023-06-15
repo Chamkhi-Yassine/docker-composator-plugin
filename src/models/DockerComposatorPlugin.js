@@ -1,17 +1,12 @@
-/* eslint-disable no-restricted-imports */
 import {
   DefaultPlugin,
 } from 'leto-modelizer-plugin-core';
-import DockerComposatorData from './DockerComposatorData';
-import DockerComposatorPluginDrawer from '../draw/DockerComposatorPluginDrawer';
-import DockerComposatorPluginMetadata from '../metadata/DockerComposatorPluginMetadata';
-import DockerComposatorPluginParser from '../parser/DockerComposatorPluginParser';
-import DockerComposatorPluginRenderer from '../render/DockerComposatorPluginRenderer';
-import packageInfo from '../../package.json';
-
-/**
- * Template of plugin model.
- */
+import DockerComposatorData from 'src/models/DockerComposatorData';
+import DockerComposatorPluginDrawer from 'src/draw/DockerComposatorPluginDrawer';
+import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorPluginParser from 'src/parser/DockerComposatorPluginParser';
+import DockerComposatorPluginRenderer from 'src/render/DockerComposatorPluginRenderer';
+import packageInfo from 'package.json';
 
 class DockerComposatorPlugin extends DefaultPlugin {
   /**

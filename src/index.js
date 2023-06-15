@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-imports */
-import DockerComposatorPlugin from './models/DockerComposatorPlugin';
+import DockerComposatorPlugin from 'src/models/DockerComposatorPlugin';
 
 export default DockerComposatorPlugin;
