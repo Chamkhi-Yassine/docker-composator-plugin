@@ -1,9 +1,7 @@
-import DockerComposatorData from '../../../src/models/DockerComposatorData';
 import DockerComposatorPlugin from '../../../src/models/DockerComposatorPlugin';
-import packageInfo from '../../../package.json';
 
 describe('DockerComposatorPlugin', () => {
-  it('should create a DockerComposatorData instance with the correct properties', () => {
+  it('should create a DockerComposatorPlugin instance ', () => {
     
     const plugin = new DockerComposatorPlugin();
     expect(plugin).toBeInstanceOf(DockerComposatorPlugin); 
