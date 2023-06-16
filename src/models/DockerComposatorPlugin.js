@@ -6,6 +6,7 @@ import DockerComposatorPluginDrawer from 'src/draw/DockerComposatorPluginDrawer'
 import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
 import DockerComposatorPluginParser from 'src/parser/DockerComposatorPluginParser';
 import DockerComposatorPluginRenderer from 'src/render/DockerComposatorPluginRenderer';
+import DockerComposatorConfiguration from 'src/models/DockerComposatorConfiguration';
 import packageInfo from 'package.json';
 
 class DockerComposatorPlugin extends DefaultPlugin {
@@ -16,7 +17,12 @@ class DockerComposatorPlugin extends DefaultPlugin {
   constructor(props = {
     event: null,
   }) {
-    const pluginData = new DockerComposatorData({
+    const configuration = new DockerComposatorConfiguration({
+      defaultFileName: 'new_file.yaml',
+      defaultFileExtension: 'yaml',
+    });
+
+    const pluginData = new DockerComposatorData(configuration, {
       name: packageInfo.name,
       version: packageInfo.version,
     }, props.event);
@@ -27,6 +33,7 @@ class DockerComposatorPlugin extends DefaultPlugin {
       pluginMetadata: new DockerComposatorPluginMetadata(pluginData),
       pluginParser: new DockerComposatorPluginParser(pluginData),
       pluginRenderer: new DockerComposatorPluginRenderer(pluginData),
+      configuration,
     });
   }
 }
