@@ -1,0 +1,5 @@
+/*! For license information please see leto-modelizer-plugin-core.js.LICENSE.txt */
+
+/*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
+
+/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
