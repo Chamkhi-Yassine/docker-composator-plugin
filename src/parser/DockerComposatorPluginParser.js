@@ -74,6 +74,11 @@ class DockerComposatorPluginParser extends DefaultParser {
         });
 
         this.pluginData.components.push(...this.listener.components);
+        this.listener.fileInformation = {};
+        this.listener.components = [];
+        this.listener.definitions = [];
+        this.listener.childComponentsByType = {};
+
         this.pluginData.emitEvent({ id, status: 'success' });
       });
   }
