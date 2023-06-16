@@ -6,6 +6,11 @@ import DockerComposatorPluginListener from 'src/parser/DockerComposatorPluginLis
  * Template of plugin parser.
  */
 class DockerComposatorPluginParser extends DefaultParser {
+  constructor(pluginData) {
+    super(pluginData);
+    this.listener = new DockerComposatorPluginListener();
+  }
+
   isParsable(fileInformation) {
     return /\.ya?ml$/.test(fileInformation.path);
   }
@@ -48,14 +53,16 @@ class DockerComposatorPluginParser extends DefaultParser {
             global: false,
           },
         });
-        const listener = new DockerComposatorPluginListener(
-          input,
-          this.pluginData.definitions.components,
-        );
+        this.listener.fileInformation = input;
+        this.listener.definitions = this.pluginData.definitions.components;
+        // this.listener = new DockerComposatorPluginListener(
+        //   input,
+        //   this.pluginData.definitions.components,
+        // );
 
         lidyParse({
           src_data: input.content,
-          listener,
+          listener: this.listener,
           path: input.path,
           prog: {
             errors: [],
@@ -66,7 +73,7 @@ class DockerComposatorPluginParser extends DefaultParser {
           },
         });
 
-        this.pluginData.components.push(...listener.components);
+        this.pluginData.components.push(...this.listener.components);
         this.pluginData.emitEvent({ id, status: 'success' });
       });
   }

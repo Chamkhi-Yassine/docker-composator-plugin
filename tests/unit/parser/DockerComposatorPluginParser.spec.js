@@ -2,10 +2,10 @@ import fs from 'fs';
 import { FileInformation, FileInput } from 'leto-modelizer-plugin-core';
 import DockerComposatorPluginParser from 'src/parser/DockerComposatorPluginParser';
 import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
-
 import DockerComposatorData from 'src/models/DockerComposatorData';
-import mockData from 'tests/resources/veto-full-compose';
-import emptyComposeMockData from 'tests/resources/empty-compose';
+
+import mockData from 'tests/resources/parser/veto-full-compose';
+import emptyComposeMockData from 'tests/resources/parser/empty-compose';
 
 describe('Test DockerComposatorPluginParser', () => {
   describe('Test functions', () => {
@@ -76,7 +76,7 @@ describe('Test DockerComposatorPluginParser', () => {
         const parser = new DockerComposatorPluginParser(pluginData);
         const file = new FileInput({
           path: './veto-full-compose.yaml',
-          content: fs.readFileSync('tests/resources/veto-full-compose.yaml', 'utf8'),
+          content: fs.readFileSync('tests/resources/parser/veto-full-compose.yaml', 'utf8'),
         });
         parser.parse([file]);
         expect(pluginData.components).toEqual(mockData.components);
@@ -91,7 +91,7 @@ describe('Test DockerComposatorPluginParser', () => {
 
         const file = new FileInput({
           path: './empty-compose.yaml',
-          content: fs.readFileSync('tests/resources/empty-compose.yaml', 'utf8'),
+          content: fs.readFileSync('tests/resources/parser/empty-compose.yaml', 'utf8'),
         });
         parser.parse([file]);
         expect(pluginData.components).toEqual(emptyComposeMockData.components);

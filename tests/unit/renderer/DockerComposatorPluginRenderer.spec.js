@@ -1,5 +1,6 @@
 import DockerComposatorPluginRenderer from 'src/render/DockerComposatorPluginRenderer';
 import pluginData from 'tests/resources/renderer/RendererTestData';
+import MockPluginData from 'tests/resources/renderer/MockPluginData';
 
 describe('DockerComposatorPluginRenderer', () => {
   let renderer;
@@ -142,5 +143,16 @@ describe('DockerComposatorPluginRenderer', () => {
 
     const result = renderer.insertComponentName(formatted, component);
     expect(result).toEqual(expected);
+  });
+
+  it('should go through default in switch block', () => {
+    renderer.pluginData = new MockPluginData();
+
+    const component = {
+      id: 'WrongComponent',
+    };
+    renderer.insertChildComponentsAttributes({}, component);
+    // Object component should not be changed
+    expect(component).toEqual({ id: 'WrongComponent' });
   });
 });

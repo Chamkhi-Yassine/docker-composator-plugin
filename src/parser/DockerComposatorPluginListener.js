@@ -219,7 +219,7 @@ class DockerComposatorPluginListener {
     const dependsOnValue = [];
     // For each child object of the depends_on array, create its attributes.
     // Each child has two attributes: service and condition.
-    childNode.childs.forEach((child, i = 0) => {
+    childNode.childs.forEach((child, i) => {
       const linkDefinition = definition.definedAttributes[0].definedAttributes.find(
         ({ type }) => type === 'Link',
       );

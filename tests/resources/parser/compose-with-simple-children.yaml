@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  test-service:
+    image: busybox
+networks:
+  backend:
+    driver: custom-driver-0
+volumes:
+  data:
+    driver: custom-driver-1
+secrets:
+  secret-file:
+    file: 'path/to/secret/file'
+configs:
+  config-file:
+    file: 'path/to/config/file'

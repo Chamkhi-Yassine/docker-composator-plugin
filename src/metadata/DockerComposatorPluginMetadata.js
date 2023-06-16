@@ -57,7 +57,7 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
    * @returns {ComponentDefinition} Parsed component definition.
    */
   getComponentDefinition(component) {
-    const attributes = component.attributes || [];
+    const { attributes } = component;
     const definedAttributes = attributes.map(this.getAttributeDefinition, this);
     const comp = new ComponentDefinition({
       ...component,

@@ -8,7 +8,6 @@ class DockerComposatorPluginComponent extends Component {
       }
       if (attributes[index].type === 'Object' || attributes[index].type === 'Array') {
         const attribute = this.__getAttributeByName(attributes[index].value, name);
-
         if (attribute) {
           return attribute;
         }
