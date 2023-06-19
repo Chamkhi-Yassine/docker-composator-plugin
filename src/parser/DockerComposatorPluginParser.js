@@ -6,18 +6,18 @@ import DockerComposatorPluginListener from 'src/parser/DockerComposatorPluginLis
  * Template of plugin parser.
  */
 class DockerComposatorPluginParser extends DefaultParser {
-  constructor(pluginData) {
-    super(pluginData);
-    this.listener = new DockerComposatorPluginListener();
-  }
-
+  /**
+   * Check if the file is parsable by this parser.
+   * @param {FileInput} fileInformation - Information about the file.
+   * @returns {boolean} True if the file is parsable, false otherwise.
+   */
   isParsable(fileInformation) {
     return /\.ya?ml$/.test(fileInformation.path);
   }
 
   /**
-   * Convert the content of files into Components.
-   * @param {FileInput[]} [inputs=[]] - Data you want to parse.
+   * Parse the content of files into Components.
+   * @param {FileInput[]} [inputs=[]] - Data to parse.
    * @param {string} [parentEventId=null] - Parent event id.
    */
   parse(inputs = [], parentEventId = null) {
@@ -53,16 +53,14 @@ class DockerComposatorPluginParser extends DefaultParser {
             global: false,
           },
         });
-        this.listener.fileInformation = input;
-        this.listener.definitions = this.pluginData.definitions.components;
-        // this.listener = new DockerComposatorPluginListener(
-        //   input,
-        //   this.pluginData.definitions.components,
-        // );
+        const listener = new DockerComposatorPluginListener(
+          input,
+          this.pluginData.definitions.components,
+        );
 
         lidyParse({
           src_data: input.content,
-          listener: this.listener,
+          listener,
           path: input.path,
           prog: {
             errors: [],
@@ -73,12 +71,7 @@ class DockerComposatorPluginParser extends DefaultParser {
           },
         });
 
-        this.pluginData.components.push(...this.listener.components);
-        this.listener.fileInformation = {};
-        this.listener.components = [];
-        this.listener.definitions = [];
-        this.listener.childComponentsByType = {};
-
+        this.pluginData.components.push(...listener.components);
         this.pluginData.emitEvent({ id, status: 'success' });
       });
   }

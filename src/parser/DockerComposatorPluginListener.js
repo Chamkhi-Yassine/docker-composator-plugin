@@ -11,26 +11,9 @@ class DockerComposatorPluginListener {
    * @param {ComponentDefinition[]} [definitions=[]] - All component definitions.
    */
   constructor(fileInformation, definitions = []) {
-    /**
-     * File information.
-     * @type {FileInformation}
-     */
     this.fileInformation = fileInformation;
-
-    /**
-     * Array of component definitions.
-     * @type {ComponentDefinition[]}
-     */
     this.definitions = definitions;
-
-    /**
-     * Parsed components.
-     */
     this.components = [];
-
-    /**
-     * Parsed subcomponents.
-     */
     this.childComponentsByType = {};
   }
 
@@ -217,8 +200,6 @@ class DockerComposatorPluginListener {
 
   createDependsOnAttribute(id, childNode, childKey, definition) {
     const dependsOnValue = [];
-    // For each child object of the depends_on array, create its attributes.
-    // Each child has two attributes: service and condition.
     childNode.childs.forEach((child, i) => {
       const linkDefinition = definition.definedAttributes[0].definedAttributes.find(
         ({ type }) => type === 'Link',
@@ -247,10 +228,10 @@ class DockerComposatorPluginListener {
           }),
         ],
       }));
-      // Increment depends_on service link name for the current component
+
       i += 1;
     });
-    // Return the final depends_on component with all its children properly set
+
     return new ComponentAttribute({
       name: childKey,
       type: 'Array',

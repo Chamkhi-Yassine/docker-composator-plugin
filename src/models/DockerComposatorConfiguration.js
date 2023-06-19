@@ -1,8 +1,5 @@
 import { DefaultConfiguration } from 'leto-modelizer-plugin-core';
 
-/**
- * Terrator configuration.
- */
 class DockerComposatorConfiguration extends DefaultConfiguration {
   /**
    * Default constructor.

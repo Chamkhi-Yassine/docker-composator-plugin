@@ -12,8 +12,9 @@ import packageInfo from 'package.json';
 class DockerComposatorPlugin extends DefaultPlugin {
   /**
    * Default constructor.
+   * @param {Object} props - Plugin properties.
+   *   @param {string} props.event - Event data.
    */
-
   constructor(props = {
     event: null,
   }) {

@@ -24,9 +24,14 @@ class DockerComposatorData extends DefaultData {
     return id;
   }
 
+  /**
+   * Get all component links.
+   * @returns {ComponentLink[]} Array of component links.
+   */
   getLinks() {
     const links = [];
-    // This function creates depends_on links for Service Components
+
+    // Create depends_on links for Service Components
     this.components.forEach((component) => {
       const dependsOnAttribute = component.attributes.find(
         ({ name }) => name === 'depends_on',
@@ -48,6 +53,7 @@ class DockerComposatorData extends DefaultData {
       }
     });
 
+    // Create links based on link definitions
     this.definitions.links.forEach((definition) => {
       const components = this.getComponentsByType(definition.sourceRef);
       components.forEach((component) => {
@@ -64,11 +70,13 @@ class DockerComposatorData extends DefaultData {
         });
       });
     });
+
+    // Add workflow links
     return links.concat(this.getWorkflowLinks());
   }
 
   /**
-   * Set link definition in link definitions
+   * Set link definition in link definitions.
    * @param {string} type - Component type to link.
    * @param {ComponentAttributeDefinition[]} definedAttributes - Component attribute definitions.
    * @private

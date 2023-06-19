@@ -3,10 +3,16 @@ import {
   FileInput,
 } from 'leto-modelizer-plugin-core';
 import yaml from 'js-yaml';
+
 /**
  * Template of plugin renderer.
  */
 class DockerComposatorPluginRenderer extends DefaultRender {
+  /**
+   * Render files from related components.
+   * @param {string} [parentEventId] - Parent event id.
+   * @returns {FileInput[]} Render files array.
+   */
   renderFiles(parentEventId = null) {
     return this.pluginData.components.filter(
       (component) => !component.getContainerId(),
@@ -31,23 +37,29 @@ class DockerComposatorPluginRenderer extends DefaultRender {
       });
   }
 
+  /**
+   * Format a component into the desired structure.
+   * @param {Component} component - The component to format.
+   * @returns {Object} The formatted component.
+   */
   formatComponent(component) {
     const formatted = this.formatAttributes(component.attributes, component);
-    // formatted = this.insertComponentName(formatted, component);
     this.insertChildComponentsAttributes(formatted, component);
-    // this.insertDefaultValues(formatted, component);
     return formatted;
   }
 
+  /**
+   * Format the attributes of a component.
+   * @param {Attribute[]} attributes - The attributes to format.
+   * @param {Component} component - The component containing the attributes.
+   * @returns {Object} The formatted attributes.
+   */
   formatAttributes(attributes, component) {
     return attributes.reduce((acc, attribute) => {
       if (attribute.type === 'Object') {
         acc[attribute.name] = this.formatAttributes(attribute.value, component);
       } else if (attribute.type === 'Array') {
-        // acc[attribute.name] = Object.values(this.formatAttributes(attribute.value, component));
-
         if (attribute.name === 'depends_on') {
-          // acc[attribute.name] = Object.values(this.formatAttributes(attribute.value, component));
           acc[attribute.name] = this.formatDependsOnAttributes(attribute);
         } else {
           acc[attribute.name] = Array.from(attribute.value);
@@ -61,6 +73,11 @@ class DockerComposatorPluginRenderer extends DefaultRender {
     }, {});
   }
 
+  /**
+   * Format the "depends_on" attribute of a component.
+   * @param {Attribute} attribute - The "depends_on" attribute.
+   * @returns {Object} The formatted "depends_on" attribute.
+   */
   formatDependsOnAttributes(attribute) {
     const subAttributes = {};
     attribute.value.forEach((childObject) => {
@@ -70,11 +87,24 @@ class DockerComposatorPluginRenderer extends DefaultRender {
     return subAttributes;
   }
 
+  /**
+   * Insert the component name into the formatted object.
+   * @param {Object} formatted - The formatted object.
+   * @param {Component} component - The component.
+   * @returns {Object} The formatted object with the component name inserted.
+   */
   insertComponentName(formatted, component) {
     formatted = this.insertFront(formatted, 'name', component.id);
     return formatted;
   }
 
+  /**
+   * Insert a key-value pair at the front of an object.
+   * @param {Object} object - The object to modify.
+   * @param {string} key - The key to insert.
+   * @param {*} value - The value to insert.
+   * @returns {Object} The object with the key-value pair inserted at the front.
+   */
   insertFront(object, key, value) {
     delete object[key];
     return {
@@ -83,6 +113,11 @@ class DockerComposatorPluginRenderer extends DefaultRender {
     };
   }
 
+  /**
+   * Insert attributes of child components into the formatted object.
+   * @param {Object} formatted - The formatted object.
+   * @param {Component} component - The parent component.
+   */
   insertChildComponentsAttributes(formatted, component) {
     const childComponents = this.pluginData.getChildren(component.id);
     if (!childComponents.length) {

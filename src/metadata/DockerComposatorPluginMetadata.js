@@ -6,6 +6,7 @@ import {
 } from 'leto-modelizer-plugin-core';
 import jsonComponents from 'src/assets/metadata';
 import Schema from 'src/metadata/ValidationSchema';
+
 /*
  * Metadata is used to generate definition of Component and ComponentAttribute.
  *
@@ -37,7 +38,6 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
     }
 
     if (errors.length > 0) {
-      // throw new Error('Metadata are not valid', { cause: errors });
       return false;
     }
 
@@ -75,7 +75,7 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
     const subAttributes = attribute.attributes || [];
     const attributeDef = new ComponentAttributeDefinition({
       ...attribute,
-      displayName: attribute.displayName, // || this.formatDisplayName(attribute.name),
+      displayName: attribute.displayName,
       definedAttributes: subAttributes.map(this.getAttributeDefinition, this),
     });
     attributeDef.expanded = attribute.expanded || false;
