@@ -40,7 +40,7 @@ class DockerComposatorRenderer extends DefaultRender {
   /**
    * Format a component into the desired structure.
    * @param {Component} component - The component to format.
-   * @returns {Object} The formatted component.
+   * @returns {object} The formatted component.
    */
   formatComponent(component) {
     const formatted = this.formatAttributes(component.attributes, component);
@@ -52,7 +52,7 @@ class DockerComposatorRenderer extends DefaultRender {
    * Format the attributes of a component.
    * @param {Attribute[]} attributes - The attributes to format.
    * @param {Component} component - The component containing the attributes.
-   * @returns {Object} The formatted attributes.
+   * @returns {object} The formatted attributes.
    */
   formatAttributes(attributes, component) {
     return attributes.reduce((acc, attribute) => {
@@ -76,7 +76,7 @@ class DockerComposatorRenderer extends DefaultRender {
   /**
    * Format the "depends_on" attribute of a component.
    * @param {Attribute} attribute - The "depends_on" attribute.
-   * @returns {Object} The formatted "depends_on" attribute.
+   * @returns {object} The formatted "depends_on" attribute.
    */
   formatDependsOnAttributes(attribute) {
     const subAttributes = {};
@@ -89,9 +89,9 @@ class DockerComposatorRenderer extends DefaultRender {
 
   /**
    * Insert the component name into the formatted object.
-   * @param {Object} formatted - The formatted object.
+   * @param {object} formatted - The formatted object.
    * @param {Component} component - The component.
-   * @returns {Object} The formatted object with the component name inserted.
+   * @returns {object} The formatted object with the component name inserted.
    */
   insertComponentName(formatted, component) {
     formatted = this.insertFront(formatted, 'name', component.id);
@@ -100,10 +100,10 @@ class DockerComposatorRenderer extends DefaultRender {
 
   /**
    * Insert a key-value pair at the front of an object.
-   * @param {Object} object - The object to modify.
+   * @param {object} object - The object to modify.
    * @param {string} key - The key to insert.
    * @param {*} value - The value to insert.
-   * @returns {Object} The object with the key-value pair inserted at the front.
+   * @returns {object} The object with the key-value pair inserted at the front.
    */
   insertFront(object, key, value) {
     delete object[key];
@@ -115,7 +115,7 @@ class DockerComposatorRenderer extends DefaultRender {
 
   /**
    * Insert attributes of child components into the formatted object.
-   * @param {Object} formatted - The formatted object.
+   * @param {object} formatted - The formatted object.
    * @param {Component} component - The parent component.
    */
   insertChildComponentsAttributes(formatted, component) {

@@ -86,5 +86,12 @@ describe('Test DockerComposatorParser', () => {
         expect(listener.exit_secret(undefined)).not.toBeDefined();
       });
     });
+
+    describe('Test function: createComponentFromTree', () => {
+      it('Should return null if type is not in list', () => {
+        const listener = new DockerComposatorListener();
+        expect(listener.createComponentFromTree({}, 'NonExistentType')).toBeNull();
+      });
+    });
   });
 });

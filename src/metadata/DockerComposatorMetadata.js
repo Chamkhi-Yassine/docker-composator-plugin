@@ -8,7 +8,7 @@ import jsonComponents from 'src/assets/metadata';
 import Schema from 'src/metadata/ValidationSchema';
 
 /*
- * Metadata is used to generate definition of Component and ComponentAttribute.
+ * Metadata is used to generate definitions of Components and ComponentAttributes.
  *
  * In our plugin managing Docker Composator, we use [Ajv](https://ajv.js.org/) to validate metadata.
  * And we provide a `assets/metadata/docker-compose.json` to define all metadata.
@@ -44,6 +44,9 @@ class DockerComposatorMetadata extends DefaultMetadata {
     return true;
   }
 
+  /**
+   * Function that adds component definitions from JSON file to pluginData.
+   */
   parse() {
     const componentDefs = jsonComponents.flatMap(
       (component) => this.getComponentDefinition(component),
@@ -52,18 +55,18 @@ class DockerComposatorMetadata extends DefaultMetadata {
   }
 
   /**
-   * Convert a JSON component definition object to a KubernetesComponentDefinition.
+   * Convert a JSON component definition object to a ComponentDefinition.
    * @param {object} component - JSON component definition object to parse.
    * @returns {ComponentDefinition} Parsed component definition.
    */
   getComponentDefinition(component) {
     const { attributes } = component;
     const definedAttributes = attributes.map(this.getAttributeDefinition, this);
-    const comp = new ComponentDefinition({
+    const componentDef = new ComponentDefinition({
       ...component,
       definedAttributes,
     });
-    return comp;
+    return componentDef;
   }
 
   /**

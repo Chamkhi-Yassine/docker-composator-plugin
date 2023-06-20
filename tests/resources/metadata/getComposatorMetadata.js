@@ -3,7 +3,7 @@ import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
 import DockerComposatorData from 'src/models/DockerComposatorData';
 
 /**
- * Convert a JSON component definition object to a KubernetesComponentDefinition.
+ * Create metadata from a specific metadata JSON file.
  * @param {string} metadataName - metadata name.
  * @param {string} metadataUrl - path to metadata JSON file.
  * @returns {DockerComposatorMetadata} DockerComposatorMetadata instance containing metadata

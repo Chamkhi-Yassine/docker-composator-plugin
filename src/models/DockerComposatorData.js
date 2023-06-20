@@ -53,7 +53,7 @@ class DockerComposatorData extends DefaultData {
       }
     });
 
-    // Create links based on link definitions
+    // Create other links based on link definitions
     this.definitions.links.forEach((definition) => {
       const components = this.getComponentsByType(definition.sourceRef);
       components.forEach((component) => {

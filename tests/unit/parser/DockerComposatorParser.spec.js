@@ -31,13 +31,6 @@ describe('Test DockerComposatorParser', () => {
         expect(parser.isParsable(file)).toEqual(false);
       });
 
-      // it('Should return false on missing file', () => {
-      //   const parser = new DockerComposatorParser();
-      //   const file = new FileInformation({ path: 'missing_file.yml' });
-      //
-      //   expect(parser.isParsable(file)).toEqual(false);
-      // });
-
       it('Should return false on wrong file', () => {
         const parser = new DockerComposatorParser();
         const file = new FileInformation({ path: '.github/workflows/simple.tf' });
