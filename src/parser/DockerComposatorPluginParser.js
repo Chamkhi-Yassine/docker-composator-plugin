@@ -2,22 +2,19 @@ import { DefaultParser } from 'leto-modelizer-plugin-core';
 import { parse as lidyParse } from 'src/lidy/dcompose';
 import DockerComposatorPluginListener from 'src/parser/DockerComposatorPluginListener';
 
-/**
- * Template of plugin parser.
- */
 class DockerComposatorPluginParser extends DefaultParser {
-  /**
-   * Check if the file is parsable by this parser.
-   * @param {FileInput} fileInformation - Information about the file.
-   * @returns {boolean} True if the file is parsable, false otherwise.
-   */
+  constructor(pluginData) {
+    super(pluginData);
+    this.listener = new DockerComposatorPluginListener();
+  }
+
   isParsable(fileInformation) {
     return /\.ya?ml$/.test(fileInformation.path);
   }
 
   /**
-   * Parse the content of files into Components.
-   * @param {FileInput[]} [inputs=[]] - Data to parse.
+   * Convert the content of files into Components.
+   * @param {FileInput[]} [inputs=[]] - Data you want to parse.
    * @param {string} [parentEventId=null] - Parent event id.
    */
   parse(inputs = [], parentEventId = null) {
@@ -53,14 +50,13 @@ class DockerComposatorPluginParser extends DefaultParser {
             global: false,
           },
         });
-        const listener = new DockerComposatorPluginListener(
-          input,
-          this.pluginData.definitions.components,
-        );
+
+        this.listener.fileInformation = input;
+        this.listener.definitions = this.pluginData.definitions.components;
 
         lidyParse({
           src_data: input.content,
-          listener,
+          listener: this.listener,
           path: input.path,
           prog: {
             errors: [],
@@ -71,7 +67,12 @@ class DockerComposatorPluginParser extends DefaultParser {
           },
         });
 
-        this.pluginData.components.push(...listener.components);
+        this.pluginData.components.push(...this.listener.components);
+        this.listener.fileInformation = {};
+        this.listener.components = [];
+        this.listener.definitions = [];
+        this.listener.childComponentsByType = {};
+
         this.pluginData.emitEvent({ id, status: 'success' });
       });
   }
