@@ -46,42 +46,42 @@ describe('Test DockerComposatorPluginParser', () => {
     });
 
     describe('Test function: exit_root', () => {
-      it('Should do nothing if not rootNode.value.version', () => {
+      it('Should do nothing if rootNode.value.version is not defined', () => {
         const listener = new DockerComposatorPluginListener();
         expect(listener.exit_root({ value: 'value does not have version' })).not.toBeDefined();
       });
     });
 
     describe('Test function: exit_service', () => {
-      it('Should do nothing if not rootNode.value.version', () => {
+      it('Should do nothing if serviceNode is not defined', () => {
         const listener = new DockerComposatorPluginListener();
         expect(listener.exit_service(undefined)).not.toBeDefined();
       });
     });
 
     describe('Test function: exit_volume', () => {
-      it('Should do nothing if not rootNode.value.version', () => {
+      it('Should do nothing if columeNode is not defined', () => {
         const listener = new DockerComposatorPluginListener();
         expect(listener.exit_volume(undefined)).not.toBeDefined();
       });
     });
 
     describe('Test function: exit_network', () => {
-      it('Should do nothing if not rootNode.value.version', () => {
+      it('Should do nothing if networkNode is not defined', () => {
         const listener = new DockerComposatorPluginListener();
         expect(listener.exit_network(undefined)).not.toBeDefined();
       });
     });
 
     describe('Test function: exit_config', () => {
-      it('Should do nothing if not rootNode.value.version', () => {
+      it('Should do nothing if configNode is not defined', () => {
         const listener = new DockerComposatorPluginListener();
         expect(listener.exit_config(undefined)).not.toBeDefined();
       });
     });
 
     describe('Test function: exit_secret', () => {
-      it('Should do nothing if not rootNode.value.version', () => {
+      it('Should do nothing if secretNode is not defined', () => {
         const listener = new DockerComposatorPluginListener();
         expect(listener.exit_secret(undefined)).not.toBeDefined();
       });
