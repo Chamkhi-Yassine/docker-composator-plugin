@@ -1,10 +1,10 @@
 import { ComponentAttribute, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
 import DockerComposatorData from 'src/models/DockerComposatorData';
-import DockerComposatorPluginComponent from 'src/models/DockerComposatorPluginComponent';
-import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorComponent from 'src/models/DockerComposatorComponent';
+import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
 
 const pluginData = new DockerComposatorData();
-const metadata = new DockerComposatorPluginMetadata(pluginData);
+const metadata = new DockerComposatorMetadata(pluginData);
 metadata.parse();
 
 const dockerComposeDef = pluginData.definitions.components
@@ -34,7 +34,7 @@ const dependsOnDatabaseDef = new ComponentAttributeDefinition({
   name: 'service_veterinary-ms_1',
 });
 
-const dockerCompose = new DockerComposatorPluginComponent({
+const dockerCompose = new DockerComposatorComponent({
   id: 'veto-full-compose',
   path: './veto-full-compose.yaml',
   definition: dockerComposeDef,
@@ -49,7 +49,7 @@ const dockerCompose = new DockerComposatorPluginComponent({
   ],
 });
 
-const databaseService = new DockerComposatorPluginComponent({
+const databaseService = new DockerComposatorComponent({
   id: 'database',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
@@ -113,7 +113,7 @@ const databaseService = new DockerComposatorPluginComponent({
   ],
 });
 
-const veterinaryConfigServerService = new DockerComposatorPluginComponent({
+const veterinaryConfigServerService = new DockerComposatorComponent({
   id: 'veterinary-config-server',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
@@ -216,7 +216,7 @@ const veterinaryConfigServerService = new DockerComposatorPluginComponent({
   ],
 });
 
-const veterinaryMsService = new DockerComposatorPluginComponent({
+const veterinaryMsService = new DockerComposatorComponent({
   id: 'veterinary-ms',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
@@ -302,7 +302,7 @@ const veterinaryMsService = new DockerComposatorPluginComponent({
   ],
 });
 
-const backendNetwork = new DockerComposatorPluginComponent({
+const backendNetwork = new DockerComposatorComponent({
   id: 'backend',
   path: './veto-full-compose.yaml',
   definition: networkDef,
@@ -324,7 +324,7 @@ const backendNetwork = new DockerComposatorPluginComponent({
   ],
 });
 
-const dataVolume = new DockerComposatorPluginComponent({
+const dataVolume = new DockerComposatorComponent({
   id: 'data',
   path: './veto-full-compose.yaml',
   definition: volumeDef,
@@ -346,7 +346,7 @@ const dataVolume = new DockerComposatorPluginComponent({
   ],
 });
 
-const secretComponent = new DockerComposatorPluginComponent({
+const secretComponent = new DockerComposatorComponent({
   id: 'secret-file',
   path: './veto-full-compose.yaml',
   definition: secretDef,
@@ -368,7 +368,7 @@ const secretComponent = new DockerComposatorPluginComponent({
   ],
 });
 
-const configComponent = new DockerComposatorPluginComponent({
+const configComponent = new DockerComposatorComponent({
   id: 'config-file',
   path: './veto-full-compose.yaml',
   definition: configDef,

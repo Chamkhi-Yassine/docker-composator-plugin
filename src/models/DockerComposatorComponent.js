@@ -1,6 +1,6 @@
 import { Component } from 'leto-modelizer-plugin-core';
 
-class DockerComposatorPluginComponent extends Component {
+class DockerComposatorComponent extends Component {
   /**
    * Get attribute by name recursively.
    * @param {ComponentAttribute[]} attributes - Array of component attributes.
@@ -25,4 +25,4 @@ class DockerComposatorPluginComponent extends Component {
   }
 }
 
-export default DockerComposatorPluginComponent;
+export default DockerComposatorComponent;

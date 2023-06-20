@@ -1,12 +1,12 @@
-import DockerComposatorPluginRenderer from 'src/render/DockerComposatorPluginRenderer';
+import DockerComposatorRenderer from 'src/render/DockerComposatorRenderer';
 import pluginData from 'tests/resources/renderer/RendererTestData';
 import MockPluginData from 'tests/resources/renderer/MockPluginData';
 
-describe('DockerComposatorPluginRenderer', () => {
+describe('DockerComposatorRenderer', () => {
   let renderer;
 
   beforeEach(() => {
-    renderer = new DockerComposatorPluginRenderer(pluginData);
+    renderer = new DockerComposatorRenderer(pluginData);
   });
 
   it('should render files correctly', () => {

@@ -1,10 +1,10 @@
 import { ComponentAttribute } from 'leto-modelizer-plugin-core';
 import DockerComposatorData from 'src/models/DockerComposatorData';
-import DockerComposatorPluginComponent from 'src/models/DockerComposatorPluginComponent';
-import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorComponent from 'src/models/DockerComposatorComponent';
+import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
 
 const pluginData = new DockerComposatorData();
-const metadata = new DockerComposatorPluginMetadata(pluginData);
+const metadata = new DockerComposatorMetadata(pluginData);
 metadata.parse();
 
 const serviceDef = pluginData.definitions.components
@@ -16,7 +16,7 @@ const dependsOnLinkDef = serviceDef.definedAttributes.find(
 ).definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
 
 // Create the veterinary-config-server service component
-const veterinaryConfigServerService = new DockerComposatorPluginComponent({
+const veterinaryConfigServerService = new DockerComposatorComponent({
   id: 'veterinary-config-server',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
@@ -44,7 +44,7 @@ const veterinaryConfigServerService = new DockerComposatorPluginComponent({
 });
 
 // Create the veterinary-ms service component
-const veterinaryMsService = new DockerComposatorPluginComponent({
+const veterinaryMsService = new DockerComposatorComponent({
   id: 'veterinary-ms',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
@@ -82,7 +82,7 @@ const veterinaryMsService = new DockerComposatorPluginComponent({
   ],
 });
 
-const backendNetwork = new DockerComposatorPluginComponent({
+const backendNetwork = new DockerComposatorComponent({
   id: 'backend',
   path: './veto-full-compose.yaml',
   definition: networkDef,

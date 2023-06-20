@@ -1,10 +1,10 @@
 import { ComponentAttribute, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
-import Component from 'src/models/DockerComposatorPluginComponent';
+import Component from 'src/models/DockerComposatorComponent';
 
 /**
  * Lidy listener for Docker Compose files.
  */
-class DockerComposatorPluginListener {
+class DockerComposatorListener {
   /**
    * Default constructor.
    * @param {FileInformation} fileInformation - File information.
@@ -259,4 +259,4 @@ class DockerComposatorPluginListener {
   }
 }
 
-export default DockerComposatorPluginListener;
+export default DockerComposatorListener;

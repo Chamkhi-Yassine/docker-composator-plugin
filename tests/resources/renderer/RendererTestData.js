@@ -1,10 +1,10 @@
 import { ComponentAttribute } from 'leto-modelizer-plugin-core';
 import DockerComposatorData from 'src/models/DockerComposatorData';
-import DockerComposatorPluginComponent from 'src/models/DockerComposatorPluginComponent';
-import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorComponent from 'src/models/DockerComposatorComponent';
+import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
 
 const pluginData = new DockerComposatorData();
-const metadata = new DockerComposatorPluginMetadata(pluginData);
+const metadata = new DockerComposatorMetadata(pluginData);
 metadata.parse();
 
 const dockerComposeDef = pluginData.definitions.components
@@ -20,7 +20,7 @@ const configDef = pluginData.definitions.components
 const secretDef = pluginData.definitions.components
   .find(({ type }) => type === 'Secret');
 
-const dockerCompose = new DockerComposatorPluginComponent({
+const dockerCompose = new DockerComposatorComponent({
   id: 'veto-full-compose',
   path: './veto-full-compose.yaml',
   definition: dockerComposeDef,
@@ -35,7 +35,7 @@ const dockerCompose = new DockerComposatorPluginComponent({
   ],
 });
 
-const service = new DockerComposatorPluginComponent({
+const service = new DockerComposatorComponent({
   id: 'database',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
@@ -117,7 +117,7 @@ service.attributes.push(new ComponentAttribute({
   ],
 }));
 
-const service2 = new DockerComposatorPluginComponent({
+const service2 = new DockerComposatorComponent({
   id: 'front',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
@@ -166,7 +166,7 @@ service2.attributes.push(new ComponentAttribute({
     .find(({ name }) => name === 'parentCompose'),
   value: 'veto-full-compose',
 }));
-const network = new DockerComposatorPluginComponent({
+const network = new DockerComposatorComponent({
   id: 'backend',
   path: './veto-full-compose.yaml',
   definition: networkDef,
@@ -188,7 +188,7 @@ network.attributes.push(new ComponentAttribute({
   value: 'veto-full-compose',
 }));
 
-const volume = new DockerComposatorPluginComponent({
+const volume = new DockerComposatorComponent({
   id: 'data',
   path: './veto-full-compose.yaml',
   definition: volumeDef,
@@ -210,7 +210,7 @@ volume.attributes.push(new ComponentAttribute({
   value: 'veto-full-compose',
 }));
 
-const config = new DockerComposatorPluginComponent({
+const config = new DockerComposatorComponent({
   id: 'config_database_config',
   path: './veto-full-compose.yaml',
   definition: configDef,
@@ -240,7 +240,7 @@ config.attributes.push(new ComponentAttribute({
   value: 'veto-full-compose',
 }));
 
-const secret = new DockerComposatorPluginComponent({
+const secret = new DockerComposatorComponent({
   id: 'databse-secret',
   path: './veto-full-compose.yaml',
   definition: secretDef,

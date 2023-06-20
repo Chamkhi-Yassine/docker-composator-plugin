@@ -1,9 +1,9 @@
 import { ComponentLinkDefinition } from 'leto-modelizer-plugin-core';
 import DockerComposatorData from 'src/models/DockerComposatorData';
-import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
+import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
 
 const pluginData = new DockerComposatorData();
-const metadata = new DockerComposatorPluginMetadata(pluginData);
+const metadata = new DockerComposatorMetadata(pluginData);
 metadata.parse();
 
 const linkDefinition1 = new ComponentLinkDefinition({

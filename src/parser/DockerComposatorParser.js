@@ -1,11 +1,11 @@
 import { DefaultParser } from 'leto-modelizer-plugin-core';
 import { parse as lidyParse } from 'src/lidy/dcompose';
-import DockerComposatorPluginListener from 'src/parser/DockerComposatorPluginListener';
+import DockerComposatorListener from 'src/parser/DockerComposatorListener';
 
-class DockerComposatorPluginParser extends DefaultParser {
+class DockerComposatorParser extends DefaultParser {
   constructor(pluginData) {
     super(pluginData);
-    this.listener = new DockerComposatorPluginListener();
+    this.listener = new DockerComposatorListener();
   }
 
   isParsable(fileInformation) {
@@ -78,4 +78,4 @@ class DockerComposatorPluginParser extends DefaultParser {
   }
 }
 
-export default DockerComposatorPluginParser;
+export default DockerComposatorParser;

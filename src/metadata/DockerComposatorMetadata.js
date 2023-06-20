@@ -14,7 +14,7 @@ import Schema from 'src/metadata/ValidationSchema';
  * And we provide a `assets/metadata/docker-compose.json` to define all metadata.
  *
  */
-class DockerComposatorPluginMetadata extends DefaultMetadata {
+class DockerComposatorMetadata extends DefaultMetadata {
   constructor(pluginData) {
     super(pluginData);
     this.ajv = new Ajv();
@@ -83,4 +83,4 @@ class DockerComposatorPluginMetadata extends DefaultMetadata {
   }
 }
 
-export default DockerComposatorPluginMetadata;
+export default DockerComposatorMetadata;

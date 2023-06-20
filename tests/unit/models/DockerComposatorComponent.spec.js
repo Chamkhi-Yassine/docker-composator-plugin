@@ -1,11 +1,11 @@
 import { ComponentAttribute } from 'leto-modelizer-plugin-core';
-import DockerComposatorPluginComponent from 'src/models/DockerComposatorPluginComponent';
+import DockerComposatorComponent from 'src/models/DockerComposatorComponent';
 
 describe('Test DockerComposatorMetadata', () => {
   describe('Test methods', () => {
     describe('Test method: __getAttributeByName', () => {
       it('Should return true on valid metadata', () => {
-        const component = new DockerComposatorPluginComponent();
+        const component = new DockerComposatorComponent();
 
         const objectAttribute = new ComponentAttribute({
           name: 'parentObject',

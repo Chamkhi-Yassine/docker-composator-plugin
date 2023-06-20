@@ -1,6 +1,6 @@
 import { DefaultDrawer } from 'leto-modelizer-plugin-core';
 
-class DockerComposatorPluginDrawer extends DefaultDrawer {
+class DockerComposatorDrawer extends DefaultDrawer {
   constructor(pluginData, resources, rootId, options) {
     super(pluginData, resources, rootId, {
       ...options,
@@ -12,4 +12,4 @@ class DockerComposatorPluginDrawer extends DefaultDrawer {
   }
 }
 
-export default DockerComposatorPluginDrawer;
+export default DockerComposatorDrawer;

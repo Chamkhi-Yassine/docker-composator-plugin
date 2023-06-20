@@ -3,7 +3,7 @@ import {
   ComponentLink,
   ComponentLinkDefinition,
 } from 'leto-modelizer-plugin-core';
-import Component from 'src/models/DockerComposatorPluginComponent';
+import Component from 'src/models/DockerComposatorComponent';
 
 class DockerComposatorData extends DefaultData {
   /**

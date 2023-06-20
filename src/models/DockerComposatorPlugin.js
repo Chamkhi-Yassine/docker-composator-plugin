@@ -2,10 +2,10 @@ import {
   DefaultPlugin,
 } from 'leto-modelizer-plugin-core';
 import DockerComposatorData from 'src/models/DockerComposatorData';
-import DockerComposatorPluginDrawer from 'src/draw/DockerComposatorPluginDrawer';
-import DockerComposatorPluginMetadata from 'src/metadata/DockerComposatorPluginMetadata';
-import DockerComposatorPluginParser from 'src/parser/DockerComposatorPluginParser';
-import DockerComposatorPluginRenderer from 'src/render/DockerComposatorPluginRenderer';
+import DockerComposatorDrawer from 'src/draw/DockerComposatorDrawer';
+import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
+import DockerComposatorParser from 'src/parser/DockerComposatorParser';
+import DockerComposatorRenderer from 'src/render/DockerComposatorRenderer';
 import DockerComposatorConfiguration from 'src/models/DockerComposatorConfiguration';
 import packageInfo from 'package.json';
 
@@ -30,10 +30,10 @@ class DockerComposatorPlugin extends DefaultPlugin {
 
     super({
       pluginData,
-      pluginDrawer: new DockerComposatorPluginDrawer(pluginData),
-      pluginMetadata: new DockerComposatorPluginMetadata(pluginData),
-      pluginParser: new DockerComposatorPluginParser(pluginData),
-      pluginRenderer: new DockerComposatorPluginRenderer(pluginData),
+      pluginDrawer: new DockerComposatorDrawer(pluginData),
+      pluginMetadata: new DockerComposatorMetadata(pluginData),
+      pluginParser: new DockerComposatorParser(pluginData),
+      pluginRenderer: new DockerComposatorRenderer(pluginData),
       configuration,
     });
   }

@@ -7,7 +7,7 @@ import yaml from 'js-yaml';
 /**
  * Template of plugin renderer.
  */
-class DockerComposatorPluginRenderer extends DefaultRender {
+class DockerComposatorRenderer extends DefaultRender {
   /**
    * Render files from related components.
    * @param {string} [parentEventId] - Parent event id.
@@ -153,4 +153,4 @@ class DockerComposatorPluginRenderer extends DefaultRender {
   }
 }
 
-export default DockerComposatorPluginRenderer;
+export default DockerComposatorRenderer;
