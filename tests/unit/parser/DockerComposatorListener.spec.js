@@ -5,10 +5,10 @@ import DockerComposatorParser from 'src/parser/DockerComposatorParser';
 import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
 import DockerComposatorData from 'src/models/DockerComposatorData';
 
-describe('Test DockerComposatorParser', () => {
+describe('Test DockerComposatorListener', () => {
   describe('Test functions', () => {
     describe('Test function: lidyToLetoType', () => {
-      it('Should return true on .yml file', () => {
+      it('Should convert type correctly', () => {
         const listener = new DockerComposatorListener();
         expect(listener.lidyToLetoType('string')).toBe('String');
         expect(listener.lidyToLetoType('boolean')).toBe('Boolean');

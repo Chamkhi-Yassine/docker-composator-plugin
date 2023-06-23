@@ -62,7 +62,7 @@ describe('Test DockerComposatorParser', () => {
         expect(pluginData.components.length).toEqual(0);
       });
 
-      it('Parse should set valid component', () => {
+      it('Should set valid components', () => {
         const pluginData = new DockerComposatorData();
         const metadata = new DockerComposatorMetadata(pluginData);
         metadata.parse();

@@ -11,14 +11,9 @@ describe('DockerComposatorRenderer', () => {
 
   it('should render files correctly', () => {
     const files = renderer.renderFiles();
-
-    // Assert the number of rendered files
     expect(files.length).toBe(1);
-
-    // Assert the file properties
     const [file] = files;
     expect(file.path).toBe('./veto-full-compose.yaml');
-    // Add more assertions for the file content if needed
   });
 
   it('should format a Docker Compose component correctly', () => {
@@ -28,7 +23,6 @@ describe('DockerComposatorRenderer', () => {
 
     const formattedComponent = renderer.formatComponent(component);
 
-    // Add assertions to validate the formatted Docker Compose component
 
     expect(formattedComponent.version).toBe('3.9');
   });
@@ -40,8 +34,6 @@ describe('DockerComposatorRenderer', () => {
 
     const formattedComponent = renderer.formatComponent(component);
 
-    // Add assertions to validate the formatted Service component
-    // Example assertions:
     expect(formattedComponent).toBeDefined();
     expect(formattedComponent.image).toEqual('postgres');
     expect(formattedComponent.environment).toEqual(['POSTGRES_USER=admin', 'POSTGRES_PASSWORD=pg-pwd']);
@@ -49,8 +41,6 @@ describe('DockerComposatorRenderer', () => {
     expect(formattedComponent.networks).toEqual(['backend']);
     expect(formattedComponent.volumes).toEqual(['data']);
     expect(formattedComponent.healthcheck).toEqual({ retries: 3, test: 'test-exemple' });
-
-    // Add more assertions as needed
   });
 
   it('should format a depends on in a Service component correctly', () => {
@@ -62,8 +52,6 @@ describe('DockerComposatorRenderer', () => {
 
     expect(formattedComponent).toBeDefined();
     expect(formattedComponent.depends_on).toEqual({ database: { condition: 'service_healthy' } });
-
-    // Add more assertions as needed
   });
 
   it('should format a Network component correctly', () => {
@@ -95,8 +83,6 @@ describe('DockerComposatorRenderer', () => {
     );
 
     const formattedComponent = renderer.formatComponent(component);
-
-    // Add assertions to validate the formatted Config component
     expect(formattedComponent).toBeDefined();
     expect(formattedComponent).toBeDefined();
     expect(formattedComponent.file).toEqual('./configs/config_server_config.yml');
@@ -132,10 +118,8 @@ describe('DockerComposatorRenderer', () => {
   });
 
   it('should insert the component name into the formatted object', () => {
-    const formatted = { ...pluginData.components[0] }; // Assuming the first component is 'veto-full-compose'
-
+    const formatted = { ...pluginData.components[0] };
     const component = pluginData.components.find((comp) => comp.id === 'veto-full-compose');
-
     const expected = {
       ...formatted,
       name: component.id,
@@ -147,12 +131,10 @@ describe('DockerComposatorRenderer', () => {
 
   it('should go through default in switch block', () => {
     renderer.pluginData = new MockPluginData();
-
     const component = {
       id: 'WrongComponent',
     };
     renderer.insertChildComponentsAttributes({}, component);
-    // Object component should not be changed
     expect(component).toEqual({ id: 'WrongComponent' });
   });
 });

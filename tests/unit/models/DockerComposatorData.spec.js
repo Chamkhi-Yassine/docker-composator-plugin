@@ -3,26 +3,24 @@ import DockerComposatorData from 'src/models/DockerComposatorData';
 import dataGetLinkTestsPluginData from 'tests/resources/models/DataGetLinkTests';
 
 describe('DockerComposatorData', () => {
-  describe('addComponent', () => {
+  describe('Test function:  addComponent', () => {
     it('should add a new component and return the generated ID', () => {
       const data = new DockerComposatorData();
-      const definition = new ComponentDefinition({ type: 'Service' }); // Create a component definition
+      const definition = new ComponentDefinition({ type: 'Service' });
 
-      const id = data.addComponent(definition); // Add the component and get the returned ID
+      const id = data.addComponent(definition); 
 
-      expect(id).toBeDefined(); // Check if the ID is defined
+      expect(id).toBeDefined(); 
 
-      // Find the added component in the components array
       const addedComponent = data.components.find((component) => component.id === id);
 
-      expect(addedComponent).toBeDefined(); // Check if the added component is defined
-      expect(addedComponent.id).toBe(id); // Check if the added component has the correct ID
-      // Check if the added component has the correct definition
+      expect(addedComponent).toBeDefined(); 
+      expect(addedComponent.id).toBe(id); 
       expect(addedComponent.definition).toBe(definition);
     });
   });
 
-  describe('getLinks', () => {
+  describe('Test function:  getLinks', () => {
     it('should return component links based on depends_on attribute', () => {
       const data = dataGetLinkTestsPluginData;
 
