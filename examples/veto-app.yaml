@@ -1,0 +1,74 @@
+version: '3.9'
+services:
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_USER=admin
+    ports:
+      - '5432:5432'
+    networks:
+      - backend
+    volumes:
+      - data
+    configs:
+      - db_config
+    secrets:
+      - db_secrets
+  veterinary-config-server:
+    image: veterinary-config-server:0.2
+    build:
+      context: ./Backend/config-server
+      dockerfile: ./Backend/config-server/Dockerfile
+    healthcheck:
+      test: curl -f http://localhost:2001/actuator/health
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - backend
+  veterinary-ms:
+    image: veterinary-ms:0.2
+    build:
+      context: ./Backend/veterinary-ms
+    depends_on:
+      veterinary-config-server:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://database:5432/veterinary_db
+      - CONFIG_SERVER_HOST=veterinary-config-server
+      - SPRING_CLOUD_CONFIG_URI=http://veterinary-config-server:2001
+    networks:
+      - backend
+      - front
+    stdin_open: true
+    privileged: true
+    tty: true
+  veterinary-frontend:
+    image: my-veterinary-ui:0.1
+    build:
+      context: ./Frontend
+    depends_on:
+      veterinary-ms:
+        condition: service_started
+    ports:
+      - '9090:9090'
+    networks:
+      - front
+    stdin_open: true
+    tty: true
+networks:
+  backend:
+    driver: custom-driver-one
+  front:
+    driver: custom-driver-2
+volumes:
+  data:
+    driver: custom-driver
+configs:
+  db_config:
+    file: config.file
+secrets:
+  db_secrets:
+    file: secret.file
