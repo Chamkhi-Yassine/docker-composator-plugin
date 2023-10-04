@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { FileInput } from 'leto-modelizer-plugin-core';
+import { FileInput, FileInformation } from 'leto-modelizer-plugin-core';
 import DockerComposatorListener from 'src/parser/DockerComposatorListener';
 import DockerComposatorParser from 'src/parser/DockerComposatorParser';
 import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
@@ -40,7 +40,7 @@ describe('Test DockerComposatorListener', () => {
           Config: [],
           Secret: [],
         };
-        parser.parse([file]);
+        parser.parse(new FileInformation({ path: './compose-with-simple-children.yaml' }), [file]);
         expect(pluginData.components.length).toBe(6);
       });
     });

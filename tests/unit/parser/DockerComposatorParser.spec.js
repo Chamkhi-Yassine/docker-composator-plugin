@@ -56,7 +56,7 @@ describe('Test DockerComposatorParser', () => {
           path: '',
           content: null,
         });
-        parser.parse([file]);
+        parser.parse(new FileInformation({ path: '' }), [file]);
 
         expect(pluginData.components).not.toBeNull();
         expect(pluginData.components.length).toEqual(0);
@@ -71,7 +71,7 @@ describe('Test DockerComposatorParser', () => {
           path: './veto-full-compose.yaml',
           content: fs.readFileSync('tests/resources/parser/veto-full-compose.yaml', 'utf8'),
         });
-        parser.parse([file]);
+        parser.parse(new FileInformation({ path: './veto-full-compose.yaml' }), [file]);
         expect(pluginData.components).toEqual(mockData.components);
       });
 
@@ -86,7 +86,7 @@ describe('Test DockerComposatorParser', () => {
           path: './empty-compose.yaml',
           content: fs.readFileSync('tests/resources/parser/empty-compose.yaml', 'utf8'),
         });
-        parser.parse([file]);
+        parser.parse(new FileInformation({ path: './empty-compose.yaml' }), [file]);
         expect(pluginData.components).toEqual(emptyComposeMockData.components);
       });
     });
