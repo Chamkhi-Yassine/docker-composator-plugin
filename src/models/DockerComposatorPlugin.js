@@ -19,7 +19,7 @@ class DockerComposatorPlugin extends DefaultPlugin {
     event: null,
   }) {
     const configuration = new DockerComposatorConfiguration({
-      defaultFileName: 'new_file.yaml',
+      defaultFileName: 'docker-compose.yaml',
       defaultFileExtension: 'yaml',
     });
 

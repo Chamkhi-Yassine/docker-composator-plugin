@@ -32,6 +32,7 @@ module.exports = {
   ignorePatterns: [
     'docs/*',
     'dist/*',
+    'src/lidy/*',
     'src/assets/index.js',
   ],
 

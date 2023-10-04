@@ -3,11 +3,6 @@ main: root
 root: 
   _oneOf:
     - docker-compose
-    - service
-    - volume
-    - network
-    - config
-    - secret
 
 
 docker-compose:
