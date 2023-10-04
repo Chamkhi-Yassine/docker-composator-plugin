@@ -5,6 +5,10 @@ import {
 } from 'leto-modelizer-plugin-core';
 import Component from 'src/models/DockerComposatorComponent';
 
+/**
+ * Specific Docker compose data.
+ * @augments {DefaultData}
+ */
 class DockerComposatorData extends DefaultData {
   /**
    * Create new component.

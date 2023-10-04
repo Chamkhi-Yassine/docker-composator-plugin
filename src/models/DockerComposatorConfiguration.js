@@ -1,5 +1,9 @@
 import { DefaultConfiguration } from 'leto-modelizer-plugin-core';
 
+
+/**
+ * DockerComposator configuration.
+ */
 class DockerComposatorConfiguration extends DefaultConfiguration {
   /**
    * Default constructor.

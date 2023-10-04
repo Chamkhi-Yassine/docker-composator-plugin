@@ -2,12 +2,24 @@ import { DefaultParser } from 'leto-modelizer-plugin-core';
 import { parse as lidyParse } from 'src/lidy/dcompose';
 import DockerComposatorListener from 'src/parser/DockerComposatorListener';
 
+/**
+ * Class to parse and retrieve components/links from Docker compose files.
+ */
 class DockerComposatorParser extends DefaultParser {
+  /**
+   * Default constructor.
+   * @param {PluginData} [pluginData] - pluginData - Plugin data with components
+   * 
+   */
   constructor(pluginData) {
     super(pluginData);
     this.listener = new DockerComposatorListener();
   }
-
+ /**
+   * Indicate if this parser can parse this file.
+   * @param {FileInformation} [fileInformation] - File information.
+   * @returns {boolean} Boolean that indicates if this file can be parsed or not.
+   */
   isParsable(fileInformation) {
     return /\.ya?ml$/.test(fileInformation.path);
   }
