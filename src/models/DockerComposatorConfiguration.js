@@ -1,4 +1,5 @@
 import { DefaultConfiguration, Tag } from 'leto-modelizer-plugin-core';
+import syntax from 'src/configuration/syntax';
 
 class DockerComposatorConfiguration extends DefaultConfiguration {
   /**
@@ -10,6 +11,7 @@ class DockerComposatorConfiguration extends DefaultConfiguration {
       ...props,
       editor: {
         ...props.editor,
+        syntax,
       },
       tags: [
         new Tag({ type: 'language', value: 'Docker-Compose' }),
