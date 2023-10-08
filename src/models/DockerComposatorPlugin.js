@@ -9,6 +9,9 @@ import DockerComposatorRenderer from 'src/render/DockerComposatorRenderer';
 import DockerComposatorConfiguration from 'src/models/DockerComposatorConfiguration';
 import packageInfo from 'package.json';
 
+/**
+ * Docker compose plugin.
+ */
 class DockerComposatorPlugin extends DefaultPlugin {
   /**
    * Default constructor.
