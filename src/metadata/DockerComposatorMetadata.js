@@ -4,8 +4,8 @@ import {
   ComponentDefinition,
   ComponentAttributeDefinition,
 } from 'leto-modelizer-plugin-core';
-import jsonComponents from 'src/assets/metadata';
-import Schema from 'src/metadata/ValidationSchema';
+import jsonComponents from '../assets/metadata';
+import Schema from '../metadata/ValidationSchema';
 
 /*
  * Metadata is used to generate definitions of Components and ComponentAttributes.

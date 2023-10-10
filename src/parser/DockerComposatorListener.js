@@ -1,5 +1,5 @@
 import { ComponentAttribute, ComponentAttributeDefinition } from 'leto-modelizer-plugin-core';
-import DockerComposatorComponent from 'src/models/DockerComposatorComponent';
+import DockerComposatorComponent from '../models/DockerComposatorComponent';
 
 /**
  * Lidy listener for Docker Compose files.
