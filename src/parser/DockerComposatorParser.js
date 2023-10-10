@@ -9,13 +9,13 @@ class DockerComposatorParser extends DefaultParser {
   /**
    * Default constructor.
    * @param {PluginData} [pluginData] - pluginData - Plugin data with components
-   * 
    */
   constructor(pluginData) {
     super(pluginData);
     this.listener = new DockerComposatorListener();
   }
- /**
+
+  /**
    * Indicate if this parser can parse this file.
    * @param {FileInformation} [fileInformation] - File information.
    * @returns {boolean} Boolean that indicates if this file can be parsed or not.
@@ -34,61 +34,53 @@ class DockerComposatorParser extends DefaultParser {
     this.pluginData.components = [];
     this.pluginData.parseErrors = [];
 
-    inputs
-      .filter(({ path }) => diagram.path === path)
-      .filter(({ content, path }) => {
-        if (content && content.trim() !== '') {
-          return true;
-        }
-        this.pluginData.emitEvent({
-          parent: parentEventId,
-          type: 'Parser',
-          action: 'read',
-          status: 'warning',
-          files: [path],
-          data: {
-            code: 'no_content',
-            global: false,
-          },
-        });
-        return false;
-      })
-      .forEach((input) => {
-        const id = this.pluginData.emitEvent({
-          parent: parentEventId,
-          type: 'Parser',
-          action: 'read',
-          status: 'running',
-          files: [input.path],
-          data: {
-            global: false,
-          },
-        });
-
-        this.listener.fileInformation = input;
-        this.listener.definitions = this.pluginData.definitions.components;
-
-        lidyParse({
-          src_data: input.content,
-          listener: this.listener,
-          path: input.path,
-          prog: {
-            errors: [],
-            warnings: [],
-            imports: [],
-            alreadyImported: [],
-            root: [],
-          },
-        });
-
-        this.pluginData.components.push(...this.listener.components);
-        this.listener.fileInformation = {};
-        this.listener.components = [];
-        this.listener.definitions = [];
-        this.listener.childComponentsByType = {};
-
-        this.pluginData.emitEvent({ id, status: 'success' });
+    inputs.filter(({ content, path }) => {
+      if (diagram.path === path && content && content.trim() !== '') {
+        return true;
+      }
+      this.pluginData.emitEvent({
+        parent: parentEventId,
+        type: 'Parser',
+        action: 'read',
+        status: 'warning',
+        files: [path],
+        data: {
+          code: 'no_content',
+          global: false,
+        },
       });
+      return false;
+    }).forEach((input) => {
+      const id = this.pluginData.emitEvent({
+        parent: parentEventId,
+        type: 'Parser',
+        action: 'read',
+        status: 'running',
+        files: [input.path],
+        data: {
+          global: false,
+        },
+      });
+      // const listener = new DockerComposatorListener(input, this.pluginData.definitions.components);
+      this.listener.fileInformation = input;
+      this.listener.definitions = this.pluginData.definitions.components;
+      this.listener.components = this.pluginData.components;
+      lidyParse({
+        src_data: input.content,
+        listener: this.listener,
+        path: input.path,
+        prog: {
+          errors: [],
+          warnings: [],
+          imports: [],
+          alreadyImported: [],
+          root: [],
+        },
+      });
+      this.listener.childComponentsByType = {};
+
+      this.pluginData.emitEvent({ id, status: 'success' });
+    });
   }
 }
 

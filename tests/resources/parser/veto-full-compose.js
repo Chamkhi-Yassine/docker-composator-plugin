@@ -24,6 +24,10 @@ const dependsOnLinkDef = serviceDef.definedAttributes.find(
   ({ name }) => name === 'depends_on',
 ).definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
 
+const dependsOnConditionDef = serviceDef.definedAttributes.find(
+  ({ name }) => name === 'depends_on',
+).definedAttributes[0].definedAttributes.find(({ name }) => name === 'condition');
+
 const dependsOnConfigServerDef = new ComponentAttributeDefinition({
   ...dependsOnLinkDef,
   name: 'service_veterinary-ms_0',
@@ -263,6 +267,7 @@ const veterinaryMsService = new DockerComposatorComponent({
           new ComponentAttribute({
             name: 'condition',
             type: 'String',
+            definition: dependsOnConditionDef,
             value: 'service_healthy',
           }),
         ],
@@ -280,6 +285,7 @@ const veterinaryMsService = new DockerComposatorComponent({
           new ComponentAttribute({
             name: 'condition',
             type: 'String',
+            definition: dependsOnConditionDef,
             value: 'service_healthy',
           }),
         ],

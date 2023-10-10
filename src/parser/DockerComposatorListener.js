@@ -42,86 +42,102 @@ class DockerComposatorListener {
   /**
    * Function called when attribute `service` is parsed.
    * Create a component from the parsed service element.
-   * @param {MapNode} serviceNode - The Lidy `root` node.
+   * @param {MapNode} serviceNode - The Lidy `service` node.
    */
   exit_service(serviceNode) {
-    const type = 'Service';
-    if (serviceNode) {
-      const serviceComponent = this.createComponentFromTree(serviceNode, type);
-      serviceComponent.path = this.fileInformation.path;
-      if (!this.childComponentsByType[type]) {
-        this.childComponentsByType[type] = [];
-      }
-      this.childComponentsByType[type].push(serviceComponent);
-    }
+    this.createComponent(serviceNode, 'Service');
   }
 
   /**
    * Function called when attribute `volume` is parsed.
    * Create a component from the parsed volume element.
-   * @param {MapNode} volumeNode - The Lidy `root` node.
+   * @param {MapNode} volumeNode - The Lidy `volume` node.
    */
   exit_volume(volumeNode) {
-    const type = 'Volume';
-    if (volumeNode) {
-      const volumeComponent = this.createComponentFromTree(volumeNode, type);
-      volumeComponent.path = this.fileInformation.path;
-      if (!this.childComponentsByType[type]) {
-        this.childComponentsByType[type] = [];
-      }
-      this.childComponentsByType[type].push(volumeComponent);
-    }
+    this.createComponent(volumeNode, 'Volume');
   }
 
   /**
    * Function called when attribute `network` is parsed.
    * Create a component from the parsed network element.
-   * @param {MapNode} networkNode - The Lidy `root` node.
+   * @param {MapNode} networkNode - The Lidy `network` node.
    */
   exit_network(networkNode) {
-    const type = 'Network';
-    if (networkNode) {
-      const networkComponent = this.createComponentFromTree(networkNode, type);
-      networkComponent.path = this.fileInformation.path;
-      if (!this.childComponentsByType[type]) {
-        this.childComponentsByType[type] = [];
-      }
-      this.childComponentsByType[type].push(networkComponent);
-    }
+    this.createComponent(networkNode, 'Network');
   }
 
   /**
    * Function called when attribute `config` is parsed.
    * Create a component from the parsed config element.
-   * @param {MapNode} configNode - The Lidy `root` node.
+   * @param {MapNode} configNode - The Lidy `config` node.
    */
   exit_config(configNode) {
-    const type = 'Config';
-    if (configNode) {
-      const configComponent = this.createComponentFromTree(configNode, type);
-      configComponent.path = this.fileInformation.path;
-      if (!this.childComponentsByType[type]) {
-        this.childComponentsByType[type] = [];
-      }
-      this.childComponentsByType[type].push(configComponent);
-    }
+    this.createComponent(configNode, 'Config');
   }
 
   /**
    * Function called when attribute `secret` is parsed.
    * Create a component from the parsed secret element.
-   * @param {MapNode} secretNode - The Lidy `root` node.
+   * @param {MapNode} secretNode - The Lidy `secret` node.
    */
   exit_secret(secretNode) {
-    const type = 'Secret';
-    if (secretNode) {
-      const secretComponent = this.createComponentFromTree(secretNode, type);
-      secretComponent.path = this.fileInformation.path;
+    this.createComponent(secretNode, 'Secret');
+  }
+
+  /**
+   * Function called to create component on exit.
+   * @param {MapNode} node - The node that contains the tree.
+   * @param {string} type - The type of the component that will be created.
+   */
+  createComponent(node, type) {
+    if (node) {
+      const component = this.createComponentFromTree(node, type);
+      component.path = this.fileInformation.path;
       if (!this.childComponentsByType[type]) {
         this.childComponentsByType[type] = [];
       }
-      this.childComponentsByType[type].push(secretComponent);
+      this.childComponentsByType[type].push(component);
     }
+  }
+
+  /**
+   * Function called to create id for component based on name.
+   * @param {MapNode} node - The node that contains the tree.
+   * @param {string} type - The type of the component that will be created.
+   * @returns {string | null} - The created id or null if type is not supported
+   */
+  setComponentId(node, type) {
+    let id = 'unnamed_component';
+    // If the component is Docker-Compose, set the id as the name of the file
+    // else find the name from the list of components respective to type
+    switch (type) {
+      case 'Docker-Compose':
+      {
+        id = this.fileInformation.path?.split('/').pop().split('.')[0];
+        break;
+      }
+      case 'Service':
+      case 'Volume':
+      case 'Network':
+      case 'Config':
+      case 'Secret':
+      {
+        const nodeObject = JSON.parse(JSON.stringify(node.ctx.src));
+        const typeLowerCase = type.toLowerCase();
+        const srcMap = new Map(Object.entries(nodeObject[`${typeLowerCase}s`]));
+
+        const currentString = JSON.stringify(node.current);
+        srcMap.forEach((value, key) => {
+          if (JSON.stringify(value) === currentString) {
+            id = key;
+          }
+        });
+        break;
+      }
+      default:
+        return null;
+    }
+    return id;
   }
 
   /**
@@ -132,57 +148,18 @@ class DockerComposatorListener {
    */
   createComponentFromTree(node, type) {
     const definition = this.definitions.find((def) => def.type === type);
-    let id = 'unnamed_component';
-
-    // If the component is Docker-Compose, set the id as the name of the file
-    // else find the name from the list of components respective to type
-    if (type === 'Docker-Compose') {
-      id = this.fileInformation.path?.split('/').pop().split('.')[0];
-      delete node.value.services;
-      delete node.value.volumes;
-      delete node.value.networks;
-      delete node.value.secrets;
-      delete node.value.configs;
-    } else if (type === 'Service') {
-      const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.services).find(
-        (key) => JSON.stringify(
-          nodeObject.ctx.src.services[key],
-        ) === JSON.stringify(nodeObject.current),
-      );
-    } else if (type === 'Volume') {
-      const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.volumes).find(
-        (key) => JSON.stringify(
-          nodeObject.ctx.src.volumes[key],
-        ) === JSON.stringify(nodeObject.current),
-      );
-    } else if (type === 'Network') {
-      const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.networks).find(
-        (key) => JSON.stringify(
-          nodeObject.ctx.src.networks[key],
-        ) === JSON.stringify(nodeObject.current),
-      );
-    } else if (type === 'Config') {
-      const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.configs).find(
-        (key) => JSON.stringify(
-          nodeObject.ctx.src.configs[key],
-        ) === JSON.stringify(nodeObject.current),
-      );
-    } else if (type === 'Secret') {
-      const nodeObject = JSON.parse(JSON.stringify(node));
-      id = Object.keys(nodeObject.ctx.src.secrets).find(
-        (key) => JSON.stringify(
-          nodeObject.ctx.src.secrets[key],
-        ) === JSON.stringify(nodeObject.current),
-      );
-    } else {
+    const id = this.setComponentId(node, type);
+    if (!id) {
       return null;
     }
+    if (type === 'Docker-Compose') {
+      const propsToDelete = ['services', 'volumes', 'networks', 'secrets', 'configs'];
+      propsToDelete.forEach((prop) => delete node.value[prop]);
+    }
+
     delete node?.value?.metadata?.value.name;
     delete node?.value?.name;
+
     const component = new DockerComposatorComponent({
       id,
       definition,
@@ -201,7 +178,7 @@ class DockerComposatorListener {
    * @returns {ComponentAttribute} - The constructed ComponentAttribute.
    */
   createAttributesFromTreeNode(id, parentNode, parentDefinition) {
-    return Object.keys(parentNode.value).map((childKey) => {
+    const result = Object.keys(parentNode.value).map((childKey) => {
       const childNode = parentNode.value[childKey];
       const definition = parentDefinition?.definedAttributes.find(
         ({ name }) => name === (parentNode.type !== 'list' ? childKey : null),
@@ -228,6 +205,8 @@ class DockerComposatorListener {
 
       return attribute;
     });
+
+    return result;
   }
 
   /**
@@ -282,6 +261,9 @@ class DockerComposatorListener {
           new ComponentAttribute({
             name: 'condition',
             type: 'String',
+            definition: definition.definedAttributes[0].definedAttributes.find(
+              ({ name }) => name === 'condition',
+            ),
             value: child.value.condition.value,
           }),
         ],

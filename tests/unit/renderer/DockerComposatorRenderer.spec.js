@@ -1,6 +1,5 @@
 import DockerComposatorRenderer from 'src/render/DockerComposatorRenderer';
 import pluginData from 'tests/resources/renderer/RendererTestData';
-import MockPluginData from 'tests/resources/renderer/MockPluginData';
 
 describe('DockerComposatorRenderer', () => {
   let renderer;
@@ -22,7 +21,6 @@ describe('DockerComposatorRenderer', () => {
     );
 
     const formattedComponent = renderer.formatComponent(component);
-
 
     expect(formattedComponent.version).toBe('3.9');
   });
@@ -115,26 +113,5 @@ describe('DockerComposatorRenderer', () => {
     expect(formattedComponent.networks).toBeUndefined();
     expect(formattedComponent.configs).toBeUndefined();
     expect(formattedComponent.secrets).toBeUndefined();
-  });
-
-  it('should insert the component name into the formatted object', () => {
-    const formatted = { ...pluginData.components[0] };
-    const component = pluginData.components.find((comp) => comp.id === 'veto-full-compose');
-    const expected = {
-      ...formatted,
-      name: component.id,
-    };
-
-    const result = renderer.insertComponentName(formatted, component);
-    expect(result).toEqual(expected);
-  });
-
-  it('should go through default in switch block', () => {
-    renderer.pluginData = new MockPluginData();
-    const component = {
-      id: 'WrongComponent',
-    };
-    renderer.insertChildComponentsAttributes({}, component);
-    expect(component).toEqual({ id: 'WrongComponent' });
   });
 });

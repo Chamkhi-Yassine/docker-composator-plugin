@@ -1,9 +1,8 @@
 import { Component } from 'leto-modelizer-plugin-core';
 
-
 /**
-* Specific Docker compose component.
-*/
+ * Specific Docker compose component.
+ */
 class DockerComposatorComponent extends Component {
   /**
    * Get attribute by name recursively.

@@ -75,8 +75,7 @@ class DockerComposatorData extends DefaultData {
       });
     });
 
-    // Add workflow links
-    return links.concat(this.getWorkflowLinks());
+    return links;
   }
 
   /**

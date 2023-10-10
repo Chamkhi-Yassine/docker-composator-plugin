@@ -56,18 +56,20 @@ class DockerComposatorRenderer extends DefaultRender {
    */
   formatAttributes(attributes, component) {
     return attributes.reduce((acc, attribute) => {
-      if (attribute.type === 'Object') {
-        acc[attribute.name] = this.formatAttributes(attribute.value, component);
-      } else if (attribute.type === 'Array') {
-        if (attribute.name === 'depends_on') {
-          acc[attribute.name] = this.formatDependsOnAttributes(attribute);
-        } else {
-          acc[attribute.name] = Array.from(attribute.value);
-        }
-      } else if (attribute.definition?.type === 'Reference') {
-        // Drop attribute in rendered file
-      } else {
-        acc[attribute.name] = attribute.value;
+      switch (attribute.type) {
+        case 'Object':
+          acc[attribute.name] = this.formatAttributes(attribute.value, component);
+          break;
+        case 'Array':
+          acc[attribute.name] = attribute.name === 'depends_on'
+            ? this.formatDependsOnAttributes(attribute)
+            : Array.from(attribute.value);
+          break;
+        default:
+          if (attribute.definition?.type !== 'Reference') {
+            acc[attribute.name] = attribute.value;
+          }
+          break;
       }
       return acc;
     }, {});
@@ -88,32 +90,6 @@ class DockerComposatorRenderer extends DefaultRender {
   }
 
   /**
-   * Insert the component name into the formatted object.
-   * @param {object} formatted - The formatted object.
-   * @param {Component} component - The component.
-   * @returns {object} The formatted object with the component name inserted.
-   */
-  insertComponentName(formatted, component) {
-    formatted = this.insertFront(formatted, 'name', component.id);
-    return formatted;
-  }
-
-  /**
-   * Insert a key-value pair at the front of an object.
-   * @param {object} object - The object to modify.
-   * @param {string} key - The key to insert.
-   * @param {*} value - The value to insert.
-   * @returns {object} The object with the key-value pair inserted at the front.
-   */
-  insertFront(object, key, value) {
-    delete object[key];
-    return {
-      [key]: value,
-      ...object,
-    };
-  }
-
-  /**
    * Insert attributes of child components into the formatted object.
    * @param {object} formatted - The formatted object.
    * @param {Component} component - The parent component.
@@ -125,30 +101,9 @@ class DockerComposatorRenderer extends DefaultRender {
     }
 
     childComponents.forEach((childComponent) => {
-      switch (childComponent.definition.type) {
-        case 'Service':
-          formatted.services ||= {};
-          formatted.services[childComponent.id] = this.formatComponent(childComponent);
-          break;
-        case 'Volume':
-          formatted.volumes ||= {};
-          formatted.volumes[childComponent.id] = this.formatComponent(childComponent);
-          break;
-        case 'Network':
-          formatted.networks ||= {};
-          formatted.networks[childComponent.id] = this.formatComponent(childComponent);
-          break;
-        case 'Config':
-          formatted.configs ||= {};
-          formatted.configs[childComponent.id] = this.formatComponent(childComponent);
-          break;
-        case 'Secret':
-          formatted.secrets ||= {};
-          formatted.secrets[childComponent.id] = this.formatComponent(childComponent);
-          break;
-        default:
-          break;
-      }
+      const componentType = `${childComponent.definition.type.toLowerCase()}s`;
+      formatted[componentType] ||= {};
+      formatted[componentType][childComponent.id] = this.formatComponent(childComponent);
     });
   }
 }
