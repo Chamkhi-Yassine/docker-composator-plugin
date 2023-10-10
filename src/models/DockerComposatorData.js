@@ -3,31 +3,13 @@ import {
   ComponentLink,
   ComponentLinkDefinition,
 } from 'leto-modelizer-plugin-core';
-import Component from 'src/models/DockerComposatorComponent';
+// import Component from 'src/models/DockerComposatorComponent';
 
 /**
  * Specific Docker compose data.
  * @augments {DefaultData}
  */
 class DockerComposatorData extends DefaultData {
-  /**
-   * Create new component.
-   * @param {ComponentDefinition} definition - Component definition.
-   * @param {string} [folder=''] - Folder path.
-   * @returns {string} Component id.
-   */
-  addComponent(definition, folder = '') {
-    const id = this.generateComponentId(definition);
-    const component = new Component({
-      id,
-      definition,
-      path: `${folder}${id}.yaml`,
-    });
-    this.components.push(component);
-
-    return id;
-  }
-
   /**
    * Get all component links.
    * @returns {ComponentLink[]} Array of component links.
