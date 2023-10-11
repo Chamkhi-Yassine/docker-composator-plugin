@@ -15,11 +15,34 @@ import Schema from 'src/metadata/ValidationSchema';
  *
  */
 class DockerComposatorMetadata extends DefaultMetadata {
+
+  /**
+   * Default constructor.
+   * @param {object} pluginData - Plugin data.
+   */
   constructor(pluginData) {
     super(pluginData);
+     /**
+     * ajv.
+     * @type {Ajv}
+     */
     this.ajv = new Ajv();
+    /**
+     * schema.
+     * @type {Schema}
+     */
     this.schema = Schema;
+
+    /**
+     * dockerComosator components
+     * @type {jsonComponents}
+     */
     this.jsonComponents = jsonComponents;
+
+    /**
+     * dockerComosator validation
+     * @type {validate}
+     */
     this.validate = this.validate.bind(this);
   }
 
@@ -112,7 +135,7 @@ class DockerComposatorMetadata extends DefaultMetadata {
 
   /**
    * Get all possible parent container types.
-   * @param {JenkinsComponentDefinition} componentDefinition - Definition to get all parent
+   * @param {DockerComposatorComponentDefinition} componentDefinition - Definition to get all parent
    * container types.
    * @returns {string[]} All possible parent container types.
    */
