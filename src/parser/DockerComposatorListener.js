@@ -11,9 +11,25 @@ class DockerComposatorListener {
    * @param {ComponentDefinition[]} [definitions=[]] - All component definitions.
    */
   constructor(fileInformation, definitions = []) {
+    /**
+     * fileInformation
+     * @param {object} fileInformation
+     */
     this.fileInformation = fileInformation;
+    /**
+     * definitions
+     * @param {definitions} fileInformation
+     */
     this.definitions = definitions;
+    /**
+     * components
+     * @param {Array} components
+     */
     this.components = [];
+    /**
+     * childComponentsByType
+     * @param {object} childComponentsByType
+     */
     this.childComponentsByType = {};
   }
 
