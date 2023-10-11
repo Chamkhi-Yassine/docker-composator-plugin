@@ -51,6 +51,7 @@ class DockerComposatorMetadata extends DefaultMetadata {
     const componentDefs = jsonComponents.flatMap(
       (component) => this.getComponentDefinition(component),
     );
+    this.setChildrenTypes(componentDefs);
     this.pluginData.definitions.components = componentDefs;
   }
 
@@ -61,11 +62,21 @@ class DockerComposatorMetadata extends DefaultMetadata {
    */
   getComponentDefinition(component) {
     const { attributes } = component;
+    if (component.type !== 'Docker-Compose') {
+      // All stages are children of the Docker-Compose, so they must have a reference attibute.
+      attributes.unshift({
+        name: 'docker-compose',
+        type: 'Reference',
+        containerRef: 'Docker-Compose',
+        required: true,
+      });
+    }
     const definedAttributes = attributes.map(this.getAttributeDefinition, this);
     const componentDef = new ComponentDefinition({
       ...component,
       definedAttributes,
     });
+    componentDef.parentTypes = this.getParentTypes(componentDef);
     return componentDef;
   }
 
@@ -78,11 +89,63 @@ class DockerComposatorMetadata extends DefaultMetadata {
     const subAttributes = attribute.attributes || [];
     const attributeDef = new ComponentAttributeDefinition({
       ...attribute,
-      displayName: attribute.displayName,
+      displayName: attribute.displayName || this.formatDisplayName(attribute.name),
       definedAttributes: subAttributes.map(this.getAttributeDefinition, this),
     });
     attributeDef.expanded = attribute.expanded || false;
     return attributeDef;
+  }
+
+  /**
+   * Format a name into a readable displayName.
+   * @param {string} name - Name to format.
+   * @returns {string} Formatted displayName.
+   */
+  formatDisplayName(name) {
+    if (!name) {
+      return name;
+    }
+    const s = name.replace(/([A-Z])/g, ' $1');
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+
+  /**
+   * Get all possible parent container types.
+   * @param {JenkinsComponentDefinition} componentDefinition - Definition to get all parent
+   * container types.
+   * @returns {string[]} All possible parent container types.
+   */
+  getParentTypes(componentDefinition) {
+    const parentTypes = [];
+
+    componentDefinition.definedAttributes
+      .filter((attribute) => attribute.type === 'Reference')
+      .map((attribute) => attribute.containerRef)
+      .filter((ref) => !parentTypes.includes(ref))
+      .forEach((ref) => parentTypes.push(ref));
+
+    return parentTypes;
+  }
+
+
+  /**
+   * Set the childrenTypes of all containers from children's parentTypes.
+   * @param {DockerComposatorComponentDefinition[]} componentDefinitions - Array of component definitions.
+   */
+  setChildrenTypes(componentDefinitions) {
+    const children = componentDefinitions
+      .filter((def) => def.parentTypes.length > 0)
+      .reduce((acc, def) => {
+        def.parentTypes.forEach((parentType) => {
+          acc[parentType] = [...(acc[parentType] || []), def.type];
+        });
+        return acc;
+      }, {});
+    componentDefinitions.filter((def) => children[def.type])
+      .forEach((def) => {
+        def.childrenTypes = children[def.type];
+      });
   }
 }
 
