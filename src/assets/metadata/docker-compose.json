@@ -5,13 +5,6 @@
         "displayName": "Docker Compose",
         "icon": "compose",
         "isContainer": true,
-        "childrenTypes": [
-          "Service",
-          "Volume",
-          "Network",
-          "Config",
-          "Secret"
-        ],
         "attributes": [
             {
                 "name": "version",
@@ -25,15 +18,8 @@
         "model": "DefaultModel",
         "icon": "service",
         "displayName": "Service",
-        "parentTypes": ["Docker-Compose"],
         "isContainer": false,
         "attributes": [
-          {
-            "name": "parentCompose",
-            "type": "Reference",
-            "containerRef": "Docker-Compose",
-            "required": true
-          },
           {
             "name": "image",
             "type": "String",
@@ -192,15 +178,8 @@
       "model": "DefaultModel",
       "icon": "volume",
       "displayName": "Volume",
-      "parentTypes": ["Docker-Compose"],
       "isContainer":false,
       "attributes":[
-          {
-            "name": "parentCompose",
-            "type": "Reference",
-            "containerRef": "Docker-Compose",
-            "required": true
-          },
           {
             "name": "driver",              
             "type": "String",
@@ -237,15 +216,8 @@
       "model": "DefaultModel",
       "icon": "network",
       "displayName": "Network",
-      "parentTypes": ["Docker-Compose"],
       "isContainer":false,
       "attributes":[
-          {
-            "name": "parentCompose",
-            "type": "Reference",
-            "containerRef": "Docker-Compose",
-            "required": true
-          },
           {
             "name": "driver",              
             "type": "String",
@@ -337,16 +309,8 @@
       "model": "DefaultModel",
       "icon": "config",
       "displayName": "Config",
-      "parentTypes": ["Docker-Compose"],
       "isContainer":false,
       "attributes":[
-        {
-            "name": "parentCompose",
-            "type": "Reference",
-            "required":true,
-            "containerRef": "Docker-Compose"
-            
-        },
         {
             "name": "file",              
             "type": "String",
@@ -368,16 +332,8 @@
       "model": "DefaultModel",
       "icon": "secret",
       "displayName": "Secret",
-      "parentTypes": ["Docker-Compose"],
       "isContainer":false,
       "attributes":[
-        {
-            "name": "parentCompose",
-            "type": "Reference",
-            "required":true,
-            "containerRef": "Docker-Compose"
-            
-        },
         {
             "name": "file",              
             "type": "String",

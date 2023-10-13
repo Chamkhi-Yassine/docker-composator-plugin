@@ -12,6 +12,10 @@ class DockerComposatorParser extends DefaultParser {
    */
   constructor(pluginData) {
     super(pluginData);
+    /**
+     * listener
+     * @param {DockerComposatorListener} listener
+     */
     this.listener = new DockerComposatorListener();
   }
 
