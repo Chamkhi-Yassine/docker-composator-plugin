@@ -78,7 +78,22 @@ service.attributes.push(new ComponentAttribute({
   type: 'Array',
   definition: serviceDef.definedAttributes
     .find(({ name }) => name === 'volumes'),
-  value: ['data'],
+  value: [new ComponentAttribute({
+    name: null,
+    type: 'Object',
+    value: [
+      new ComponentAttribute({
+        name: 'volume_database_0',
+        type: 'Array',
+        value: ['data'],
+      }),
+      new ComponentAttribute({
+        name: 'mount-path',
+        type: 'String',
+        value: '/path/to/mount',
+      }),
+    ],
+  })],
 }));
 
 service.attributes.push(new ComponentAttribute({

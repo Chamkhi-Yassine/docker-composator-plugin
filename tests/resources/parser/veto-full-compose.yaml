@@ -9,7 +9,7 @@ services:
     networks:
       - backend
     volumes:
-      - data
+      - data:/path/to/mount
     secrets:
       - secret-file
     configs:

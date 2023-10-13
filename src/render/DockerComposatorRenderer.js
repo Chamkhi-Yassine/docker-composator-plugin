@@ -63,7 +63,9 @@ class DockerComposatorRenderer extends DefaultRender {
         case 'Array':
           acc[attribute.name] = attribute.name === 'depends_on'
             ? this.formatDependsOnAttributes(attribute)
-            : Array.from(attribute.value);
+            : attribute.name === 'volumes'
+              ? this.formatVolumesAttributes(attribute)
+              : Array.from(attribute.value);
           break;
         default:
           if (attribute.definition?.type !== 'Reference') {
@@ -85,6 +87,19 @@ class DockerComposatorRenderer extends DefaultRender {
     attribute.value.forEach((childObject) => {
       subAttributes[childObject.value[0].value] = {};
       subAttributes[childObject.value[0].value][childObject.value[1].name] = childObject.value[1].value;
+    });
+    return subAttributes;
+  }
+
+  /**
+   * Format the "volumes" attribute of a component.
+   * @param {Attribute} attribute - The "volumes" attribute.
+   * @returns {object} The formatted "volumes" attribute.
+   */
+  formatVolumesAttributes(attribute) {
+    const subAttributes = [];
+    attribute.value.forEach((childObject) => {
+      subAttributes.push(`${childObject.value[0].value}:${childObject.value[1].value}`);
     });
     return subAttributes;
   }

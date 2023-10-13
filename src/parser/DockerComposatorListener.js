@@ -40,7 +40,7 @@ class DockerComposatorListener {
   }
 
   /**
-   * Function called when attribute `service` is parsed.
+   * Function called when parsing a service.
    * Create a component from the parsed service element.
    * @param {MapNode} serviceNode - The Lidy `service` node.
    */
@@ -49,7 +49,7 @@ class DockerComposatorListener {
   }
 
   /**
-   * Function called when attribute `volume` is parsed.
+   * Function called when parsing a volume.
    * Create a component from the parsed volume element.
    * @param {MapNode} volumeNode - The Lidy `volume` node.
    */
@@ -58,7 +58,7 @@ class DockerComposatorListener {
   }
 
   /**
-   * Function called when attribute `network` is parsed.
+   * Function called when parsing a network.
    * Create a component from the parsed network element.
    * @param {MapNode} networkNode - The Lidy `network` node.
    */
@@ -67,7 +67,7 @@ class DockerComposatorListener {
   }
 
   /**
-   * Function called when attribute `config` is parsed.
+   * Function called when parsing a config.
    * Create a component from the parsed config element.
    * @param {MapNode} configNode - The Lidy `config` node.
    */
@@ -76,7 +76,7 @@ class DockerComposatorListener {
   }
 
   /**
-   * Function called when attribute `secret` is parsed.
+   * Function called when parsing a secret.
    * Create a component from the parsed secret element.
    * @param {MapNode} secretNode - The Lidy `secret` node.
    */
@@ -188,6 +188,9 @@ class DockerComposatorListener {
       if (childKey === 'depends_on') {
         return this.createDependsOnAttribute(id, childNode, definition);
       }
+      if (childKey === 'volumes') {
+        return this.createVolumesAttribute(id, childNode, definition);
+      }
       if ((childNode.type === 'map' || childNode.type === 'list')) {
         attributeValue = this.createAttributesFromTreeNode(id, childNode, definition);
       } else if (childNode.type === 'string' && (!childKey || /[0-9]+/i.test(childKey))) {
@@ -219,6 +222,61 @@ class DockerComposatorListener {
   setParentComponent(parentComponent, childComponents) {
     childComponents?.forEach((childComponent) => {
       childComponent.setReferenceAttribute(parentComponent);
+    });
+  }
+
+  /**
+   * Function called to create volumes attribute from component tree.
+   * @param {string} id - The id of the component.
+   * @param {MapNode} childNode - The node that contains the tree.
+   * @param {ComponentDefinition} definition - The definition of the component.
+   * @returns {ComponentAttribute} - The constructed volumes ComponentAttribute.
+   */
+  createVolumesAttribute(id, childNode, definition) {
+    const volumesAttributeValue = [];
+    childNode.childs.forEach((child, i) => {
+      // Fetch the definition of the link from volumes attributes definitions
+      const linkDefinition = definition.definedAttributes[0].definedAttributes.find(
+        ({ type }) => type === 'Link',
+      );
+
+      // Set the name for the new link to be created and add its definition from
+      // the one fetched previously. The name is based on the id of the current component and
+      // the index of the link (child).
+      const newLinkName = `volume_${id}_${i}`;
+      const newLinkAttributeDefinition = new ComponentAttributeDefinition({
+        ...linkDefinition,
+        name: newLinkName,
+      });
+      // Since volumes is an array of multiple objects (which are themselves ComponentAttributes)
+      // each containing a link and a condition, we push in this step the created object with its
+      // two attributes to the value of volumes.
+      volumesAttributeValue.push(new ComponentAttribute({
+        name: null,
+        type: 'Object',
+        value: [
+          new ComponentAttribute({
+            name: newLinkName,
+            type: 'Array',
+            definition: newLinkAttributeDefinition,
+            value: [child.value.split(':')[0]],
+          }),
+          new ComponentAttribute({
+            name: 'mount-path',
+            type: 'String',
+            definition: definition.definedAttributes[0].definedAttributes.find(
+              ({ name }) => name === 'mount-path',
+            ),
+            value: child.value.split(':')[1],
+          }),
+        ],
+      }));
+    });
+    return new ComponentAttribute({
+      name: 'volumes',
+      type: 'Array',
+      definition,
+      value: volumesAttributeValue,
     });
   }
 

@@ -37,7 +37,7 @@ describe('DockerComposatorRenderer', () => {
     expect(formattedComponent.environment).toEqual(['POSTGRES_USER=admin', 'POSTGRES_PASSWORD=pg-pwd']);
     expect(formattedComponent.ports).toEqual(['5432:5432']);
     expect(formattedComponent.networks).toEqual(['backend']);
-    expect(formattedComponent.volumes).toEqual(['data']);
+    expect(formattedComponent.volumes).toEqual(['data:/path/to/mount']);
     expect(formattedComponent.healthcheck).toEqual({ retries: 3, test: 'test-exemple' });
   });
 

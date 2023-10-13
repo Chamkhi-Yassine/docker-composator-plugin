@@ -137,9 +137,25 @@
           },
           {
             "name": "volumes",
-            "type": "Link",
-            "linkRef": "Volume",
-            "linkColor": "green"
+            "type": "Array",
+            "attributes": [
+              {
+                "name": null,
+                "type": "Object",
+                "attributes": [
+                  {
+                    "name": "volume-name",
+                    "type": "Link",
+                    "linkRef": "Volume",
+                    "linkColor": "green"
+                  },
+                  {
+                    "name": "mount-path",
+                    "type": "String"
+                  }
+                ]
+              }
+            ]
           },
           {
             "name": "configs",

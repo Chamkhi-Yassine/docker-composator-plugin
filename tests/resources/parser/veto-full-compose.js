@@ -38,6 +38,19 @@ const dependsOnDatabaseDef = new ComponentAttributeDefinition({
   name: 'service_veterinary-ms_1',
 });
 
+const volumesLinkDef = serviceDef.definedAttributes.find(
+  ({ name }) => name === 'volumes',
+).definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
+
+const volumesMountpathDef = serviceDef.definedAttributes.find(
+  ({ name }) => name === 'volumes',
+).definedAttributes[0].definedAttributes.find(({ name }) => name === 'mount-path');
+
+const volumesMsLinkDef = new ComponentAttributeDefinition({
+  ...volumesLinkDef,
+  name: 'volume_database_0',
+});
+
 const dockerCompose = new DockerComposatorComponent({
   id: 'veto-full-compose',
   path: './veto-full-compose.yaml',
@@ -91,7 +104,24 @@ const databaseService = new DockerComposatorComponent({
       type: 'Array',
       definition: serviceDef.definedAttributes
         .find(({ name }) => name === 'volumes'),
-      value: ['data'],
+      value: [new ComponentAttribute({
+        name: null,
+        type: 'Object',
+        value: [
+          new ComponentAttribute({
+            name: 'volume_database_0',
+            type: 'Array',
+            definition: volumesMsLinkDef,
+            value: ['data'],
+          }),
+          new ComponentAttribute({
+            name: 'mount-path',
+            type: 'String',
+            definition: volumesMountpathDef,
+            value: '/path/to/mount',
+          }),
+        ],
+      })],
     }),
     new ComponentAttribute({
       name: 'secrets',

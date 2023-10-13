@@ -39,6 +39,28 @@ class DockerComposatorData extends DefaultData {
       }
     });
 
+    // Create volumes links for Service components
+    this.components.forEach((component) => {
+      const volumesAttribute = component.attributes.find(
+        ({ name }) => name === 'volumes',
+      );
+      if (volumesAttribute) {
+        volumesAttribute.value.forEach((item) => {
+          const definition = this.definitions.links.find(
+            ({ attributeRef }) => attributeRef === 'volume-name',
+          );
+
+          links.push(new ComponentLink({
+            definition,
+            source: component.id,
+            target: item.value.find(
+              ({ name }) => name.startsWith('volume'),
+            ).value[0],
+          }));
+        });
+      }
+    });
+
     // Create other links based on link definitions
     this.definitions.links.forEach((definition) => {
       const components = this.getComponentsByType(definition.sourceRef);

@@ -11,6 +11,8 @@ const serviceDef = pluginData.definitions.components
   .find(({ type }) => type === 'Service');
 const networkDef = pluginData.definitions.components
   .find(({ type }) => type === 'Network');
+const volumeDef = pluginData.definitions.components
+  .find(({ type }) => type === 'Volume');
 const dependsOnLinkDef = serviceDef.definedAttributes.find(
   ({ name }) => name === 'depends_on',
 ).definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
@@ -79,6 +81,29 @@ const veterinaryMsService = new DockerComposatorComponent({
         }),
       ],
     }),
+    new ComponentAttribute({
+      name: 'volumes',
+      type: 'Array',
+      definition: serviceDef.definedAttributes.find(({ name }) => name === 'volumes'),
+      value: [
+        new ComponentAttribute({
+          name: null,
+          type: 'Object',
+          value: [
+            new ComponentAttribute({
+              name: 'volume_veterinary-ms_0',
+              type: 'Array',
+              value: ['data'],
+            }),
+            new ComponentAttribute({
+              name: 'mount-path',
+              type: 'String',
+              value: 'service healthy',
+            }),
+          ],
+        }),
+      ],
+    }),
   ],
 });
 
@@ -104,8 +129,31 @@ const backendNetwork = new DockerComposatorComponent({
   ],
 });
 
+const dataVolume = new DockerComposatorComponent({
+  id: 'data',
+  path: './veto-full-compose.yaml',
+  definition: volumeDef,
+  attributes: [
+    new ComponentAttribute({
+      name: 'driver',
+      type: 'String',
+      definition: volumeDef.definedAttributes
+        .find(({ name }) => name === 'driver'),
+      value: 'custom-driver',
+    }),
+    new ComponentAttribute({
+      name: 'parentCompose',
+      type: 'String',
+      definition: serviceDef.definedAttributes
+        .find(({ name }) => name === 'parentCompose'),
+      value: 'veto-full-compose',
+    }),
+  ],
+});
+
 // Add the components to the data
 pluginData.components.push(backendNetwork);
+pluginData.components.push(dataVolume);
 pluginData.components.push(veterinaryConfigServerService);
 pluginData.components.push(veterinaryMsService);
 
