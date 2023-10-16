@@ -1,13 +1,13 @@
 import {
   DefaultPlugin,
 } from 'leto-modelizer-plugin-core';
-import DockerComposatorData from '../models/DockerComposatorData';
-import DockerComposatorDrawer from '../draw/DockerComposatorDrawer';
-import DockerComposatorMetadata from '../metadata/DockerComposatorMetadata';
-import DockerComposatorParser from '../parser/DockerComposatorParser';
-import DockerComposatorRenderer from '../render/DockerComposatorRenderer';
-import DockerComposatorConfiguration from '../models/DockerComposatorConfiguration';
-import packageInfo from '../../package.json';
+import DockerComposatorData from 'src/models/DockerComposatorData';
+import DockerComposatorDrawer from 'src/draw/DockerComposatorDrawer';
+import DockerComposatorMetadata from 'src/metadata/DockerComposatorMetadata';
+import DockerComposatorParser from 'src/parser/DockerComposatorParser';
+import DockerComposatorRenderer from 'src/render/DockerComposatorRenderer';
+import DockerComposatorConfiguration from 'src/models/DockerComposatorConfiguration';
+import packageInfo from 'package.json';
 
 /**
  * Docker compose plugin.

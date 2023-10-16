@@ -1,5 +1,5 @@
 import { DefaultConfiguration, Tag } from 'leto-modelizer-plugin-core';
-import syntax from '../configuration/syntax';
+import syntax from 'src/configuration/syntax';
 
 /**
  * DockerComposator configuration.
