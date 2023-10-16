@@ -62,14 +62,11 @@ module.exports = {
     // Allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'jsdoc/no-undefined-types': 'off',
-    'no-restricted-imports': 'off',
-    'import/no-useless-path-segments': 'off',
-
-    // 'no-restricted-imports': ['error', {
-    //   patterns: [{
-    //     group: ['\\.\\./*', '\\./*'],
-    //     message: 'Use \'src/\' for base of import. Don\'t use \'./\' or \'../\'.',
-    // }],
-    // }],
+    'no-restricted-imports': ['error', {
+      patterns: [{
+        group: ['\\.\\./*', '\\./*'],
+        message: 'Use \'src/\' for base of import. Don\'t use \'./\' or \'../\'.',
+      }],
+    }],
   },
 };
