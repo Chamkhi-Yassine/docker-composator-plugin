@@ -66,6 +66,7 @@ describe('Test DockerComposatorParser', () => {
         const pluginData = new DockerComposatorData();
         const metadata = new DockerComposatorMetadata(pluginData);
         metadata.parse();
+
         const parser = new DockerComposatorParser(pluginData);
         const file = new FileInput({
           path: './veto-full-compose.yaml',

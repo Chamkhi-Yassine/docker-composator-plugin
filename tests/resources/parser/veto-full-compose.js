@@ -7,6 +7,7 @@ const pluginData = new DockerComposatorData();
 const metadata = new DockerComposatorMetadata(pluginData);
 metadata.parse();
 
+// Components Definitions
 const dockerComposeDef = pluginData.definitions.components
   .find(({ type }) => type === 'Docker-Compose');
 const serviceDef = pluginData.definitions.components
@@ -20,37 +21,55 @@ const secretDef = pluginData.definitions.components
 const configDef = pluginData.definitions.components
   .find(({ type }) => type === 'Config');
 
-const dependsOnLinkDef = serviceDef.definedAttributes.find(
-  ({ name }) => name === 'depends_on',
-).definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
+// Common attributes definitions
+const serviceImageAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'image');
+const serviceNetworksAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'networks');
+const serviceBuildAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'build');
+const buildContextAttributeDef = serviceBuildAttributeDef.definedAttributes
+  .find(({ name }) => name === 'context');
+const serviceHealthcheckAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'healthcheck');
 
-const dependsOnConditionDef = serviceDef.definedAttributes.find(
-  ({ name }) => name === 'depends_on',
-).definedAttributes[0].definedAttributes.find(({ name }) => name === 'condition');
+const parentComposeAttribute = new ComponentAttribute({
+  name: 'parentCompose',
+  type: 'String',
+  definition: serviceDef.definedAttributes
+    .find(({ name }) => name === 'parentCompose'),
+  value: 'veto-full-compose',
+});
 
+// "Depends On" attribute special definitions
+const dependsOnAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'depends_on');
+const dependsOnLinkDef = dependsOnAttributeDef.definedAttributes[0].definedAttributes
+  .find(({ type }) => type === 'Link');
+const dependsOnConditionDef = dependsOnAttributeDef.definedAttributes[0].definedAttributes
+  .find(({ name }) => name === 'condition');
 const dependsOnConfigServerDef = new ComponentAttributeDefinition({
   ...dependsOnLinkDef,
   name: 'service_veterinary-ms_0',
 });
-
 const dependsOnDatabaseDef = new ComponentAttributeDefinition({
   ...dependsOnLinkDef,
   name: 'service_veterinary-ms_1',
 });
 
-const volumesLinkDef = serviceDef.definedAttributes.find(
-  ({ name }) => name === 'volumes',
-).definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
-
-const volumesMountpathDef = serviceDef.definedAttributes.find(
-  ({ name }) => name === 'volumes',
-).definedAttributes[0].definedAttributes.find(({ name }) => name === 'mount-path');
-
+// "Volumes" attribute special definitions
+const serviceVolumesAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'volumes');
+const volumesLinkDef = serviceVolumesAttributeDef.definedAttributes[0].definedAttributes
+  .find(({ type }) => type === 'Link');
+const volumesMountpathDef = serviceVolumesAttributeDef.definedAttributes[0].definedAttributes
+  .find(({ name }) => name === 'mount-path');
 const volumesMsLinkDef = new ComponentAttributeDefinition({
   ...volumesLinkDef,
   name: 'volume_database_0',
 });
 
+// Instantiating Components
 const dockerCompose = new DockerComposatorComponent({
   id: 'veto-full-compose',
   path: './veto-full-compose.yaml',
@@ -74,8 +93,7 @@ const databaseService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'image',
       type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'image'),
+      definition: serviceImageAttributeDef,
       value: 'postgres',
     }),
     new ComponentAttribute({
@@ -95,15 +113,13 @@ const databaseService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'networks',
       type: 'Array',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'networks'),
+      definition: serviceNetworksAttributeDef,
       value: ['backend'],
     }),
     new ComponentAttribute({
       name: 'volumes',
       type: 'Array',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'volumes'),
+      definition: serviceVolumesAttributeDef,
       value: [new ComponentAttribute({
         name: null,
         type: 'Object',
@@ -137,13 +153,7 @@ const databaseService = new DockerComposatorComponent({
         .find(({ name }) => name === 'configs'),
       value: ['config-file'],
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
 });
 
@@ -155,31 +165,24 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'image',
       type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'image'),
+      definition: serviceImageAttributeDef,
       value: 'veterinary-config-server:0.2',
     }),
     new ComponentAttribute({
       name: 'build',
       type: 'Object',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'build'),
+      definition: serviceBuildAttributeDef,
       value: [
         new ComponentAttribute({
           name: 'context',
           type: 'String',
-          definition: serviceDef.definedAttributes.find(
-            ({ name }) => name === 'build',
-          ).definedAttributes.find(
-            ({ name }) => name === 'context',
-          ),
+          definition: buildContextAttributeDef,
           value: './Backend/config-server',
         }),
         new ComponentAttribute({
           name: 'dockerfile',
           type: 'String',
-          definition: serviceDef.definedAttributes.find(
-            ({ name }) => name === 'build',
-          ).definedAttributes.find(
+          definition: serviceBuildAttributeDef.definedAttributes.find(
             ({ name }) => name === 'dockerfile',
           ),
           value: './Backend/config-server/Dockerfile',
@@ -189,14 +192,12 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'healthcheck',
       type: 'Object',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck'),
+      definition: serviceHealthcheckAttributeDef,
       value: [
         new ComponentAttribute({
           name: 'test',
           type: 'String',
-          definition: serviceDef.definedAttributes.find(
-            ({ name }) => name === 'healthcheck',
-          ).definedAttributes.find(
+          definition: serviceHealthcheckAttributeDef.definedAttributes.find(
             ({ name }) => name === 'test',
           ),
           value: 'curl -f http://localhost:2001/actuator/health',
@@ -204,9 +205,7 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
         new ComponentAttribute({
           name: 'interval',
           type: 'String',
-          definition: serviceDef.definedAttributes.find(
-            ({ name }) => name === 'healthcheck',
-          ).definedAttributes.find(
+          definition: serviceHealthcheckAttributeDef.definedAttributes.find(
             ({ name }) => name === 'interval',
           ),
           value: '30s',
@@ -214,9 +213,7 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
         new ComponentAttribute({
           name: 'timeout',
           type: 'String',
-          definition: serviceDef.definedAttributes.find(
-            ({ name }) => name === 'healthcheck',
-          ).definedAttributes.find(
+          definition: serviceHealthcheckAttributeDef.definedAttributes.find(
             ({ name }) => name === 'timeout',
           ),
           value: '5s',
@@ -224,9 +221,7 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
         new ComponentAttribute({
           name: 'retries',
           type: 'Number',
-          definition: serviceDef.definedAttributes.find(
-            ({ name }) => name === 'healthcheck',
-          ).definedAttributes.find(
+          definition: serviceHealthcheckAttributeDef.definedAttributes.find(
             ({ name }) => name === 'retries',
           ),
           value: 3,
@@ -236,17 +231,10 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'networks',
       type: 'Array',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'networks'),
+      definition: serviceNetworksAttributeDef,
       value: ['backend'],
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
 });
 
@@ -258,23 +246,18 @@ const veterinaryMsService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'image',
       type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'image'),
+      definition: serviceImageAttributeDef,
       value: 'veterinary-ms:0.2',
     }),
     new ComponentAttribute({
       name: 'build',
       type: 'Object',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'build'),
+      definition: serviceBuildAttributeDef,
       value: [
         new ComponentAttribute({
           name: 'context',
           type: 'String',
-          definition: serviceDef.definedAttributes.find(
-            ({ name }) => name === 'build',
-          ).definedAttributes.find(
-            ({ name }) => name === 'context',
-          ),
+          definition: buildContextAttributeDef,
           value: './Backend/veterinary-ms',
         }),
       ],
@@ -282,8 +265,7 @@ const veterinaryMsService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'depends_on',
       type: 'Array',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'depends_on'),
+      definition: dependsOnAttributeDef,
       value: [new ComponentAttribute({
         name: null,
         type: 'Object',
@@ -328,13 +310,7 @@ const veterinaryMsService = new DockerComposatorComponent({
         .find(({ name }) => name === 'tty'),
       value: true,
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
 });
 
@@ -350,13 +326,7 @@ const backendNetwork = new DockerComposatorComponent({
         .find(({ name }) => name === 'driver'),
       value: 'custom-driver-0',
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: networkDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
 });
 
@@ -372,13 +342,7 @@ const dataVolume = new DockerComposatorComponent({
         .find(({ name }) => name === 'driver'),
       value: 'custom-driver-1',
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: volumeDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
 });
 
@@ -394,13 +358,7 @@ const secretComponent = new DockerComposatorComponent({
         .find(({ name }) => name === 'file'),
       value: 'path/to/secret/file',
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: secretDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
 });
 
@@ -416,16 +374,11 @@ const configComponent = new DockerComposatorComponent({
         .find(({ name }) => name === 'file'),
       value: 'path/to/config/file',
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: configDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
 });
 
+// Adding components to pluginData
 pluginData.components.push(databaseService);
 pluginData.components.push(veterinaryConfigServerService);
 pluginData.components.push(veterinaryMsService);

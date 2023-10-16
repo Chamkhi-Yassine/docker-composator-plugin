@@ -7,17 +7,46 @@ const pluginData = new DockerComposatorData();
 const metadata = new DockerComposatorMetadata(pluginData);
 metadata.parse();
 
+// Component definitions
+const dockerComposeDef = pluginData.definitions.components
+  .find(({ type }) => type === 'Docker-Compose');
 const serviceDef = pluginData.definitions.components
   .find(({ type }) => type === 'Service');
 const networkDef = pluginData.definitions.components
   .find(({ type }) => type === 'Network');
 const volumeDef = pluginData.definitions.components
   .find(({ type }) => type === 'Volume');
-const dependsOnLinkDef = serviceDef.definedAttributes.find(
-  ({ name }) => name === 'depends_on',
-).definedAttributes[0].definedAttributes.find(({ type }) => type === 'Link');
 
-// Create the veterinary-config-server service component
+// Common attributes definitions
+const serviceImageAttributeDef = serviceDef.definedAttributes.find(({ name }) => name === 'image');
+const dependsOnLinkDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'depends_on').definedAttributes[0].definedAttributes
+  .find(({ type }) => type === 'Link');
+
+const parentComposeAttribute = new ComponentAttribute({
+  name: 'parentCompose',
+  type: 'String',
+  definition: serviceDef.definedAttributes
+    .find(({ name }) => name === 'parentCompose'),
+  value: 'veto-full-compose',
+});
+
+// Instantiating components
+const dockerCompose = new DockerComposatorComponent({
+  id: 'veto-full-compose',
+  path: './veto-full-compose.yaml',
+  definition: dockerComposeDef,
+  attributes: [
+    new ComponentAttribute({
+      name: 'version',
+      type: 'String',
+      definition: dockerComposeDef.definedAttributes
+        .find(({ name }) => name === 'version'),
+      value: '3.9',
+    }),
+  ],
+});
+
 const veterinaryConfigServerService = new DockerComposatorComponent({
   id: 'veterinary-config-server',
   path: './veto-full-compose.yaml',
@@ -26,7 +55,7 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'image',
       type: 'String',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'image'),
+      definition: serviceImageAttributeDef,
       value: 'veterinary-config-server:0.2',
     }),
     new ComponentAttribute({
@@ -36,16 +65,11 @@ const veterinaryConfigServerService = new DockerComposatorComponent({
         .find(({ name }) => name === 'networks'),
       value: ['backend'],
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+
   ],
 });
 
-// Create the veterinary-ms service component
 const veterinaryMsService = new DockerComposatorComponent({
   id: 'veterinary-ms',
   path: './veto-full-compose.yaml',
@@ -54,7 +78,7 @@ const veterinaryMsService = new DockerComposatorComponent({
     new ComponentAttribute({
       name: 'image',
       type: 'String',
-      definition: serviceDef.definedAttributes.find(({ name }) => name === 'image'),
+      definition: serviceImageAttributeDef,
       value: 'veterinary-ms:0.2',
     }),
     new ComponentAttribute({
@@ -104,6 +128,8 @@ const veterinaryMsService = new DockerComposatorComponent({
         }),
       ],
     }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+
   ],
 });
 
@@ -119,13 +145,8 @@ const backendNetwork = new DockerComposatorComponent({
         .find(({ name }) => name === 'driver'),
       value: 'custom-driver-0',
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+
   ],
 });
 
@@ -141,17 +162,13 @@ const dataVolume = new DockerComposatorComponent({
         .find(({ name }) => name === 'driver'),
       value: 'custom-driver',
     }),
-    new ComponentAttribute({
-      name: 'parentCompose',
-      type: 'String',
-      definition: serviceDef.definedAttributes
-        .find(({ name }) => name === 'parentCompose'),
-      value: 'veto-full-compose',
-    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+
   ],
 });
 
-// Add the components to the data
+// Adding components to pluginData
+pluginData.components.push(dockerCompose);
 pluginData.components.push(backendNetwork);
 pluginData.components.push(dataVolume);
 pluginData.components.push(veterinaryConfigServerService);

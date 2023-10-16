@@ -15,14 +15,13 @@ import Schema from '../metadata/ValidationSchema';
  *
  */
 class DockerComposatorMetadata extends DefaultMetadata {
-
   /**
    * Default constructor.
    * @param {object} pluginData - Plugin data.
    */
   constructor(pluginData) {
     super(pluginData);
-     /**
+    /**
      * ajv.
      * @type {Ajv}
      */
@@ -75,7 +74,7 @@ class DockerComposatorMetadata extends DefaultMetadata {
       (component) => this.getComponentDefinition(component),
     );
     this.setChildrenTypes(componentDefs);
-    this.pluginData.definitions.components = componentDefs;
+    this.pluginData.definitions.components.push(...componentDefs);
   }
 
   /**
@@ -84,11 +83,11 @@ class DockerComposatorMetadata extends DefaultMetadata {
    * @returns {ComponentDefinition} Parsed component definition.
    */
   getComponentDefinition(component) {
-    const { attributes } = component;
+    const attributes = [...component.attributes];
     if (component.type !== 'Docker-Compose') {
-      // All stages are children of the Docker-Compose, so they must have a reference attibute.
-      attributes.unshift({
-        name: 'docker-compose',
+      // All components are children of the Docker-Compose, so they must have a reference attibute.
+      attributes.push({
+        name: 'parentCompose',
         type: 'Reference',
         containerRef: 'Docker-Compose',
         required: true,
@@ -132,7 +131,6 @@ class DockerComposatorMetadata extends DefaultMetadata {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
-
   /**
    * Get all possible parent container types.
    * @param {DockerComposatorComponentDefinition} componentDefinition - Definition to get all parent
@@ -140,17 +138,15 @@ class DockerComposatorMetadata extends DefaultMetadata {
    * @returns {string[]} All possible parent container types.
    */
   getParentTypes(componentDefinition) {
-    const parentTypes = [];
+    const { parentTypes } = componentDefinition;
 
     componentDefinition.definedAttributes
       .filter((attribute) => attribute.type === 'Reference')
       .map((attribute) => attribute.containerRef)
       .filter((ref) => !parentTypes.includes(ref))
       .forEach((ref) => parentTypes.push(ref));
-
     return parentTypes;
   }
-
 
   /**
    * Set the childrenTypes of all containers from children's parentTypes.

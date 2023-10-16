@@ -7,6 +7,7 @@ const pluginData = new DockerComposatorData();
 const metadata = new DockerComposatorMetadata(pluginData);
 metadata.parse();
 
+// Components Definitions
 const dockerComposeDef = pluginData.definitions.components
   .find(({ type }) => type === 'Docker-Compose');
 const serviceDef = pluginData.definitions.components
@@ -20,6 +21,20 @@ const configDef = pluginData.definitions.components
 const secretDef = pluginData.definitions.components
   .find(({ type }) => type === 'Secret');
 
+// Common attributes
+const dependsOnAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'depends_on');
+const serviceImageAttributeDef = serviceDef.definedAttributes
+  .find(({ name }) => name === 'image');
+const parentComposeAttribute = new ComponentAttribute({
+  name: 'parentCompose',
+  type: 'String',
+  definition: serviceDef.definedAttributes
+    .find(({ name }) => name === 'parentCompose'),
+  value: 'veto-full-compose',
+});
+
+// Instantiating Components
 const dockerCompose = new DockerComposatorComponent({
   id: 'veto-full-compose',
   path: './veto-full-compose.yaml',
@@ -39,252 +54,208 @@ const service = new DockerComposatorComponent({
   id: 'database',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
-});
-
-service.attributes.push(new ComponentAttribute({
-  name: 'image',
-  type: 'String',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'image'),
-  value: 'postgres',
-}));
-
-service.attributes.push(new ComponentAttribute({
-  name: 'environment',
-  type: 'Array',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'environment'),
-  value: ['POSTGRES_USER=admin', 'POSTGRES_PASSWORD=pg-pwd'],
-}));
-
-service.attributes.push(new ComponentAttribute({
-  name: 'ports',
-  type: 'Array',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'ports'),
-  value: ['5432:5432'],
-}));
-
-service.attributes.push(new ComponentAttribute({
-  name: 'networks',
-  type: 'Array',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'networks'),
-  value: ['backend'],
-}));
-
-service.attributes.push(new ComponentAttribute({
-  name: 'volumes',
-  type: 'Array',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'volumes'),
-  value: [new ComponentAttribute({
-    name: null,
-    type: 'Object',
-    value: [
-      new ComponentAttribute({
-        name: 'volume_database_0',
-        type: 'Array',
-        value: ['data'],
-      }),
-      new ComponentAttribute({
-        name: 'mount-path',
-        type: 'String',
-        value: '/path/to/mount',
-      }),
-    ],
-  })],
-}));
-
-service.attributes.push(new ComponentAttribute({
-  name: 'parentCompose',
-  type: 'String',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'parentCompose'),
-  value: 'veto-full-compose',
-}));
-
-service.attributes.push(new ComponentAttribute({
-  name: 'healthcheck',
-  type: 'Object',
-  definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck'),
-  value: [
+  attributes: [
     new ComponentAttribute({
-      name: 'test',
-      type: 'string',
-      definition: serviceDef.definedAttributes.find(
-        ({ name }) => name === 'healthcheck',
-      ).definedAttributes.find(
-        ({ name }) => name === 'test',
-      ),
-      value: 'test-exemple',
+      name: 'image',
+      type: 'String',
+      definition: serviceImageAttributeDef,
+      value: 'postgres',
     }),
     new ComponentAttribute({
-      name: 'retries',
-      type: 'Number',
-      definition: serviceDef.definedAttributes.find(
-        ({ name }) => name === 'healthcheck',
-      ).definedAttributes.find(
-        ({ name }) => name === 'retries',
-      ),
-      value: 3,
+      name: 'environment',
+      type: 'Array',
+      definition: serviceDef.definedAttributes
+        .find(({ name }) => name === 'environment'),
+      value: ['POSTGRES_USER=admin', 'POSTGRES_PASSWORD=pg-pwd'],
     }),
+    new ComponentAttribute({
+      name: 'ports',
+      type: 'Array',
+      definition: serviceDef.definedAttributes
+        .find(({ name }) => name === 'ports'),
+      value: ['5432:5432'],
+    }),
+    new ComponentAttribute({
+      name: 'networks',
+      type: 'Array',
+      definition: serviceDef.definedAttributes
+        .find(({ name }) => name === 'networks'),
+      value: ['backend'],
+    }),
+    new ComponentAttribute({
+      name: 'volumes',
+      type: 'Array',
+      definition: serviceDef.definedAttributes
+        .find(({ name }) => name === 'volumes'),
+      value: [new ComponentAttribute({
+        name: null,
+        type: 'Object',
+        value: [
+          new ComponentAttribute({
+            name: 'volume_database_0',
+            type: 'Array',
+            value: ['data'],
+          }),
+          new ComponentAttribute({
+            name: 'mount-path',
+            type: 'String',
+            value: '/path/to/mount',
+          }),
+        ],
+      })],
+    }),
+    new ComponentAttribute({
+      name: 'healthcheck',
+      type: 'Object',
+      definition: serviceDef.definedAttributes.find(({ name }) => name === 'healthcheck'),
+      value: [
+        new ComponentAttribute({
+          name: 'test',
+          type: 'string',
+          definition: serviceDef.definedAttributes.find(
+            ({ name }) => name === 'healthcheck',
+          ).definedAttributes.find(
+            ({ name }) => name === 'test',
+          ),
+          value: 'test-exemple',
+        }),
+        new ComponentAttribute({
+          name: 'retries',
+          type: 'Number',
+          definition: serviceDef.definedAttributes.find(
+            ({ name }) => name === 'healthcheck',
+          ).definedAttributes.find(
+            ({ name }) => name === 'retries',
+          ),
+          value: 3,
+        }),
+      ],
+    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
   ],
-}));
+});
 
 const service2 = new DockerComposatorComponent({
   id: 'front',
   path: './veto-full-compose.yaml',
   definition: serviceDef,
+  attributes: [
+    new ComponentAttribute({
+      name: 'image',
+      type: 'String',
+      definition: serviceImageAttributeDef,
+      value: 'postgres',
+    }),
+    new ComponentAttribute({
+      name: 'depends_on',
+      type: 'Array',
+      definition: dependsOnAttributeDef,
+      value: [
+        new ComponentAttribute({
+          name: null,
+          type: 'Object',
+          value: [
+            new ComponentAttribute({
+              name: 'service_veterinary-ms_1',
+              type: 'Array',
+              definition: dependsOnAttributeDef.definedAttributes[0].definedAttributes
+                .find(({ type }) => type === 'Link'),
+              value: ['database'],
+            }),
+            new ComponentAttribute({
+              name: 'condition',
+              type: 'String',
+              definition: dependsOnAttributeDef.definedAttributes[0].definedAttributes
+                .find(({ name }) => name === 'condition'),
+              value: 'service_healthy',
+            }),
+          ],
+        }),
+      ],
+    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+  ],
 });
 
-service2.attributes.push(new ComponentAttribute({
-  name: 'image',
-  type: 'String',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'image'),
-  value: 'postgres',
-}));
-
-service2.attributes.push(new ComponentAttribute({
-  name: 'depends_on',
-  type: 'Array',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'depends_on'),
-  value: [new ComponentAttribute({
-    name: null,
-    type: 'Object',
-    value: [
-      new ComponentAttribute({
-        name: 'service_id_0',
-        type: 'Array',
-        definition: serviceDef.definedAttributes.find(
-          ({ name }) => name === 'depends_on',
-        ).definedAttributes[0].definedAttributes.find(
-          ({ type }) => type === 'Link',
-        ),
-        value: ['database'],
-      }),
-      new ComponentAttribute({
-        name: 'condition',
-        type: 'String',
-        value: 'service_healthy',
-      }),
-    ],
-  })],
-}));
-
-service2.attributes.push(new ComponentAttribute({
-  name: 'parentCompose',
-  type: 'String',
-  definition: serviceDef.definedAttributes
-    .find(({ name }) => name === 'parentCompose'),
-  value: 'veto-full-compose',
-}));
 const network = new DockerComposatorComponent({
   id: 'backend',
   path: './veto-full-compose.yaml',
   definition: networkDef,
+  attributes: [
+    new ComponentAttribute({
+      name: 'driver',
+      type: 'String',
+      definition: networkDef.definedAttributes
+        .find(({ name }) => name === 'driver'),
+      value: 'custom-driver-one',
+    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+  ],
 });
-
-network.attributes.push(new ComponentAttribute({
-  name: 'driver',
-  type: 'String',
-  definition: networkDef.definedAttributes
-    .find(({ name }) => name === 'driver'),
-  value: 'custom-driver-one',
-}));
-
-network.attributes.push(new ComponentAttribute({
-  name: 'parentCompose',
-  type: 'String',
-  definition: networkDef.definedAttributes
-    .find(({ name }) => name === 'parentCompose'),
-  value: 'veto-full-compose',
-}));
 
 const volume = new DockerComposatorComponent({
   id: 'data',
   path: './veto-full-compose.yaml',
   definition: volumeDef,
+  attributes: [
+    new ComponentAttribute({
+      name: 'driver',
+      type: 'String',
+      definition: volumeDef.definedAttributes
+        .find(({ name }) => name === 'driver'),
+      value: 'data-driver-one',
+    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+  ],
 });
-
-volume.attributes.push(new ComponentAttribute({
-  name: 'driver',
-  type: 'String',
-  definition: volumeDef.definedAttributes
-    .find(({ name }) => name === 'driver'),
-  value: 'data-driver-one',
-}));
-
-volume.attributes.push(new ComponentAttribute({
-  name: 'parentCompose',
-  type: 'String',
-  definition: volumeDef.definedAttributes
-    .find(({ name }) => name === 'parentCompose'),
-  value: 'veto-full-compose',
-}));
 
 const config = new DockerComposatorComponent({
   id: 'config_database_config',
   path: './veto-full-compose.yaml',
   definition: configDef,
+  attributes: [
+    new ComponentAttribute({
+      name: 'file',
+      type: 'String',
+      definition: configDef.definedAttributes
+        .find(({ name }) => name === 'file'),
+      value: './configs/config_server_config.yml',
+    }),
+    new ComponentAttribute({
+      name: 'external',
+      type: 'Boolean',
+      definition: configDef.definedAttributes
+        .find(({ name }) => name === 'external'),
+      value: true,
+    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+  ],
 });
-
-config.attributes.push(new ComponentAttribute({
-  name: 'file',
-  type: 'String',
-  definition: configDef.definedAttributes
-    .find(({ name }) => name === 'file'),
-  value: './configs/config_server_config.yml',
-}));
-
-config.attributes.push(new ComponentAttribute({
-  name: 'external',
-  type: 'Boolean',
-  definition: configDef.definedAttributes
-    .find(({ name }) => name === 'external'),
-  value: true,
-}));
-
-config.attributes.push(new ComponentAttribute({
-  name: 'parentCompose',
-  type: 'String',
-  definition: configDef.definedAttributes
-    .find(({ name }) => name === 'parentCompose'),
-  value: 'veto-full-compose',
-}));
 
 const secret = new DockerComposatorComponent({
   id: 'databse-secret',
   path: './veto-full-compose.yaml',
   definition: secretDef,
+  attributes: [
+    new ComponentAttribute({
+      name: 'file',
+      type: 'String',
+      definition: secretDef.definedAttributes
+        .find(({ name }) => name === 'file'),
+      value: './secrets/secret_database.yml',
+    }),
+    new ComponentAttribute({
+      name: 'external',
+      type: 'Boolean',
+      definition: secretDef.definedAttributes
+        .find(({ name }) => name === 'external'),
+      value: true,
+    }),
+    new ComponentAttribute({ ...parentComposeAttribute }),
+  ],
 });
 
-secret.attributes.push(new ComponentAttribute({
-  name: 'file',
-  type: 'String',
-  definition: secretDef.definedAttributes
-    .find(({ name }) => name === 'file'),
-  value: './secrets/secret_database.yml',
-}));
-
-secret.attributes.push(new ComponentAttribute({
-  name: 'external',
-  type: 'Boolean',
-  definition: secretDef.definedAttributes
-    .find(({ name }) => name === 'external'),
-  value: true,
-}));
-
-secret.attributes.push(new ComponentAttribute({
-  name: 'parentCompose',
-  type: 'String',
-  definition: secretDef.definedAttributes
-    .find(({ name }) => name === 'parentCompose'),
-  value: 'veto-full-compose',
-}));
-
+// Adding components to pluginData
 pluginData.components.push(config);
 pluginData.components.push(secret);
 pluginData.components.push(volume);
