@@ -11,4 +11,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for parsing Docker-Compose files.
 - Support for rendering Docker-Compose files from diagrams generated via the drag-and-drop interface of Leto-Modelizer.
-- leto-modelizer-clugin-core version 0.21.0
+- leto-modelizer-plugin-core version 0.21.0
